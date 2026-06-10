@@ -9,14 +9,22 @@ export function Pipeline() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step) => (
-            <Card key={step.n} interactive className="p-4">
-              <span className="font-mono text-xs font-semibold tracking-wider text-accent tnum">
+            <Card key={step.n} interactive className="overflow-hidden p-4">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-1 -top-3 select-none font-display text-6xl leading-none tnum text-accent/[0.07] transition-colors duration-300 group-hover:text-accent/[0.12]"
+              >
                 {step.n}
               </span>
-              <strong className="mt-1.5 block font-display text-[15px] text-foreground">
+              <span className="relative font-mono text-[11px] font-semibold tracking-label text-accent tnum">
+                {step.n}
+              </span>
+              <strong className="relative mt-1.5 block font-display text-[15px] text-foreground">
                 {step.title}
               </strong>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+              <p className="relative mt-1 text-sm leading-relaxed text-muted-foreground">
+                {step.desc}
+              </p>
             </Card>
           ))}
         </div>

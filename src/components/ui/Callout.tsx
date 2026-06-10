@@ -15,12 +15,27 @@ const labelTone: Record<Exclude<Tone, "neutral">, string> = {
   clay: "text-clay",
 };
 
+const barTone: Record<Exclude<Tone, "neutral">, string> = {
+  accent: "bg-accent-gradient",
+  go: "bg-go",
+  amber: "bg-amber",
+  clay: "bg-clay",
+};
+
 export function Callout({ tone, label, body, className }: CalloutData & { className?: string }) {
   return (
-    <div className={cn("rounded-xl border px-4 py-3 text-sm", toneStyles[tone], className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-xl border pl-5 pr-4 py-3 text-sm",
+        toneStyles[tone],
+        className,
+      )}
+    >
+      {/* signature tone bar — quiet accent rail along the leading edge */}
+      <span className={cn("absolute inset-y-0 left-0 w-1", barTone[tone])} aria-hidden="true" />
       <span
         className={cn(
-          "mb-1 block font-mono text-[10px] font-semibold uppercase tracking-label",
+          "mb-1 flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-label",
           labelTone[tone],
         )}
       >

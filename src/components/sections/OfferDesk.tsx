@@ -123,7 +123,7 @@ export function OfferDesk() {
                 key={loop.k}
                 className="flex items-start gap-4 border-b border-border/70 px-4 py-3 last:border-0"
               >
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent/10 font-mono text-xs font-semibold text-accent tnum">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gradient-br font-mono text-xs font-semibold text-accent-foreground shadow-accent tnum">
                   {i + 1}
                 </span>
                 <div className="min-w-0">

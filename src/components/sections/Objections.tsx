@@ -9,7 +9,7 @@ export function Objections() {
       <div className="space-y-8">
         <div className="grid gap-3 sm:grid-cols-2">
           {list.map((o) => (
-            <Card key={o.q} className="p-5">
+            <Card key={o.q} interactive className="p-5">
               <strong className="block font-display text-[15px] text-foreground">{o.q}</strong>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{o.reframe}</p>
               {o.note && (
@@ -37,10 +37,12 @@ export function Objections() {
           </h3>
           <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <div className="grid grid-cols-2 border-b border-border bg-muted/60">
-              <span className="px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-clay">
+              <span className="flex items-center gap-2 px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-clay">
+                <span className="h-1.5 w-1.5 rounded-full bg-clay" />
                 Do not say
               </span>
-              <span className="border-l border-border px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-go">
+              <span className="flex items-center gap-2 border-l border-border px-4 py-2.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-go">
+                <span className="h-1.5 w-1.5 rounded-full bg-go" />
                 Say instead
               </span>
             </div>

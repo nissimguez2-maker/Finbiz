@@ -48,12 +48,22 @@ function LaneCard({ lane }: { lane: Lane }) {
   return (
     <div
       className={cn(
-        "relative rounded-2xl border border-t-2 border-border bg-card p-6 shadow-md",
+        "group relative overflow-hidden rounded-2xl border border-t-2 border-border bg-card p-6 shadow-md",
+        "transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl",
         toneBorder[lane.tone],
       )}
     >
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h3 className={cn("font-display text-lg", toneText[lane.tone])}>{lane.name}</h3>
+        <h3 className={cn("flex items-center gap-2.5 font-display text-lg", toneText[lane.tone])}>
+          <span
+            className={cn(
+              "h-2 w-2 rounded-full",
+              toneDot[lane.tone],
+              lane.tone === "go" && "motion-safe:animate-pulse-dot",
+            )}
+          />
+          {lane.name}
+        </h3>
         <span
           className={cn(
             "rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-label",

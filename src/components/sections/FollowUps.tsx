@@ -39,7 +39,7 @@ function TemplateRow({ template }: { template: SmsTemplate }) {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-muted/40 p-3">
+    <div className="rounded-xl border border-border bg-muted/40 p-3 transition-colors hover:border-accent/30 hover:bg-accent/[0.03]">
       <div className="mb-1.5 flex items-center justify-between gap-2">
         <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-accent">
           {template.label}
@@ -48,7 +48,12 @@ function TemplateRow({ template }: { template: SmsTemplate }) {
           type="button"
           onClick={copy}
           aria-label={copied ? "Copied to clipboard" : `Copy ${template.label} message`}
-          className="focus-ring shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-accent"
+          className={
+            "focus-ring shrink-0 rounded-md px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider transition-colors " +
+            (copied
+              ? "text-go"
+              : "text-muted-foreground hover:bg-accent/[0.08] hover:text-accent")
+          }
         >
           {copied ? "Copied" : "Copy"}
         </button>

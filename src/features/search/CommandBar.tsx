@@ -89,8 +89,8 @@ export function CommandBar() {
   return (
     <div className="no-print sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-border bg-background/90 px-6 backdrop-blur sm:px-10">
       <style>{MARK_STYLES}</style>
-      <div className="relative flex flex-1 items-center">
-        <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted-foreground" />
+      <div className="group relative flex flex-1 items-center">
+        <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-accent" />
         <input
           ref={inputRef}
           type="text"
@@ -104,7 +104,7 @@ export function CommandBar() {
           onKeyDown={onInputKeyDown}
           autoComplete="off"
           spellCheck={false}
-          className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-24 font-mono text-[13px] text-foreground placeholder:text-muted-foreground focus-ring"
+          className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-24 font-mono text-[13px] text-foreground shadow-sm transition-shadow placeholder:text-muted-foreground focus-ring focus-visible:border-accent/40 focus-visible:shadow-accent"
         />
 
         {/* Match count + clear, right-aligned inside the input. */}

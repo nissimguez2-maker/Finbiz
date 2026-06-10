@@ -36,7 +36,7 @@ export function TextBubble({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** A numbered/labelled call beat with an accent rail. */
+/** A numbered/labelled call beat with an accent rail + large ghost numeral. */
 export function Beat({
   label,
   children,
@@ -46,9 +46,20 @@ export function Beat({
   children: React.ReactNode;
   className?: string;
 }) {
+  // Surface any leading number in the label as a large decorative numeral
+  // (e.g. "01 · Open" -> "01"). Purely cosmetic; the full label still renders.
+  const lead = label.match(/^\s*(\d{1,2})/)?.[1];
   return (
-    <div className={cn("relative pl-5", className)}>
+    <div className={cn("group relative pl-5", className)}>
       <span className="absolute bottom-1 left-0 top-1 w-[3px] rounded-full bg-accent-gradient" />
+      {lead && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-2 right-0 select-none font-display text-5xl leading-none text-accent/[0.06] transition-colors duration-300 group-hover:text-accent/[0.1]"
+        >
+          {lead}
+        </span>
+      )}
       <h4 className="mb-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
         {label}
       </h4>

@@ -36,28 +36,39 @@ export function Sidebar() {
       </div>
 
       <div className="mt-3 flex-1 px-3">
-        {nav.map((n) => (
-          <a
-            key={n.id}
-            href={`#${n.id}`}
-            className={cn(
-              "flex items-baseline gap-3 rounded-lg px-3 py-2 text-[13.5px] transition-colors",
-              active === n.id
-                ? "bg-accent/[0.07] font-semibold text-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-          >
-            <span
+        {nav.map((n) => {
+          const isActive = active === n.id;
+          return (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              aria-current={isActive ? "true" : undefined}
               className={cn(
-                "font-mono text-[11px] font-semibold",
-                active === n.id ? "text-accent" : "text-muted-foreground/70",
+                "focus-ring relative flex items-baseline gap-3 rounded-lg px-3 py-2 text-[13.5px] transition-colors",
+                isActive
+                  ? "bg-accent/[0.07] font-semibold text-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
-              {n.navNo}
-            </span>
-            {n.navLabel}
-          </a>
-        ))}
+              {/* signature accent bar marks the active section */}
+              <span
+                className={cn(
+                  "absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-accent-gradient transition-opacity duration-200",
+                  isActive ? "opacity-100" : "opacity-0",
+                )}
+              />
+              <span
+                className={cn(
+                  "font-mono text-[11px] font-semibold tnum",
+                  isActive ? "text-accent" : "text-muted-foreground/70",
+                )}
+              >
+                {n.navNo}
+              </span>
+              {n.navLabel}
+            </a>
+          );
+        })}
       </div>
 
       <p className="mx-6 mt-4 border-t border-border pt-4 font-mono text-[10px] leading-relaxed text-muted-foreground">
