@@ -41,7 +41,6 @@
   nav a .n{font-family:var(--mono);font-size:11px;color:var(--ink-3);min-width:18px;font-weight:600}
   nav a:hover{color:var(--ink);background:rgba(0,0,0,.025)}
   nav a.active{color:var(--ink);border-left-color:var(--brass);background:rgba(154,118,38,.07);font-weight:600}
-  nav a.active .n{color:var(--brass)}
   .eyes{margin:16px 22px 0;padding-top:14px;border-top:1px solid var(--line);
         font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3);letter-spacing:.01em}
 
@@ -158,6 +157,158 @@
     section,.card,.lane,table,.step,.stat{break-inside:avoid}
     body{background:#fff}
   }
+
+  /* ============================================================
+     OPERATOR CONSOLE (oc-) — additive live-call interactivity
+     All classes namespaced oc-* · reuses :root tokens only.
+     ============================================================ */
+  body.oc-bigread .say{font-size:18.5px;line-height:1.5}
+  body.oc-bigread .cue{font-size:13.5px}
+
+  mark.oc-hit{background:var(--brass-tint);color:var(--ink);border-radius:3px;
+    padding:0 1px;box-shadow:inset 0 -1px 0 #DFCB9B}
+  mark.oc-hit.oc-hit-cur{background:var(--brass-bright);color:#fff;box-shadow:none}
+  body.oc-searching .beat:not(.oc-match),
+  body.oc-searching tr.oc-row-dim{opacity:.32;transition:opacity .12s}
+  @media (prefers-reduced-motion:reduce){
+    body.oc-searching .beat:not(.oc-match),
+    body.oc-searching tr.oc-row-dim{transition:none}
+  }
+
+  /* command / search topbar */
+  .oc-bar{position:sticky;top:0;z-index:40;background:var(--rail);
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 48px}
+  .oc-search{position:relative;flex:1;min-width:200px;display:flex;align-items:center}
+  .oc-search svg{position:absolute;left:11px;width:14px;height:14px;color:var(--ink-3);pointer-events:none}
+  .oc-search input{width:100%;font-family:var(--mono);font-size:13px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:8px 86px 8px 32px;line-height:1.2}
+  .oc-search input::placeholder{color:var(--ink-3)}
+  .oc-search input:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 2px rgba(154,118,38,.15)}
+  .oc-search .oc-count{position:absolute;right:34px;font-family:var(--mono);font-size:10.5px;
+    color:var(--ink-3);letter-spacing:.04em;white-space:nowrap;pointer-events:none}
+  .oc-search .oc-x{position:absolute;right:6px;border:none;background:transparent;cursor:pointer;
+    color:var(--ink-3);font-family:var(--mono);font-size:14px;line-height:1;padding:4px 6px;border-radius:6px}
+  .oc-search .oc-x:hover{color:var(--clay);background:rgba(0,0,0,.04)}
+  .oc-kbd{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.04em;
+    border:1px solid var(--line);border-radius:5px;padding:2px 6px;background:var(--card)}
+  .oc-bar-tools{display:flex;align-items:center;gap:7px}
+  .oc-btn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--ink-2);background:var(--card);border:1px solid var(--line);border-radius:7px;
+    padding:7px 11px;cursor:pointer;line-height:1;white-space:nowrap}
+  .oc-btn:hover{border-color:var(--brass);color:var(--ink)}
+  .oc-btn:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+  .oc-btn[aria-pressed="true"]{background:var(--brass-tint);border-color:#DFCB9B;color:#5E4711}
+
+  /* compliance rails strip */
+  .oc-rails{position:sticky;top:51px;z-index:39;background:#2A2018;color:var(--brass-tint);
+    border-bottom:1px solid #3A2E22;display:flex;align-items:center;gap:0;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;padding:6px 48px}
+  .oc-rails .oc-rl{display:inline-flex;align-items:center;padding:1px 14px;border-right:1px solid #4A3B2A;white-space:nowrap}
+  .oc-rails .oc-rl:first-child{padding-left:0}
+  .oc-rails .oc-rl:last-child{border-right:none}
+  .oc-rails .oc-rl b{color:var(--brass-bright);font-weight:600;margin-right:5px}
+  .oc-rails .oc-tag{color:#C9A24A;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    margin-right:14px;padding-right:14px;border-right:1px solid #4A3B2A;font-size:9.5px}
+
+  /* MCA calculator (echoes .stat look) */
+  .oc-calc{background:var(--card);border:1px solid var(--line);border-radius:11px;margin:4px 0 14px;overflow:hidden}
+  .oc-calc-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:11px 16px;border-bottom:1px solid var(--line-2);flex-wrap:wrap}
+  .oc-calc-hd .oc-calc-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brass);font-weight:600}
+  .oc-calc-inputs{display:flex;flex-wrap:wrap;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line-2)}
+  .oc-fld{display:flex;flex-direction:column;gap:4px}
+  .oc-fld label{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  .oc-fld .oc-inwrap{display:flex;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:0 9px;height:34px}
+  .oc-fld .oc-inwrap:focus-within{border-color:var(--brass);box-shadow:0 0 0 2px rgba(154,118,38,.15)}
+  .oc-fld .oc-pre{font-family:var(--mono);font-size:13px;color:var(--ink-3);margin-right:2px}
+  .oc-fld input{width:84px;border:none;background:transparent;font-family:var(--mono);
+    font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;color:var(--ink);padding:0;line-height:1}
+  .oc-fld input:focus{outline:none}
+  .oc-fld input.oc-w-sm{width:54px}
+  .oc-toggle{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;height:34px;align-self:flex-end}
+  .oc-toggle button{font-family:var(--mono);font-size:11px;font-weight:600;border:none;background:var(--paper);
+    color:var(--ink-3);padding:0 13px;cursor:pointer;letter-spacing:.04em}
+  .oc-toggle button[aria-pressed="true"]{background:var(--brass-tint);color:#5E4711}
+  .oc-toggle button:focus-visible{outline:2px solid var(--brass);outline-offset:-2px}
+  .oc-calc-out{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+  .oc-calc-out .oc-o{background:var(--card);padding:14px 16px}
+  .oc-calc-out .oc-o .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .oc-calc-out .oc-o .v{font-family:var(--mono);font-size:23px;font-weight:600;color:var(--ink);
+    margin-top:5px;line-height:1;font-variant-numeric:tabular-nums}
+  .oc-calc-out .oc-o.hot .v{color:var(--brass)}
+  .oc-calc-out .oc-o .sub{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:4px}
+  .oc-calc-note{padding:9px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.02em;
+    color:#7A241D;background:var(--clay-tint);border-top:1px solid #E3C0BA}
+  .oc-calc-note b{letter-spacing:.06em;text-transform:uppercase;margin-right:5px}
+
+  /* section collapse affordance */
+  .oc-coll{margin-left:10px;border:1px solid var(--line);background:var(--card);
+    border-radius:6px;width:24px;height:24px;cursor:pointer;color:var(--ink-3);
+    font-family:var(--mono);font-size:13px;line-height:1;vertical-align:middle;
+    display:inline-flex;align-items:center;justify-content:center}
+  .oc-coll:hover{border-color:var(--brass);color:var(--brass)}
+  .oc-coll:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+  section.oc-collapsed > *:not(.eyebrow):not(h2){display:none}
+  section.oc-collapsed{margin-bottom:14px;opacity:.85}
+
+  /* notes / timer drawer */
+  .oc-dock{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;gap:8px}
+  .oc-fab{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.04em;
+    background:var(--ink);color:var(--paper);border:1px solid var(--ink);border-radius:9px;
+    padding:11px 15px;cursor:pointer;box-shadow:0 4px 14px rgba(23,30,38,.22);display:inline-flex;align-items:center;gap:8px}
+  .oc-fab:hover{background:var(--ink-2)}
+  .oc-fab:focus-visible{outline:2px solid var(--brass-bright);outline-offset:2px}
+  .oc-fab .oc-timer-read{font-variant-numeric:tabular-nums;color:var(--brass-bright)}
+  .oc-drawer{position:fixed;top:0;right:0;bottom:0;z-index:60;width:380px;max-width:92vw;
+    background:var(--card);border-left:1px solid var(--line);box-shadow:-8px 0 30px rgba(23,30,38,.16);
+    transform:translateX(102%);transition:transform .18s ease;display:flex;flex-direction:column}
+  .oc-drawer.oc-open{transform:translateX(0)}
+  @media (prefers-reduced-motion:reduce){.oc-drawer{transition:none}}
+  .oc-drawer-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .oc-drawer-hd h3{margin:0;font-family:var(--display);font-size:16px;font-weight:700}
+  .oc-drawer-close{border:none;background:transparent;cursor:pointer;font-family:var(--mono);
+    font-size:18px;line-height:1;color:var(--ink-3);padding:4px 8px;border-radius:6px}
+  .oc-drawer-close:hover{color:var(--clay);background:rgba(0,0,0,.04)}
+  .oc-timerbar{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line-2);background:var(--paper)}
+  .oc-timerbar .oc-clock{font-family:var(--mono);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);min-width:78px}
+  .oc-timerbar .oc-clock.oc-run{color:var(--go)}
+  .oc-timerbar .oc-mini{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;
+    border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:6px;padding:6px 9px;cursor:pointer}
+  .oc-timerbar .oc-mini:hover{border-color:var(--brass);color:var(--ink)}
+  .oc-timerbar .oc-five{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+  .oc-notes{flex:1;overflow-y:auto;padding:6px 16px 16px}
+  .oc-nf{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+  .oc-nf label{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .oc-nf input,.oc-nf textarea{font-family:var(--body);font-size:13.5px;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%}
+  .oc-nf input:focus,.oc-nf textarea:focus{outline:none;border-color:var(--brass);box-shadow:0 0 0 2px rgba(154,118,38,.13)}
+  .oc-nf textarea{resize:vertical;min-height:46px;line-height:1.45}
+  .oc-nf .oc-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .oc-drawer-ft{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line);background:var(--paper)}
+  .oc-drawer-ft .oc-btn{flex:1;text-align:center;justify-content:center}
+  .oc-drawer-ft .oc-btn.oc-danger:hover{border-color:var(--clay);color:var(--clay)}
+  .oc-saved{font-family:var(--mono);font-size:9.5px;color:var(--go);align-self:center;white-space:nowrap;letter-spacing:.04em}
+
+  @media (max-width:880px){
+    .oc-bar{padding-left:22px;padding-right:22px}
+    .oc-rails{padding-left:22px;padding-right:22px;top:auto;position:static}
+    .oc-calc-out{grid-template-columns:1fr 1fr}
+    .oc-drawer{width:100%}
+    .oc-dock{right:12px;bottom:12px}
+  }
+  @media print{
+    .oc-bar,.oc-rails,.oc-dock,.oc-drawer,.oc-coll,
+    .oc-calc-hd,.oc-calc-inputs{display:none !important}
+    /* keep .oc-calc-note: the factor-is-not-APR disclaimer must print with the numbers */
+    mark.oc-hit{background:transparent;box-shadow:none;color:inherit}
+    body.oc-searching .beat,body.oc-searching tr{opacity:1 !important}
+    section.oc-collapsed > *{display:revert !important}
+    .oc-calc{border:1px solid var(--line)}
+    .oc-calc-out{grid-template-columns:repeat(4,1fr)}
+  }
 </style>
 </head>
 <body>
@@ -194,54 +345,98 @@
       </div>
     </header>
 
+    <!-- operator console: command search + always-on compliance rails -->
+    <div class="oc-bar" role="search">
+      <div class="oc-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input id="ocSearch" type="search" autocomplete="off" spellcheck="false"
+               aria-label="Search the script — what do I say"
+               placeholder="What do I say?  Try “rate”, “credit”, “expensive”…  ( / to focus )">
+        <span class="oc-count" id="ocCount" aria-live="polite"></span>
+        <button class="oc-x" id="ocClear" type="button" aria-label="Clear search" title="Clear (Esc)" hidden>&times;</button>
+      </div>
+      <div class="oc-bar-tools">
+        <button class="oc-btn" id="ocBigRead" type="button" aria-pressed="false"
+                title="Bigger spoken-line text for mid-call reading">Big read</button>
+        <button class="oc-btn" id="ocCollapseAll" type="button"
+                title="Collapse / expand every section">Collapse all</button>
+        <span class="oc-kbd" aria-hidden="true">/ search</span>
+      </div>
+    </div>
+
+    <div class="oc-rails" role="note" aria-label="Compliance rails — always on">
+      <span class="oc-tag">Rails</span>
+      <span class="oc-rl"><b>✕</b>No “guaranteed / approved”</span>
+      <span class="oc-rl"><b>✕</b>No rate before the file</span>
+      <span class="oc-rl"><b>≠</b>Factor ≠ APR</span>
+      <span class="oc-rl"><b>✕</b>No invented urgency</span>
+    </div>
+
     <div class="body-wrap">
 
     <!-- 01 CALL -->
     <section id="call">
       <p class="eyebrow">01 — Live</p>
       <h2>Call Flow</h2>
-      <p class="lead">Top to bottom, fast. You run the call; let him talk ~60%. The urgency comes from his own answers in the Dig — not from anything you invent.</p>
+      <p class="lead">Top to bottom, fast. Your eye lands on the next line, you say it, you shut up. The urgency comes from his answers in the Dig — not from anything you push.</p>
+
+      <div class="callout c-rule"><b>One rule</b>Let him talk ~60%. You're steering, not selling — the file and his own words close this, not your volume.</div>
 
       <div class="beat"><h4>① Open — own it</h4>
         <span class="say">Hi [Name], it's Ness at FinBiz Funding. Good time? I'll be straight and quick.</span>
         <span class="say">I work with owners like you on growth capital — and I'm good at it.</span>
         <span class="say">Give me five minutes. By the end, either I see a real way to put money to work in your business, or I don't — and I'll tell you flat. Fair?</span>
-        <span class="cue">Normalizing a "no" disarms him and reads as confidence.</span>
+        <span class="cue">Naming the "no" up front disarms him — reads as confidence, not a pitch.</span>
       </div>
+
       <div class="beat"><h4>② Open the story</h4>
         <span class="say">If money wasn't the bottleneck, what's the first move you'd make in the business?</span>
-        <span class="cue">His picture here is what you close on later.</span>
+        <span class="cue">Whatever he says here is what you paint back in ⑤. Write it down word for word.</span>
       </div>
+
       <div class="beat"><h4>③ Gate — two numbers</h4>
-        <span class="say">So I'm not wasting your time — what's the business doing a month lately, and how long open?</span>
-        <span class="cue">Clears the floor → ④ · Light → Light branch · Already funded → All Set branch.</span>
+        <span class="say">So I'm not wasting your time — what's the business doing a month lately, and how long you been open?</span>
+        <span class="cue">Floor ~$15K+/mo · 6+ mo · 500+. Green $20K+ · 12+ mo · 570+.</span>
+        <span class="cue">Clears the floor → ④ · Light → Light card · Already funded → All Set card.</span>
       </div>
+
       <div class="beat"><h4>④ Dig — make the gap real</h4>
+        <span class="say">Best time to grab capital is before you're desperate for it. You've got more leverage when you don't need it — and you're in a good spot to move now.</span>
         <span class="say">What's the one thing holding you back from the next level right now?</span>
         <span class="say">How long's that been going on?</span>
-        <span class="say">If it stays another six months — what's it cost you? Jobs you turn down, customers you lose?</span>
+        <span class="say">If it stays like that another six months — what's it cost you? Jobs you turn down, customers you lose?</span>
         <span class="say">And if it were handled tomorrow — what changes for you?</span>
-        <span class="cue">He just told you the pain AND the payoff, in his words. Don't pitch yet.</span>
+        <span class="cue">He just handed you the pain AND the payoff, in his words. Don't pitch yet — let it sit.</span>
       </div>
+
       <div class="beat"><h4>⑤ Point it + paint it</h4>
-        <span class="say">Here's what I'd put in front of you — a [term loan / line / advance].</span>
+        <span class="say">Good. Here's what I'd put in front of you — a [term loan / line / advance].</span>
         <span class="say">Picture it: [the thing he said he'd do], funded and moving. That's the play.</span>
         <span class="say">Depending on your numbers I'll get you the best terms I can — and I carry the paperwork. You run the business, I run this.</span>
+        <span class="cue">"Depending on your numbers" — never name a rate before you've seen the file.</span>
       </div>
+
       <div class="beat"><h4>⑥ Close — hard, clean</h4>
-        <span class="say">Best time to grab capital is before you're desperate for it. Money's cheapest when you don't need it.</span>
-        <span class="say">Next step: send me four months of bank statements today, I build your offer tonight, we talk tomorrow with real numbers.</span>
-        <span class="say">No obligation — you see the full payback and decide. Let's get the options on the table.</span>
+        <span class="say">Here's what happens next: send me four months of bank statements today, I build your offer tonight, we talk tomorrow with real numbers.</span>
+        <span class="say">This your cell? Texting you right now so you've got me.</span>
+        <span class="cue">Daisy-chain — cell → text → email. Don't hang up until you've got the email.</span>
+        <span class="mono">→ "Hey, it's Ness — FinBiz."</span>
+        <span class="mono">→ "Shoot me your email."</span>
+        <span class="say">No obligation — you see the full payback and you decide. But let's get the options on the table.</span>
       </div>
 
       <div class="card"><strong>↪ All set / already funded — push for the second swing</strong>
-        <span class="say">Glad you're moving. Who'd you go with — payments daily, weekly, monthly?</span>
-        <span class="say">If those are daily pulls, I can probably refinance you into breathing room. Want me to take a real look?</span>
-        <span class="say">And the day you hit about halfway paid, that's a top-up at better terms. Let me be the call you make.</span>
+        <span class="say">Glad you're moving. Who'd you go with — and are the payments daily, weekly, monthly?</span>
+        <span class="say">Here's where I'm worth your time: if those are daily pulls, I can probably refinance you into more breathing room. Want me to take a real look?</span>
+        <span class="say">And the day you hit about halfway paid, that's a top-up at better terms. I'll be the call you make — costs you nothing to have me in your corner.</span>
+        <span class="cue">If he cracks the door, you're back at ⑥. Get the statements.</span>
       </div>
+
       <div class="card"><strong>↪ Light — don't waste the call</strong>
-        <span class="say">Straight with you — numbers are a little light today for the best products. But I'm not writing you off.</span>
-        <span class="cue">Offer one: credit repair to get eligible (60–90 days; never promise a score) · CCP to hold the line · "Two stronger months and a callback."</span>
+        <span class="say">Straight with you — the numbers are a little light today for the best products. But I'm not writing you off.</span>
+        <span class="cue">Offer one, then book the callback: credit repair to get eligible (60–90 days; never promise a score) · CCP to hold the line · "Give me two stronger months and a callback."</span>
       </div>
     </section>
 
@@ -249,25 +444,108 @@
     <section id="matrix">
       <p class="eyebrow">02 — Fit</p>
       <h2>Product Fit Matrix</h2>
-      <p class="lead">Name the one or two products the file can carry — don't list the menu. Fastest isn't always best: weigh payment pressure and existing debt before you anchor on speed.</p>
+      <p class="lead">The whole menu, eye-scannable. But don't read it off — name the one or two products the file can carry. MCA is the bread and butter; everything else is for a profile that earns it. Pitch what the file supports, not what sounds best.</p>
       <table>
-        <thead><tr><th>Product</th><th>Best fit</th><th>Speed</th><th>Docs</th><th>Cost</th><th>Main weakness</th></tr></thead>
+        <thead><tr><th>Product</th><th>Best fit</th><th>Terms</th><th>Speed</th><th>Say it / caveat</th></tr></thead>
         <tbody>
-          <tr><td><span class="tag t-gold">MCA</span></td><td>Needs speed, active deposits, can absorb frequent payments, may not pass a bank box</td><td>Fast</td><td>Light–mod</td><td>High</td><td>Daily/weekly payment pressure</td></tr>
-          <tr><td><span class="tag t-blue">Renewal</span></td><td>Existing/prior-funded, solid history &amp; stable recent performance</td><td>Fast–med</td><td>Moderate</td><td>Med–high</td><td>Hinges on seasoning &amp; payoff progress</td></tr>
-          <tr><td><span class="tag t-teal">Refi / Consol.</span></td><td>Carrying pressure a cleaner structure could genuinely relieve</td><td>Medium</td><td>Mod–heavy</td><td>Med–high</td><td>Can't fix an overleveraged file</td></tr>
-          <tr><td><span class="tag t-blue">Term Loan</span></td><td>Stable cash flow, stronger profile, room for monthly</td><td>Med–slow</td><td>Mod–heavy</td><td>Med–lower</td><td>Slower, stricter, less forgiving</td></tr>
-          <tr><td><span class="tag t-blue">Line of Credit</span></td><td>Recurring swings, stronger profile, value in drawing as needed</td><td>Medium</td><td>Moderate</td><td>Medium</td><td>Needs cleaner file &amp; consistency</td></tr>
+          <tr><td><span class="tag t-gold">MCA</span> <b>Primary</b></td><td>Urgent working capital · active deposits · credit-flexible · needs speed</td><td>Factor rate + total payback (e.g. <span class="mono">$20K × 1.40 = $28K</span>) · daily/weekly · non-bank, no tax returns</td><td>Fastest</td><td>Purchase of future receivables. Never "interest," "APR," or "bank loan."</td></tr>
+          <tr><td><span class="tag t-blue">Term Loan</span></td><td>Stable, stronger-credit owner · predictable need · room for monthly</td><td>From <span class="mono">~4.99% APR</span> · <span class="mono">$10K–$10M</span> · 1–10 yr monthly · no prepay penalty</td><td>Med–slow</td><td>APR is fine here — it's a real loan. Rate depends on underwriting.</td></tr>
+          <tr><td><span class="tag t-blue">Line of Credit</span></td><td>Flexible, recurring needs · cleaner profile</td><td><span class="mono">$250K–$500K</span> revolving · draw and repay as needed</td><td>Medium</td><td>Revolving — you only pay for what you draw.</td></tr>
+          <tr><td><span class="tag t-teal">Equipment Fin.</span></td><td>Buying equipment, new or used</td><td>Up to <span class="mono">100%</span> financing · up to 7-yr terms</td><td>Medium</td><td>Financed against the equipment; possible write-offs — confirm w/ his CPA.</td></tr>
+          <tr><td><span class="tag t-teal">HELOC</span></td><td><span class="mono">660+</span> credit AND real-estate equity · wants it fast</td><td>In-house indicative quote in <span class="mono">~5 min</span> · same-day funding if he cooperates · secured against his property</td><td>Same-day</td><td>Indicative number up front; final terms confirm against equity &amp; title.</td></tr>
+          <tr><td><span class="tag t-blue">Renewal / Refi / Consol.</span></td><td>Existing/prior-funded · wants relief from daily pulls · cleaning up stacks</td><td>Eligible <span class="mono">~50%</span> paid down · fresh capital · consolidate obligations</td><td>Fast–med</td><td>Better terms once paid down — and breathing room from daily payments.</td></tr>
+          <tr><td><span class="tag t-slate">Asset-Based &amp; Specialty</span></td><td>A specific asset or elite credit (factoring / SBA / CRE)</td><td>Factoring on receivables · SBA/CRE for top profiles</td><td>Varies</td><td>SBA is bank-funded — needs tax returns. Confirm bank vs non-bank first.</td></tr>
+          <tr><td><span class="tag t-slate">CCP</span> <b>Relationship play</b></td><td>Holding an already-funded or not-yet-eligible merchant</td><td>Card processing</td><td>—</td><td>Never an opener. Mid-conversation, to keep the door open.</td></tr>
+          <tr><td><span class="tag t-slate">Credit Repair</span> <b>Relationship play</b></td><td>Turning a not-yet-eligible prospect into a future deal</td><td>Up to <span class="mono">$6K</span> (scales with score) · <span class="mono">60–90 days</span> to take effect</td><td>—</td><td>Never an opener. CROA applies — never promise a score.</td></tr>
         </tbody>
       </table>
-      <div class="callout c-rule"><b>The rule</b>Pitch what the file can support, not what sounds best. The file always wins the argument in underwriting.</div>
+
+      <p class="lead" style="margin-top:20px">The ones that need a spoken line — say it like this:</p>
+
+      <div class="card"><strong>MCA — the workhorse <span class="tag t-gold">Primary</span></strong>
+        <span class="say">It's an advance against your future receivables. I give you the capital now, you pay it back from sales over time.</span>
+        <span class="cue">Factor rate + total payback only. Never call it interest, APR, or a bank loan. Non-bank — you don't owe me tax returns.</span>
+      </div>
+
+      <div class="card"><strong>Term Loan vs MCA — the one place APR is fine</strong>
+        <span class="say">This one's a real loan — fixed APR, monthly payments, from around 4.99%, no penalty if you pay it early.</span>
+        <span class="cue">Only use APR language on the Term Loan. On an MCA it's a factor rate, never a rate. Rate here still depends on underwriting — no number before the file.</span>
+      </div>
+
+      <div class="card"><strong>HELOC — speed is the hook</strong>
+        <span class="say">It's a line against your property's equity. I can get you an indicative number — amount and rate — in about five minutes, and if you cooperate we can fund the same day.</span>
+        <span class="cue">Needs 660+ credit AND real-estate equity. The 5-min quote is indicative; final terms confirm against the equity and title. Secured against his real estate.</span>
+      </div>
+
+      <div class="card"><strong>Equipment Financing — collateral's built in</strong>
+        <span class="say">We finance it against the equipment itself — up to the full cost, terms out to seven years. There may be write-offs too.</span>
+        <span class="cue">Send him to his CPA on the tax piece — don't promise the write-off yourself.</span>
+      </div>
+
+      <div class="card"><strong>Renewal / Refi / Consolidation — the second swing</strong>
+        <span class="say">Once you're about halfway paid down, I can get you better terms — fresh capital, and breathing room from those daily pulls.</span>
+        <span class="cue">Eligible around 50% paid down. This is the back-pocket play for prior-funded clients and stacked files.</span>
+      </div>
+
+      <div class="card"><strong>Asset-Based &amp; Specialty — factoring / SBA / CRE</strong>
+        <span class="say">If you've got receivables or an elite profile, there's factoring, plus SBA and CRE for the top files.</span>
+        <span class="cue">SBA and CRE are bank-funded — those need tax returns. Confirm bank vs non-bank before you ever ask a merchant for returns.</span>
+      </div>
+
+      <div class="callout c-warn"><b>Relationship plays — never an opener</b>CCP and Credit Repair don't lead a call. Use them mid-conversation to hold a merchant who's already funded or not yet eligible. Credit Repair runs up to <span class="mono">$6K</span> (scales with score) and takes <span class="mono">60–90 days</span> to take effect — and CROA applies, so never guarantee a specific score or outcome.</div>
+
+      <div class="callout c-rule"><b>Your rails</b>No "guaranteed." No rate before the file. Pitch what the file can support, not what sounds best — the file wins the argument in underwriting, every time.</div>
     </section>
 
     <!-- 03 MCA -->
     <section id="mca">
       <p class="eyebrow">03 — Structure</p>
       <h2>MCA Reality Check</h2>
-      <p class="lead">An MCA advances capital upfront against future receivables, repaid daily or weekly. Walk a real calculation — the figures do the persuading.</p>
+      <p class="lead">An MCA buys your future receivables — money now, paid back from sales daily or weekly. Don't describe it, do the math out loud. The numbers sell it.</p>
+
+      <div class="oc-calc" id="ocCalc" role="group" aria-label="MCA payback calculator">
+        <div class="oc-calc-hd">
+          <span class="oc-calc-title">Live MCA Calc</span>
+          <span class="oc-kbd" aria-hidden="true">updates as you type</span>
+        </div>
+        <div class="oc-calc-inputs">
+          <div class="oc-fld">
+            <label for="ocFunded">Funded</label>
+            <span class="oc-inwrap"><span class="oc-pre">$</span>
+              <input id="ocFunded" type="number" inputmode="decimal" min="0" step="500" value="20000"
+                     aria-label="Funded amount in dollars"></span>
+          </div>
+          <div class="oc-fld">
+            <label for="ocFactor">Factor rate</label>
+            <span class="oc-inwrap">
+              <input id="ocFactor" class="oc-w-sm" type="number" inputmode="decimal" min="1" step="0.01" value="1.40"
+                     aria-label="Factor rate multiplier, not an APR"></span>
+          </div>
+          <div class="oc-fld">
+            <label for="ocTerm">Term (# pmts)</label>
+            <span class="oc-inwrap">
+              <input id="ocTerm" class="oc-w-sm" type="number" inputmode="numeric" min="1" step="1" value="100"
+                     aria-label="Term, number of payments"></span>
+          </div>
+          <div class="oc-fld">
+            <label id="ocFreqLbl">Frequency</label>
+            <span class="oc-toggle" role="group" aria-labelledby="ocFreqLbl">
+              <button type="button" id="ocFreqDaily" aria-pressed="true">Daily</button>
+              <button type="button" id="ocFreqWeekly" aria-pressed="false">Weekly</button>
+            </span>
+          </div>
+        </div>
+        <div class="oc-calc-out">
+          <div class="oc-o"><div class="k">Funded</div><div class="v num" id="ocOutFunded">$20,000</div></div>
+          <div class="oc-o hot"><div class="k">Total payback</div><div class="v num" id="ocOutPayback">$28,000</div></div>
+          <div class="oc-o"><div class="k" id="ocPerKey">Per pmt · daily</div><div class="v num" id="ocOutPer">$280</div><div class="sub" id="ocPerSub">× 100 pmts</div></div>
+          <div class="oc-o hot"><div class="k">Total cost</div><div class="v num" id="ocOutCost">$8,000</div></div>
+        </div>
+        <div class="oc-calc-note">
+          <b>Compliance</b>Factor rate is a fixed multiplier that sets total payback — it is <strong>not</strong> an APR or interest rate. Quote payback &amp; payment, never a rate before the file.
+        </div>
+      </div>
+
       <div class="stat">
         <div class="s"><div class="k">Funded</div><div class="v">$20,000</div></div>
         <div class="s hot"><div class="k">Factor</div><div class="v">1.40</div></div>
@@ -276,6 +554,7 @@
         <div class="s"><div class="k">Daily</div><div class="v">$280</div></div>
       </div>
       <div class="callout c-warn"><b>Non-negotiable</b>A factor rate is not an APR. Never explain it as an interest rate — it's a fixed multiplier that sets the total payback. <span class="mono">$20,000 × 1.40 = $28,000</span>; <span class="mono">÷ 100 = $280</span>/day.</div>
+      <div class="callout c-rule"><b>When MCA's the call</b>Reach for it when he needs speed, has active deposits, and the bank box won't pass — but the daily pull has to fit. If he's got stable cash flow and stronger credit, steer to a Term Loan or Line of Credit; if he owns property and wants it fast, a HELOC.</div>
       <p class="lead" style="margin-top:16px">The five loops every MCA conversation closes — skip one and you create a surprise at funding:</p>
       <table>
         <tbody>
@@ -283,7 +562,7 @@
           <tr><td><b>Total payback</b></td><td>The real obligation — not the funded figure</td></tr>
           <tr><td><b>Payment frequency</b></td><td>Daily/weekly draws shape day-to-day cash flow</td></tr>
           <tr><td><b>Cash-flow fit</b></td><td>An approval still has to be survivable to be a good deal</td></tr>
-          <tr><td><b>No obligation</b></td><td>The merchant reviews the offer before committing</td></tr>
+          <tr><td><b>No obligation</b></td><td>The merchant reviews the full offer before committing</td></tr>
         </tbody>
       </table>
     </section>
@@ -292,7 +571,7 @@
     <section id="triage">
       <p class="eyebrow">04 — Triage</p>
       <h2>Eligibility &amp; Lanes</h2>
-      <p class="lead">You're not underwriting. Your call is narrower: is this file worth pursuing, and which risks have to be on the table before it ships? Needing money and being fundable are not the same thing.</p>
+      <p class="lead">You're not underwriting — you're triaging. The only question right now: is this file worth pursuing, and what risk has to be on the table before it ships? Floor to even start the conversation: <span class="num">$15K+</span>/mo deposits, <span class="num">6+</span> months in business, <span class="num">500+</span> credit. Below that, needing money isn't the same as being fundable.</p>
       <div class="lanes">
         <div class="lane g">
           <div class="hd"><h4>Green</h4><span class="big">PUSH</span></div>
@@ -314,33 +593,34 @@
     <section id="statements">
       <p class="eyebrow">05 — Truth</p>
       <h2>Reading the Bank Statements</h2>
-      <p class="lead">What a merchant says matters far less than what the statements show. Hit the first four in order, then work the full ten.</p>
+      <p class="lead">What a merchant says matters less than what the statements show — so get 4 months and read them. The numbered four below tell most of the story before you touch the detail. Hit them in order, then work the rest.</p>
       <table>
-        <thead><tr><th>Review area</th><th>What good looks like</th><th>Risk signal</th></tr></thead>
+        <thead><tr><th>#</th><th>Review area</th><th>What good looks like</th><th>Risk signal</th></tr></thead>
         <tbody>
-          <tr><td>Statement period</td><td>Recent &amp; complete</td><td>Old, missing, or gapped</td></tr>
-          <tr><td>Business / account name</td><td>Matches the file</td><td>Wrong owner or entity</td></tr>
-          <tr><td>Total monthly deposits</td><td>Real revenue volume</td><td>One-time transfers only</td></tr>
-          <tr><td>Number of deposits</td><td>Active business flow</td><td>Too few deposits</td></tr>
-          <tr><td>Average balance</td><td>An operating cushion</td><td>Constantly near zero</td></tr>
-          <tr><td>Negative days</td><td>Stays above zero</td><td>Repeated / recent negatives</td></tr>
-          <tr><td>NSFs / returned items</td><td>Clean history</td><td>Multiple or recent NSFs</td></tr>
-          <tr><td>Existing ACH pulls</td><td>Single, manageable</td><td>Multiple funders / pressure</td></tr>
-          <tr><td>Large withdrawals</td><td>Explained outflows</td><td>Irregular / unsupported</td></tr>
-          <tr><td>Authenticity</td><td>Consistent format &amp; sequence</td><td>Inconsistent / manipulated</td></tr>
+          <tr><td class="num">1</td><td><b>Total monthly deposits</b></td><td>Real revenue volume</td><td>One-time transfers only</td></tr>
+          <tr><td class="num">2</td><td><b>Average balance</b></td><td>An operating cushion</td><td>Constantly near zero</td></tr>
+          <tr><td class="num">3</td><td><b>NSFs &amp; negative days</b></td><td>Clean, stays above zero</td><td>Repeated or recent hits</td></tr>
+          <tr><td class="num">4</td><td><b>Existing ACH pulls</b></td><td>Single, manageable</td><td>Multiple funders / pressure</td></tr>
+          <tr><td></td><td>Statement period</td><td>Recent &amp; complete</td><td>Old, missing, or gapped</td></tr>
+          <tr><td></td><td>Business / account name</td><td>Matches the file</td><td>Wrong owner or entity</td></tr>
+          <tr><td></td><td>Number of deposits</td><td>Active business flow</td><td>Too few deposits</td></tr>
+          <tr><td></td><td>Negative days (detail)</td><td>Stays above zero</td><td>Repeated / recent negatives</td></tr>
+          <tr><td></td><td>Large withdrawals</td><td>Explained outflows</td><td>Irregular / unsupported</td></tr>
+          <tr><td></td><td>Authenticity</td><td>Consistent format &amp; sequence</td><td>Inconsistent / manipulated</td></tr>
         </tbody>
       </table>
-      <div class="callout c-warn"><b>First four, in order</b>Deposits → balance behavior → NSFs &amp; negative days → existing funder payments. They tell most of the story before the detail.</div>
+      <div class="callout c-warn"><b>First four, in order</b>Deposits → balance behavior → NSFs &amp; negative days → existing funder payments. Read those four and you can lane the file before you ever open the fine print.</div>
     </section>
 
     <!-- 06 FILE -->
     <section id="file">
       <p class="eyebrow">06 — Collect</p>
       <h2>The Minimum File</h2>
-      <p class="lead">A file moves when you collect the core package and the merchant cooperates fast. The core is non-negotiable; conditional items apply when the situation calls for them.</p>
+      <p class="lead">A file moves when the core package is in and the merchant moves fast. The core is non-negotiable. Conditional items only apply when the situation calls for them — don't ask for what you don't need yet.</p>
       <table>
-        <thead><tr><th>Required item</th><th>Why it's needed</th></tr></thead>
+        <thead><tr><th>Item</th><th>Why it's needed</th></tr></thead>
         <tbody>
+          <tr><td colspan="2"><b>Core — non-negotiable</b></td></tr>
           <tr><td>Completed application</td><td>Opens the formal review</td></tr>
           <tr><td>Owner legal name + ID</td><td>Identity verification</td></tr>
           <tr><td>Business name / DBA · EIN</td><td>Entity &amp; tax verification</td></tr>
@@ -348,11 +628,14 @@
           <tr><td><b>3–4 months bank statements</b></td><td>Revenue &amp; cash-flow review</td></tr>
           <tr><td>Voided check</td><td>Verifies funding/payment account</td></tr>
           <tr><td>Current loan / MCA balances</td><td>Existing-obligation review</td></tr>
+          <tr><td colspan="2"><b>Conditional — only when it applies</b></td></tr>
           <tr><td>Payoff letters <em style="color:var(--ink-3)">(if refinancing)</em></td><td>Confirms balances to be paid</td></tr>
           <tr><td>Processing stmts / bank login <em style="color:var(--ink-3)">(if requested)</em></td><td>Card-sales / real-time verification</td></tr>
+          <tr><td>Tax returns <em style="color:var(--ink-3)">(bank-funded only)</em></td><td>Income proof for SBA / bank products</td></tr>
         </tbody>
       </table>
-      <div class="callout c-good"><b>Tax returns</b>Only for bank-funded products (e.g., SBA). Not required for an MCA. Confirm bank vs. non-bank before you ever ask.</div>
+      <div class="callout c-good"><b>Tax returns</b>Only for bank-funded products like SBA — never for an MCA. Confirm bank vs. non-bank before you ask, or you'll spook a merchant over a doc you don't even need.</div>
+      <p class="lead" style="margin-top:18px">First text, keep it light: <b>4 months of bank statements + the application</b>. That's enough to start and lane the file — chase ID, voided check, and balances once they're moving.</p>
     </section>
 
     <!-- 07 PIPELINE -->
@@ -374,7 +657,7 @@
         <div class="step"><span class="n">11</span><span class="t">Funding</span><span class="d">Confirm the wire</span></div>
         <div class="step"><span class="n">12</span><span class="t">Follow-Up</span><span class="d">Build the renewal</span></div>
       </div>
-      <p class="lead" style="margin-top:18px">Nine discovery questions surface everything you need to lane a file:</p>
+      <p class="lead" style="margin-top:18px">Nine questions in discovery surface everything you need to lane the file:</p>
       <table>
         <thead><tr><th>#</th><th>Ask</th><th>What it reveals</th></tr></thead>
         <tbody>
@@ -396,19 +679,19 @@
     <section id="objections">
       <p class="eyebrow">08 — Defense</p>
       <h2>Objections, Deal Killers &amp; Compliance</h2>
-      <p class="lead">You're not overcoming resistance with pressure — you're reframing toward what the file can do. Acknowledge → clarify → reframe.</p>
+      <p class="lead">You don't beat resistance with pressure — you reframe toward what the file can do. Acknowledge → clarify → reframe, every time. Top rows are the ones you'll hear most; scan down for the rest.</p>
       <table>
         <thead><tr><th>Objection</th><th>Your reframe</th></tr></thead>
         <tbody>
-          <tr><td>"What's your rate?"</td><td>"I won't make a number up to keep you on the phone. The statements set the rate. Send them and I'll quote you real, today."</td></tr>
+          <tr><td>"What's your rate?"</td><td>"Smart question — and I won't make a number up to keep you on the phone. The statements set the rate. Send them and I'll quote you real, today."</td></tr>
+          <tr><td>"Not interested."</td><td>"Fair. Real quick — is it timing, or you just don't see the need right now?" <em>(then reframe whichever he says)</em></td></tr>
+          <tr><td>"Too expensive."</td><td>"Compared to what? If the money makes you more than it costs, the price answers itself. So what would you do with it if you had it?"</td></tr>
+          <tr><td>"Bad credit."</td><td>"That's fine, honestly. The revenue does the heavy lifting here, not the score. Let's pull the statements and see what's there."</td></tr>
+          <tr><td>"I already have funding."</td><td>"Who's the funder, what's the balance, how are the payments structured? If the file supports it, we may free up your cash flow."</td></tr>
           <tr><td>"I don't need funding."</td><td>"Best time to look at options is before cash flow gets tight. If the numbers don't make sense, there's no obligation."</td></tr>
-          <tr><td>"I already have funding."</td><td>"Who's the funder, what's the balance, how are payments structured? If the file supports it, we may improve your cash flow."</td></tr>
-          <tr><td>"I have bad credit."</td><td>"That's fine — the revenue does the heavy lifting here, not the score. Let's pull the statements and see."</td></tr>
-          <tr><td>"It's too expensive."</td><td>"Compared to what? If the money makes you more than it costs, the price answers itself. So what would you do with it?"</td></tr>
-          <tr><td>"Not interested."</td><td>"Understood — would it help to know what's there before you actually need the capital?"</td></tr>
         </tbody>
       </table>
-      <p class="lead" style="margin-top:20px">Deal killers — catch them early or they surface at the worst moment:</p>
+      <p class="lead" style="margin-top:20px">Deal killers — catch them early or they surface at the worst possible moment:</p>
       <table>
         <thead><tr><th>Issue</th><th>Your move</th></tr></thead>
         <tbody>
@@ -416,9 +699,9 @@
           <tr><td>New funding mid-underwriting</td><td>Warn the merchant early</td></tr>
           <tr><td>Negative balance at funding</td><td>Monitor before close</td></tr>
           <tr><td>Sharp deposit drop</td><td>Request MTD transactions</td></tr>
-          <tr><td>Liens / judgments · prior default</td><td>Disclose early / immediately</td></tr>
+          <tr><td>Liens / judgments · prior default</td><td>Disclose early</td></tr>
           <tr><td>Refuses bank verification</td><td>Set the expectation up front</td></tr>
-          <tr><td>Another broker submits · stops responding</td><td>Move quickly, set deadlines &amp; cadence</td></tr>
+          <tr><td>Another broker submits · stops responding</td><td>Move fast, set deadlines &amp; cadence</td></tr>
         </tbody>
       </table>
       <p class="lead" style="margin-top:20px">Compliance language — how you say it is a compliance matter, not a style choice:</p>
@@ -437,31 +720,31 @@
     <section id="followups">
       <p class="eyebrow">09 — Chase</p>
       <h2>Follow-Ups</h2>
-      <p class="lead">Get the four months in, or get a callback. Never claim an offer before you've seen a file.</p>
+      <p class="lead">Get the four months in, or get a callback. Never promise an offer before you've seen a file.</p>
       <div class="fu">
         <div class="card"><h4>After a strong call</h4>
-          <p class="tmpl"><b>Recap + ask · SMS</b>"Hey [Name], Ness from FinBiz — good talking. Send 4 months of business bank statements and I'll build your offer and come back with real numbers. No obligation."</p>
-          <p class="tmpl"><b>Same-day nudge · SMS</b>"[Name] — still got you on my list today. Fire over those 4 months and I'll get to work tonight."</p>
+          <p class="tmpl"><b>Recap + ask · SMS</b>"Hey [Name], Ness from FinBiz — good talking just now. Send me 4 months of business bank statements and I'll come back with real numbers. No obligation either way."</p>
+          <p class="tmpl"><b>Same-day nudge · SMS</b>"[Name] — still got you on my list for today. Shoot those 4 months over whenever and I'll get into it tonight."</p>
         </div>
         <div class="card"><h4>Went quiet</h4>
-          <p class="tmpl"><b>Soft bump · SMS</b>"[Name], didn't hear back — no rush. Just don't want to leave money on the table. Still want me to put options together?"</p>
-          <p class="tmpl"><b>Door-open · SMS</b>"All good if timing's off. When you're ready to look at capital I'm one text away. Check back end of week?"</p>
+          <p class="tmpl"><b>Soft bump · SMS</b>"[Name], haven't heard back — no worries. Just don't want you leaving money on the table. Want me to put a couple options together or nah?"</p>
+          <p class="tmpl"><b>Door-open · SMS</b>"All good if the timing's off right now. Whenever you wanna look at capital I'm one text away. Cool if I check back end of week?"</p>
         </div>
         <div class="card"><h4>Already funded</h4>
-          <p class="tmpl"><b>Back pocket · SMS</b>"Glad you're handled. Keep my number — the day payments feel tight or you're ready for more, I can probably do better."</p>
-          <p class="tmpl"><b>Halfway check-in · SMS</b>"Figured you might be near halfway paid. That's usually when a top-up at better terms makes sense. Want me to look?"</p>
+          <p class="tmpl"><b>Back pocket · SMS</b>"Glad you're sorted, [Name]. Keep my number though — day the payments start feeling tight, or you want more, I can probably do better."</p>
+          <p class="tmpl"><b>Halfway check-in · SMS</b>"Hey [Name] — figure you're getting close to halfway paid down. That's usually the sweet spot for a top-up at better terms. Want me to take a look?"</p>
         </div>
         <div class="card"><h4>Light / not yet</h4>
-          <p class="tmpl"><b>Honest hold · SMS</b>"Numbers are a little light for the best products today — but I'm not writing you off. Couple stronger months and let's revisit."</p>
-          <p class="tmpl"><b>Circle-back · SMS</b>"Checking in like I said. How's revenue looking now? If it firmed up, let's pull statements and get you funded."</p>
+          <p class="tmpl"><b>Honest hold · SMS</b>"[Name], numbers are a touch light for the good stuff today — but I'm not writing you off. Get me a couple stronger months and let's run it back."</p>
+          <p class="tmpl"><b>Circle-back · SMS</b>"Circling back like I said I would. How's revenue looking lately? If it's firmed up, let's pull statements and get you funded."</p>
         </div>
         <div class="card"><h4>Offer on the table</h4>
-          <p class="tmpl"><b>Walk-through · SMS</b>"Your numbers are ready. 5 minutes to walk the offer and total payback so you can decide? Today or tomorrow?"</p>
-          <p class="tmpl"><b>Decision nudge · SMS</b>"Offer's still good. No pressure — but the sooner we sign, the sooner it's in your account. Anything holding you up?"</p>
+          <p class="tmpl"><b>Walk-through · SMS</b>"[Name], your numbers are ready. Got 5 min to walk the offer and the total payback so you can actually decide? Today or tomorrow work?"</p>
+          <p class="tmpl"><b>Decision nudge · SMS</b>"Offer's still good, [Name]. No pressure — but sooner we sign, sooner it's in your account. Anything in the way I can clear up?"</p>
         </div>
         <div class="card"><h4>Funded — renewal + referral</h4>
-          <p class="tmpl"><b>Renewal watch · SMS</b>"Hope the funds did the job. Around halfway paid, you're eligible for fresh capital at better terms. Want me to flag you?"</p>
-          <p class="tmpl"><b>Referral ask · SMS</b>"Glad this worked out. Know another owner who could use capital? Send them my way — I'll take care of them."</p>
+          <p class="tmpl"><b>Renewal watch · SMS</b>"Hope that capital did the job, [Name]. Around halfway paid you're eligible for fresh funds at better terms — want me to flag you when you hit it?"</p>
+          <p class="tmpl"><b>Referral ask · SMS</b>"Glad this one worked out. Know another owner who could use capital? Send 'em my way, I'll take good care of them."</p>
         </div>
       </div>
     </section>
@@ -470,7 +753,7 @@
     <section id="qa">
       <p class="eyebrow">10 — Pre-flight</p>
       <h2>Final QA Before Submission</h2>
-      <p class="lead">A file passes only when all four blocks are clean. Never submit a file you can't explain.</p>
+      <p class="lead">A file's only clean when all four blocks check out. If you can't explain it, don't send it.</p>
       <table>
         <thead><tr><th>Block</th><th>Every box checked</th></tr></thead>
         <tbody>
@@ -485,6 +768,52 @@
     </section>
 
     </div>
+
+    <!-- operator console: notes scratchpad + call timer -->
+    <div class="oc-dock">
+      <button class="oc-fab" id="ocDockBtn" type="button" aria-expanded="false" aria-controls="ocDrawer"
+              title="Call notes & timer">
+        Call notes <span class="oc-timer-read num" id="ocFabClock">0:00</span>
+      </button>
+    </div>
+
+    <aside class="oc-drawer" id="ocDrawer" role="dialog" aria-modal="false" aria-label="Call notes and timer" aria-hidden="true">
+      <div class="oc-drawer-hd">
+        <h3>Call Notes</h3>
+        <button class="oc-drawer-close" id="ocDrawerClose" type="button" aria-label="Close notes drawer">&times;</button>
+      </div>
+
+      <div class="oc-timerbar">
+        <span class="oc-clock num" id="ocClock" aria-live="off">0:00</span>
+        <button class="oc-mini" id="ocTimerToggle" type="button">Start</button>
+        <button class="oc-mini" id="ocTimerReset" type="button">Reset</button>
+        <span class="oc-five">honor the “five minutes”</span>
+      </div>
+
+      <div class="oc-notes">
+        <div class="oc-nf"><label for="ocN_name">Name / business</label>
+          <input id="ocN_name" type="text" autocomplete="off" data-note="name"></div>
+        <div class="oc-nf"><label>Monthly revenue · Time in biz</label>
+          <div class="oc-inline">
+            <input id="ocN_rev" type="text" autocomplete="off" placeholder="$ / mo" aria-label="Monthly revenue" data-note="rev">
+            <input id="ocN_tib" type="text" autocomplete="off" placeholder="months" aria-label="Time in business" data-note="tib">
+          </div></div>
+        <div class="oc-nf"><label for="ocN_dream">“If money wasn’t the bottleneck…”</label>
+          <textarea id="ocN_dream" data-note="dream"></textarea></div>
+        <div class="oc-nf"><label for="ocN_pain">The pain (what's holding them back)</label>
+          <textarea id="ocN_pain" data-note="pain"></textarea></div>
+        <div class="oc-nf"><label for="ocN_next">Next step / commitment</label>
+          <textarea id="ocN_next" data-note="next"></textarea></div>
+        <div class="oc-nf"><label for="ocN_misc">Scratch</label>
+          <textarea id="ocN_misc" data-note="misc"></textarea></div>
+      </div>
+
+      <div class="oc-drawer-ft">
+        <span class="oc-saved" id="ocSaved" aria-live="polite"></span>
+        <button class="oc-btn" id="ocNotesCopy" type="button">Copy</button>
+        <button class="oc-btn oc-danger" id="ocNotesClear" type="button">Clear</button>
+      </div>
+    </aside>
   </main>
 </div>
 
@@ -502,6 +831,322 @@
       });
     }, {rootMargin:'-15% 0px -75% 0px'});
     document.querySelectorAll('section').forEach(function(s){ obs.observe(s); });
+  })();
+
+  /* ============================================================
+     OPERATOR CONSOLE IIFE — coexists with the scroll-spy IIFE.
+     No globals; does not touch links/map/obs.
+     ============================================================ */
+  (function(){
+    "use strict";
+    var d = document;
+    var $ = function(id){ return d.getElementById(id); };
+    var hasStore = (function(){ try{ var k="__oc"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return true; }catch(e){ return false; } })();
+    function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+    function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+    function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+    /* 1. SECTION COLLAPSE (inject buttons into each h2) */
+    var sections = [].slice.call(d.querySelectorAll('.body-wrap section'));
+    sections.forEach(function(sec){
+      var h2 = sec.querySelector('h2');
+      if(!h2) return;
+      var btn = d.createElement('button');
+      btn.className = 'oc-coll';
+      btn.type = 'button';
+      btn.setAttribute('aria-expanded','true');
+      btn.title = 'Collapse section';
+      btn.textContent = '–';
+      btn.addEventListener('click', function(){ toggleSection(sec, btn); });
+      h2.appendChild(btn);
+    });
+    function toggleSection(sec, btn){
+      var collapsed = sec.classList.toggle('oc-collapsed');
+      btn.textContent = collapsed ? '+' : '–';
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      btn.title = collapsed ? 'Expand section' : 'Collapse section';
+    }
+    var collapseAllBtn = $('ocCollapseAll');
+    if(collapseAllBtn){
+      collapseAllBtn.addEventListener('click', function(){
+        var anyOpen = sections.some(function(s){ return !s.classList.contains('oc-collapsed'); });
+        sections.forEach(function(sec){
+          var btn = sec.querySelector('.oc-coll'); if(!btn) return;
+          var isCollapsed = sec.classList.contains('oc-collapsed');
+          if(anyOpen && !isCollapsed) toggleSection(sec, btn);
+          else if(!anyOpen && isCollapsed) toggleSection(sec, btn);
+        });
+        collapseAllBtn.textContent = anyOpen ? 'Expand all' : 'Collapse all';
+      });
+    }
+
+    /* 2. BIG-READ TOGGLE (persisted) */
+    var bigBtn = $('ocBigRead');
+    function applyBig(on){
+      d.body.classList.toggle('oc-bigread', on);
+      if(bigBtn){ bigBtn.setAttribute('aria-pressed', String(on)); }
+    }
+    if(bigBtn){
+      applyBig(lsGet('oc.bigread') === '1');
+      bigBtn.addEventListener('click', function(){
+        var on = !d.body.classList.contains('oc-bigread');
+        applyBig(on); lsSet('oc.bigread', on ? '1' : '0');
+      });
+    }
+
+    /* 3. SEARCH / FILTER / HIGHLIGHT */
+    var input = $('ocSearch'), countEl = $('ocCount'), clearBtn = $('ocClear');
+    var TARGET_SEL = '.say,.cue,td,th,.callout,.card > strong,.lane li,.compgrid div,.tag,.step .t,.step .d,.tmpl';
+    var targets = [].slice.call(d.querySelectorAll('.body-wrap ' + TARGET_SEL));
+    targets.forEach(function(el){ el.setAttribute('data-oc-orig', el.innerHTML); });
+    var hits = [];
+    var curHit = -1;
+
+    function esc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+    function clearMarks(){
+      targets.forEach(function(el){
+        if(el.querySelector('mark.oc-hit')) el.innerHTML = el.getAttribute('data-oc-orig');
+      });
+    }
+    function runSearch(q){
+      q = (q||'').trim();
+      clearMarks();
+      hits = []; curHit = -1;
+      d.querySelectorAll('.beat.oc-match').forEach(function(b){ b.classList.remove('oc-match'); });
+      d.querySelectorAll('tr.oc-row-dim').forEach(function(r){ r.classList.remove('oc-row-dim'); });
+
+      if(q.length < 2){
+        d.body.classList.remove('oc-searching');
+        if(countEl) countEl.textContent = '';
+        if(clearBtn) clearBtn.hidden = (q.length === 0);
+        return;
+      }
+      var re = new RegExp('('+esc(q)+')','ig');
+      var matchCount = 0;
+      targets.forEach(function(el){
+        var orig = el.getAttribute('data-oc-orig');
+        if(!re.test(orig)) return;
+        re.lastIndex = 0;
+        highlightTextNodes(el, q);
+        var marks = el.querySelectorAll('mark.oc-hit');
+        if(marks.length){
+          matchCount += marks.length;
+          var beat = el.closest('.beat'); if(beat) beat.classList.add('oc-match');
+          for(var i=0;i<marks.length;i++) hits.push(marks[i]);
+        }
+      });
+      d.querySelectorAll('.body-wrap tbody tr').forEach(function(tr){
+        if(!tr.querySelector('mark.oc-hit')) tr.classList.add('oc-row-dim');
+      });
+      d.body.classList.add('oc-searching');
+      if(countEl) countEl.textContent = matchCount ? (matchCount + (matchCount===1?' hit':' hits')) : 'no match';
+      if(clearBtn) clearBtn.hidden = false;
+    }
+    function highlightTextNodes(root, q){
+      var ql = q.toLowerCase();
+      var walker = d.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      var nodes = [], n;
+      while((n = walker.nextNode())) nodes.push(n);
+      nodes.forEach(function(node){
+        var text = node.nodeValue, low = text.toLowerCase(), idx = low.indexOf(ql);
+        if(idx === -1) return;
+        var frag = d.createDocumentFragment(), last = 0;
+        while(idx !== -1){
+          if(idx > last) frag.appendChild(d.createTextNode(text.slice(last, idx)));
+          var mk = d.createElement('mark'); mk.className = 'oc-hit';
+          mk.textContent = text.slice(idx, idx + q.length);
+          frag.appendChild(mk);
+          last = idx + q.length;
+          idx = low.indexOf(ql, last);
+        }
+        if(last < text.length) frag.appendChild(d.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    function gotoHit(i){
+      if(!hits.length) return;
+      if(curHit >= 0 && hits[curHit]) hits[curHit].classList.remove('oc-hit-cur');
+      curHit = ((i % hits.length) + hits.length) % hits.length;
+      var el = hits[curHit];
+      el.classList.add('oc-hit-cur');
+      var sec = el.closest('section.oc-collapsed');
+      if(sec){ var b = sec.querySelector('.oc-coll'); if(b) toggleSection(sec, b); }
+      el.scrollIntoView({block:'center', behavior: prefersReduced() ? 'auto':'smooth'});
+    }
+    function prefersReduced(){
+      return window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    }
+    function resetSearch(){
+      if(input) input.value = '';
+      runSearch('');
+      if(input) input.focus();
+    }
+    if(input){
+      var t;
+      input.addEventListener('input', function(){
+        clearTimeout(t);
+        t = setTimeout(function(){ runSearch(input.value); }, 90);
+      });
+      input.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); gotoHit(e.shiftKey ? curHit - 1 : curHit + 1); }
+        else if(e.key === 'Escape'){ e.preventDefault(); resetSearch(); }
+      });
+    }
+    if(clearBtn) clearBtn.addEventListener('click', resetSearch);
+
+    /* 4. MCA CALCULATOR */
+    var elFunded = $('ocFunded'), elFactor = $('ocFactor'), elTerm = $('ocTerm');
+    var oFunded = $('ocOutFunded'), oPayback = $('ocOutPayback'), oPer = $('ocOutPer'),
+        oCost = $('ocOutCost'), perKey = $('ocPerKey'), perSub = $('ocPerSub');
+    var freqDaily = $('ocFreqDaily'), freqWeekly = $('ocFreqWeekly');
+    var freq = 'Daily';
+    var usd0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+    var usd2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2});
+    function num(el, fb){ var v = parseFloat(el && el.value); return isFinite(v) ? v : fb; }
+    function recalc(){
+      if(!elFunded) return;
+      var funded = Math.max(0, num(elFunded, 0));
+      var factor = Math.max(0, num(elFactor, 0));
+      var term   = Math.max(1, Math.round(num(elTerm, 1)));
+      var payback = funded * factor;
+      var per = payback / term;
+      var cost = payback - funded;
+      oFunded.textContent  = usd0.format(funded);
+      oPayback.textContent = usd0.format(payback);
+      oPer.textContent     = (per < 1000 && per % 1 !== 0) ? usd2.format(per) : usd0.format(per);
+      oCost.textContent    = usd0.format(cost);
+      if(perKey) perKey.textContent = 'Per pmt · ' + freq.toLowerCase();
+      if(perSub) perSub.textContent = '× ' + term + ' pmts';
+    }
+    function setFreq(f){
+      freq = f;
+      if(freqDaily)  freqDaily.setAttribute('aria-pressed', String(f === 'Daily'));
+      if(freqWeekly) freqWeekly.setAttribute('aria-pressed', String(f === 'Weekly'));
+      recalc();
+    }
+    [elFunded, elFactor, elTerm].forEach(function(el){ if(el) el.addEventListener('input', recalc); });
+    if(freqDaily)  freqDaily.addEventListener('click', function(){ setFreq('Daily'); });
+    if(freqWeekly) freqWeekly.addEventListener('click', function(){ setFreq('Weekly'); });
+    recalc();
+
+    /* 5. NOTES SCRATCHPAD + DRAWER + TIMER */
+    var drawer = $('ocDrawer'), dockBtn = $('ocDockBtn'), closeBtn = $('ocDrawerClose');
+    var noteEls = [].slice.call(d.querySelectorAll('[data-note]'));
+    var savedEl = $('ocSaved');
+    var NK = 'oc.notes.v1';
+
+    function loadNotes(){
+      if(!hasStore) return;
+      var raw = lsGet(NK); if(!raw) return;
+      var data; try{ data = JSON.parse(raw); }catch(e){ return; }
+      noteEls.forEach(function(el){ var k = el.getAttribute('data-note'); if(data[k] != null) el.value = data[k]; });
+    }
+    var saveT;
+    function saveNotes(){
+      if(!hasStore) return;
+      var data = {};
+      noteEls.forEach(function(el){ data[el.getAttribute('data-note')] = el.value; });
+      lsSet(NK, JSON.stringify(data));
+      if(savedEl){ savedEl.textContent = 'saved'; clearTimeout(saveT); saveT = setTimeout(function(){ savedEl.textContent=''; }, 1200); }
+    }
+    noteEls.forEach(function(el){ el.addEventListener('input', function(){ clearTimeout(saveT); saveT = setTimeout(saveNotes, 250); }); });
+    loadNotes();
+
+    function openDrawer(){
+      if(!drawer) return;
+      drawer.classList.add('oc-open');
+      drawer.setAttribute('aria-hidden','false');
+      if(dockBtn){ dockBtn.setAttribute('aria-expanded','true'); }
+      var first = $('ocN_name'); if(first) first.focus();
+    }
+    function closeDrawer(){
+      if(!drawer) return;
+      drawer.classList.remove('oc-open');
+      drawer.setAttribute('aria-hidden','true');
+      if(dockBtn){ dockBtn.setAttribute('aria-expanded','false'); dockBtn.focus(); }
+    }
+    if(dockBtn) dockBtn.addEventListener('click', function(){
+      if(drawer.classList.contains('oc-open')) closeDrawer(); else openDrawer();
+    });
+    if(closeBtn) closeBtn.addEventListener('click', closeDrawer);
+
+    var copyBtn = $('ocNotesCopy');
+    function notesText(){
+      var L = {name:'Name/Biz', rev:'Monthly rev', tib:'Time in biz', dream:'If money wasn’t the bottleneck', pain:'Pain', next:'Next step', misc:'Notes'};
+      var order = ['name','rev','tib','dream','pain','next','misc'];
+      var out = ['FinBiz call notes — ' + new Date().toLocaleString()];
+      order.forEach(function(k){
+        var el = d.querySelector('[data-note="'+k+'"]');
+        if(el && el.value.trim()) out.push(L[k] + ': ' + el.value.trim());
+      });
+      return out.join('\n');
+    }
+    if(copyBtn) copyBtn.addEventListener('click', function(){
+      var txt = notesText();
+      var done = function(){ var o = copyBtn.textContent; copyBtn.textContent = 'Copied'; setTimeout(function(){ copyBtn.textContent = o; }, 1100); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(done, fallbackCopy);
+      } else fallbackCopy();
+      function fallbackCopy(){
+        var ta = d.createElement('textarea'); ta.value = txt;
+        ta.style.position='fixed'; ta.style.opacity='0'; d.body.appendChild(ta); ta.focus(); ta.select();
+        try{ d.execCommand('copy'); done(); }catch(e){} d.body.removeChild(ta);
+      }
+    });
+
+    var clearNotesBtn = $('ocNotesClear');
+    if(clearNotesBtn) clearNotesBtn.addEventListener('click', function(){
+      if(!window.confirm('Clear all call notes? This cannot be undone.')) return;
+      noteEls.forEach(function(el){ el.value = ''; });
+      lsDel(NK);
+      if(savedEl){ savedEl.textContent = 'cleared'; setTimeout(function(){ savedEl.textContent=''; }, 1200); }
+      var first = $('ocN_name'); if(first) first.focus();
+    });
+
+    var clockEl = $('ocClock'), fabClock = $('ocFabClock'), tToggle = $('ocTimerToggle'), tReset = $('ocTimerReset');
+    var startTs = 0, elapsedMs = 0, timerInt = null;
+    function fmt(ms){
+      var s = Math.floor(ms/1000), m = Math.floor(s/60); s = s % 60;
+      return m + ':' + (s < 10 ? '0'+s : s);
+    }
+    function paintClock(){
+      var ms = elapsedMs + (startTs ? (Date.now() - startTs) : 0);
+      var txt = fmt(ms);
+      if(clockEl) clockEl.textContent = txt;
+      if(fabClock) fabClock.textContent = txt;
+    }
+    function startTimer(){
+      if(startTs) return;
+      startTs = Date.now();
+      if(clockEl) clockEl.classList.add('oc-run');
+      if(tToggle) tToggle.textContent = 'Stop';
+      timerInt = setInterval(paintClock, 500);
+    }
+    function stopTimer(){
+      if(!startTs) return;
+      elapsedMs += Date.now() - startTs; startTs = 0;
+      if(clockEl) clockEl.classList.remove('oc-run');
+      if(tToggle) tToggle.textContent = 'Start';
+      clearInterval(timerInt); timerInt = null; paintClock();
+    }
+    if(tToggle) tToggle.addEventListener('click', function(){ startTs ? stopTimer() : startTimer(); });
+    if(tReset) tReset.addEventListener('click', function(){
+      stopTimer(); elapsedMs = 0; paintClock();
+    });
+    paintClock();
+
+    /* 6. GLOBAL KEYBOARD SHORTCUTS */
+    d.addEventListener('keydown', function(e){
+      var tag = (e.target && e.target.tagName) || '';
+      var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(tag) || (e.target && e.target.isContentEditable);
+      if(e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey){
+        e.preventDefault(); if(input){ input.focus(); input.select(); }
+        return;
+      }
+      if(e.key === 'Escape' && drawer && drawer.classList.contains('oc-open') && !(e.target === input)){
+        closeDrawer();
+      }
+    });
   })();
 </script>
 </body>
