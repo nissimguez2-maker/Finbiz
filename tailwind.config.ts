@@ -50,6 +50,8 @@ const config: Config = {
         xl: "0 20px 25px rgba(0,0,0,0.1)",
         accent: "0 4px 14px rgba(0,82,255,0.25)",
         "accent-lg": "0 8px 24px rgba(0,82,255,0.35)",
+        // soft, accent-tinted layered lift for floating hero cards
+        "accent-soft": "0 12px 32px -8px rgba(0,82,255,0.22), 0 2px 8px rgba(15,23,42,0.06)",
       },
       backgroundImage: {
         "accent-gradient": "linear-gradient(to right, var(--accent), var(--accent-secondary))",
@@ -76,13 +78,32 @@ const config: Config = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
         },
+        // counter-rotation so an inner ring spins opposite the outer dashed ring
+        "spin-reverse": {
+          from: { transform: "rotate(360deg)" },
+          to: { transform: "rotate(0deg)" },
+        },
+        // gentle lateral+vertical drift for a secondary floating card
+        drift: {
+          "0%, 100%": { transform: "translate(0px, 0px)" },
+          "50%": { transform: "translate(6px, -8px)" },
+        },
+        // slow breathing opacity for radial accent glows
+        "glow-pulse": {
+          "0%, 100%": { opacity: "0.5" },
+          "50%": { opacity: "0.85" },
+        },
       },
       animation: {
         "fade-in-up": "fade-in-up 0.7s cubic-bezier(0.16,1,0.3,1) both",
         float: "float 5s ease-in-out infinite",
         "float-slow": "float 4s ease-in-out infinite",
+        "float-slower": "float 7s ease-in-out infinite",
+        drift: "drift 9s ease-in-out infinite",
         "pulse-dot": "pulse-dot 2s ease-in-out infinite",
         "spin-slow": "spin-slow 60s linear infinite",
+        "spin-reverse": "spin-reverse 45s linear infinite",
+        "glow-pulse": "glow-pulse 6s ease-in-out infinite",
       },
     },
   },

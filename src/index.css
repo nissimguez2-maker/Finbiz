@@ -73,6 +73,23 @@
     opacity: 0.03;
   }
 
+  /* Brighter dot-grid for the inverted "floor" band — reads as deliberate texture */
+  .dot-texture-bold {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.9) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.06;
+  }
+
+  /* Signature radial accent glow — a soft Electric-Blue bloom for hero/inverted */
+  .radial-glow {
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 82, 255, 0.22) 0%,
+      rgba(77, 124, 255, 0.1) 40%,
+      transparent 70%
+    );
+  }
+
   /* Focus ring helper matching the accent aesthetic */
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring;
