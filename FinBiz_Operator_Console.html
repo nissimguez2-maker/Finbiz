@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinBiz SDR — Operator Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#171E26; --ink-2:#404B59; --ink-3:#6B7686;
+    --paper:#EDEAE2; --rail:#E6E2D8; --card:#FBFAF6; --line:#D9D4C8; --line-2:#E7E3D8;
+    --brass:#9A7626; --brass-bright:#B5903A; --brass-tint:#EBDFC4;
+    --go:#2C6A52; --go-tint:#DDEAE2;
+    --amber:#9E751F; --amber-tint:#EFE6CD;
+    --clay:#A23F36; --clay-tint:#EEDAD5;
+    --blue:#2C5A86; --blue-tint:#DCE6F0; --teal:#1F6E60; --teal-tint:#D7E8E3; --slate:#5F6B7A; --slate-tint:#E2E4E2;
+    --display:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    --body:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55;font-size:14px;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  .num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+  .shell{display:grid;grid-template-columns:248px 1fr;max-width:1280px;margin:0 auto;min-height:100vh}
+
+  /* ---- index rail ---- */
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;background:var(--rail);
+      border-right:1px solid var(--line);padding:26px 0}
+  .brand{padding:0 22px 18px;border-bottom:1px solid var(--line);margin-bottom:10px}
+  .brand .name{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;line-height:1.05;margin:0}
+  .brand .name .mk{color:var(--brass)}
+  .brand .kick{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-top:7px}
+  nav a{display:flex;align-items:baseline;gap:11px;text-decoration:none;color:var(--ink-2);
+        padding:8px 22px;border-left:3px solid transparent;font-size:13.5px;letter-spacing:.01em}
+  nav a .n{font-family:var(--mono);font-size:11px;color:var(--ink-3);min-width:18px;font-weight:600}
+  nav a:hover{color:var(--ink);background:rgba(0,0,0,.025)}
+  nav a.active{color:var(--ink);border-left-color:var(--brass);background:rgba(154,118,38,.07);font-weight:600}
+  nav a.active .n{color:var(--brass)}
+  .eyes{margin:16px 22px 0;padding-top:14px;border-top:1px solid var(--line);
+        font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--ink-3);letter-spacing:.01em}
+
+  /* ---- main ---- */
+  main{padding:0}
+  .masthead{padding:40px 48px 26px;border-bottom:1px solid var(--line)}
+  .masthead h1{font-family:var(--display);font-weight:700;font-size:33px;letter-spacing:-.02em;margin:0;line-height:1}
+  .masthead .tagline{color:var(--ink-2);font-size:14px;margin:11px 0 0;max-width:60ch}
+  .ticker{display:flex;flex-wrap:wrap;gap:0;margin-top:22px;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card)}
+  .ticker .t{flex:1;min-width:120px;padding:11px 16px;border-right:1px solid var(--line-2)}
+  .ticker .t:last-child{border-right:none}
+  .ticker .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+  .ticker .v{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums}
+  .ticker .v small{font-size:11px;color:var(--ink-3);font-weight:500}
+
+  .body-wrap{padding:30px 48px 90px;max-width:940px}
+  section{scroll-margin-top:14px;margin-bottom:46px}
+  .eyebrow{font-family:var(--mono);font-size:11px;color:var(--brass);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+  h2{font-family:var(--display);font-size:25px;font-weight:700;letter-spacing:-.02em;margin:5px 0 5px}
+  .lead{color:var(--ink-2);font-size:14px;margin:0 0 18px;max-width:70ch}
+
+  /* tables */
+  table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);
+        border:1px solid var(--line);border-radius:11px;overflow:hidden;font-size:13px;margin:2px 0}
+  th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--line-2);vertical-align:top}
+  thead th, tr:first-child th{background:#F3F0E8;font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+       text-transform:uppercase;color:var(--ink-3);font-weight:600}
+  tr:last-child td{border-bottom:none}
+  td b{font-weight:600}
+
+  /* tags */
+  .tag{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.06em;
+       text-transform:uppercase;padding:3px 9px;border-radius:5px;border:1px solid transparent;white-space:nowrap}
+  .t-gold{background:var(--brass-tint);color:#735718;border-color:#DFCB9B}
+  .t-blue{background:var(--blue-tint);color:#234C72} .t-teal{background:var(--teal-tint);color:#185A4F}
+  .t-slate{background:var(--slate-tint);color:#4C5663}
+
+  /* call beats */
+  .beat{position:relative;padding:2px 0 2px 20px;margin-bottom:18px}
+  .beat::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:3px;border-radius:3px;background:var(--brass)}
+  .beat h4{margin:0 0 8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+  .say{display:block;font-size:15.5px;line-height:1.5;margin:7px 0;color:var(--ink);font-weight:450}
+  .say::before{content:"“";color:var(--brass);font-weight:700;margin-right:1px}
+  .say::after{content:"”";color:var(--brass);font-weight:700}
+  .cue{display:block;font-size:12.5px;color:var(--ink-3);margin-top:6px}
+  .cue::before{content:"→ ";color:var(--brass)}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:17px 19px;margin-bottom:13px}
+  .card > strong{font-family:var(--display);font-size:14px;letter-spacing:-.01em;display:block;margin-bottom:6px}
+
+  /* hero stat block (signature) */
+  .stat{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+        border-radius:11px;overflow:hidden;margin:4px 0 12px}
+  .stat .s{background:var(--card);padding:15px 16px}
+  .stat .s .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .stat .s .v{font-family:var(--mono);font-size:24px;font-weight:600;color:var(--ink);margin-top:5px;line-height:1;font-variant-numeric:tabular-nums}
+  .stat .s.hot .v{color:var(--brass)}
+
+  /* callouts */
+  .callout{border-radius:9px;padding:12px 16px;font-size:13.5px;margin:13px 0;border:1px solid transparent}
+  .callout b{font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;font-size:10px;display:block;margin-bottom:4px}
+  .c-rule{background:var(--brass-tint);color:#5E4711;border-color:#E0CDA0}
+  .c-warn{background:var(--clay-tint);color:#7A241D;border-color:#E3C0BA}
+  .c-good{background:var(--go-tint);color:#1E4F3C;border-color:#C2DBCF}
+
+  /* lanes */
+  .lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+  .lane{border-radius:11px;padding:15px 16px;border:1px solid var(--line);font-size:12.5px;background:var(--card)}
+  .lane .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .lane h4{margin:0;font-family:var(--display);font-size:14px;font-weight:700}
+  .lane .big{font-family:var(--mono);font-size:13px;font-weight:600;padding:2px 8px;border-radius:6px}
+  .lane ul{margin:0;padding-left:15px;color:var(--ink-2)} .lane li{padding:1.5px 0}
+  .lane.g{border-top:3px solid var(--go)} .lane.g h4{color:var(--go)} .lane.g .big{background:var(--go-tint);color:var(--go)}
+  .lane.y{border-top:3px solid var(--amber)} .lane.y h4{color:var(--amber)} .lane.y .big{background:var(--amber-tint);color:var(--amber)}
+  .lane.r{border-top:3px solid var(--clay)} .lane.r h4{color:var(--clay)} .lane.r .big{background:var(--clay-tint);color:var(--clay)}
+
+  /* compliance split */
+  .compgrid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:11px;overflow:hidden;font-size:13px;margin-top:2px}
+  .compgrid .h{padding:9px 15px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;background:#F3F0E8}
+  .compgrid .h.no{color:var(--clay)} .compgrid .h.ok{color:var(--go)}
+  .compgrid div{padding:9px 15px;border-top:1px solid var(--line-2)}
+  .compgrid .l{border-right:1px solid var(--line)}
+  .compgrid .no-x{color:var(--clay-1,#8C342C)} .compgrid .ok-x{color:#1E4F3C}
+
+  /* pipeline */
+  .pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 13px;font-size:12px}
+  .step .n{font-family:var(--mono);color:var(--brass);font-weight:600;font-size:12px}
+  .step .t{font-family:var(--display);font-weight:600;display:block;margin:3px 0 1px;font-size:13px}
+  .step .d{color:var(--ink-3);font-size:11.5px}
+
+  /* followups */
+  .fu{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .fu .card{margin:0}
+  .fu h4{margin:0 0 9px;font-family:var(--display);font-size:14px;font-weight:700}
+  .tmpl{font-size:12.5px;margin:0 0 9px;padding-left:11px;border-left:2px solid var(--line)}
+  .tmpl b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px;font-weight:600}
+
+  footer{color:var(--ink-3);font-size:11.5px;border-top:1px solid var(--line);padding-top:16px;margin-top:14px}
+  footer a{color:var(--blue)}
+
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr}
+    nav{position:static;height:auto}
+    .brand{border-bottom:1px solid var(--line)}
+    nav a{display:inline-flex;border-left:none;border-bottom:2px solid transparent}
+    nav a.active{border-left:none;border-bottom-color:var(--brass)}
+    .masthead,.body-wrap{padding-left:22px;padding-right:22px}
+    .stat,.lanes,.pipe,.fu,.compgrid{grid-template-columns:1fr}
+    .ticker .t{min-width:46%}
+  }
+  @media print{
+    nav{display:none} .shell{grid-template-columns:1fr} .body-wrap{max-width:none}
+    section,.card,.lane,table,.step,.stat{break-inside:avoid}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav>
+    <div class="brand">
+      <p class="name">Fin<span class="mk">Biz</span> SDR</p>
+      <p class="kick">Operator Console · Internal</p>
+    </div>
+    <a href="#call" class="active"><span class="n">01</span> Call Flow</a>
+    <a href="#matrix"><span class="n">02</span> Product Matrix</a>
+    <a href="#mca"><span class="n">03</span> MCA Reality</a>
+    <a href="#triage"><span class="n">04</span> Triage &amp; Lanes</a>
+    <a href="#statements"><span class="n">05</span> Statement Read</a>
+    <a href="#file"><span class="n">06</span> Minimum File</a>
+    <a href="#pipeline"><span class="n">07</span> Pipeline</a>
+    <a href="#objections"><span class="n">08</span> Objections</a>
+    <a href="#followups"><span class="n">09</span> Follow-Ups</a>
+    <a href="#qa"><span class="n">10</span> Final QA</a>
+    <p class="eyes">YOUR EYES ONLY — never "guaranteed / approved / cleared," no rate before the file, no invented urgency. Confidence sells; defensiveness sounds guilty.</p>
+  </nav>
+
+  <main>
+    <header class="masthead">
+      <h1>SDR Operator Console</h1>
+      <p class="tagline">One screen, ten moves — from who you are on the phone to the last check before you submit. Lead with conviction; let the file win the argument.</p>
+      <div class="ticker">
+        <div class="t"><div class="k">Qualify floor</div><div class="v">$15K<small>/mo</small></div></div>
+        <div class="t"><div class="k">Time in biz</div><div class="v">6+<small> mo</small></div></div>
+        <div class="t"><div class="k">Credit</div><div class="v">500+</div></div>
+        <div class="t"><div class="k">Green lane</div><div class="v">$20K · 12mo · 570</div></div>
+        <div class="t"><div class="k">To start a file</div><div class="v">4<small> mo stmts</small></div></div>
+      </div>
+    </header>
+
+    <div class="body-wrap">
+
+    <!-- 01 CALL -->
+    <section id="call">
+      <p class="eyebrow">01 — Live</p>
+      <h2>Call Flow</h2>
+      <p class="lead">Top to bottom, fast. You run the call; let him talk ~60%. The urgency comes from his own answers in the Dig — not from anything you invent.</p>
+
+      <div class="beat"><h4>① Open — own it</h4>
+        <span class="say">Hi [Name], it's Ness at FinBiz Funding. Good time? I'll be straight and quick.</span>
+        <span class="say">I work with owners like you on growth capital — and I'm good at it.</span>
+        <span class="say">Give me five minutes. By the end, either I see a real way to put money to work in your business, or I don't — and I'll tell you flat. Fair?</span>
+        <span class="cue">Normalizing a "no" disarms him and reads as confidence.</span>
+      </div>
+      <div class="beat"><h4>② Open the story</h4>
+        <span class="say">If money wasn't the bottleneck, what's the first move you'd make in the business?</span>
+        <span class="cue">His picture here is what you close on later.</span>
+      </div>
+      <div class="beat"><h4>③ Gate — two numbers</h4>
+        <span class="say">So I'm not wasting your time — what's the business doing a month lately, and how long open?</span>
+        <span class="cue">Clears the floor → ④ · Light → Light branch · Already funded → All Set branch.</span>
+      </div>
+      <div class="beat"><h4>④ Dig — make the gap real</h4>
+        <span class="say">What's the one thing holding you back from the next level right now?</span>
+        <span class="say">How long's that been going on?</span>
+        <span class="say">If it stays another six months — what's it cost you? Jobs you turn down, customers you lose?</span>
+        <span class="say">And if it were handled tomorrow — what changes for you?</span>
+        <span class="cue">He just told you the pain AND the payoff, in his words. Don't pitch yet.</span>
+      </div>
+      <div class="beat"><h4>⑤ Point it + paint it</h4>
+        <span class="say">Here's what I'd put in front of you — a [term loan / line / advance].</span>
+        <span class="say">Picture it: [the thing he said he'd do], funded and moving. That's the play.</span>
+        <span class="say">Depending on your numbers I'll get you the best terms I can — and I carry the paperwork. You run the business, I run this.</span>
+      </div>
+      <div class="beat"><h4>⑥ Close — hard, clean</h4>
+        <span class="say">Best time to grab capital is before you're desperate for it. Money's cheapest when you don't need it.</span>
+        <span class="say">Next step: send me four months of bank statements today, I build your offer tonight, we talk tomorrow with real numbers.</span>
+        <span class="say">No obligation — you see the full payback and decide. Let's get the options on the table.</span>
+      </div>
+
+      <div class="card"><strong>↪ All set / already funded — push for the second swing</strong>
+        <span class="say">Glad you're moving. Who'd you go with — payments daily, weekly, monthly?</span>
+        <span class="say">If those are daily pulls, I can probably refinance you into breathing room. Want me to take a real look?</span>
+        <span class="say">And the day you hit about halfway paid, that's a top-up at better terms. Let me be the call you make.</span>
+      </div>
+      <div class="card"><strong>↪ Light — don't waste the call</strong>
+        <span class="say">Straight with you — numbers are a little light today for the best products. But I'm not writing you off.</span>
+        <span class="cue">Offer one: credit repair to get eligible (60–90 days; never promise a score) · CCP to hold the line · "Two stronger months and a callback."</span>
+      </div>
+    </section>
+
+    <!-- 02 MATRIX -->
+    <section id="matrix">
+      <p class="eyebrow">02 — Fit</p>
+      <h2>Product Fit Matrix</h2>
+      <p class="lead">Name the one or two products the file can carry — don't list the menu. Fastest isn't always best: weigh payment pressure and existing debt before you anchor on speed.</p>
+      <table>
+        <thead><tr><th>Product</th><th>Best fit</th><th>Speed</th><th>Docs</th><th>Cost</th><th>Main weakness</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag t-gold">MCA</span></td><td>Needs speed, active deposits, can absorb frequent payments, may not pass a bank box</td><td>Fast</td><td>Light–mod</td><td>High</td><td>Daily/weekly payment pressure</td></tr>
+          <tr><td><span class="tag t-blue">Renewal</span></td><td>Existing/prior-funded, solid history &amp; stable recent performance</td><td>Fast–med</td><td>Moderate</td><td>Med–high</td><td>Hinges on seasoning &amp; payoff progress</td></tr>
+          <tr><td><span class="tag t-teal">Refi / Consol.</span></td><td>Carrying pressure a cleaner structure could genuinely relieve</td><td>Medium</td><td>Mod–heavy</td><td>Med–high</td><td>Can't fix an overleveraged file</td></tr>
+          <tr><td><span class="tag t-blue">Term Loan</span></td><td>Stable cash flow, stronger profile, room for monthly</td><td>Med–slow</td><td>Mod–heavy</td><td>Med–lower</td><td>Slower, stricter, less forgiving</td></tr>
+          <tr><td><span class="tag t-blue">Line of Credit</span></td><td>Recurring swings, stronger profile, value in drawing as needed</td><td>Medium</td><td>Moderate</td><td>Medium</td><td>Needs cleaner file &amp; consistency</td></tr>
+        </tbody>
+      </table>
+      <div class="callout c-rule"><b>The rule</b>Pitch what the file can support, not what sounds best. The file always wins the argument in underwriting.</div>
+    </section>
+
+    <!-- 03 MCA -->
+    <section id="mca">
+      <p class="eyebrow">03 — Structure</p>
+      <h2>MCA Reality Check</h2>
+      <p class="lead">An MCA advances capital upfront against future receivables, repaid daily or weekly. Walk a real calculation — the figures do the persuading.</p>
+      <div class="stat">
+        <div class="s"><div class="k">Funded</div><div class="v">$20,000</div></div>
+        <div class="s hot"><div class="k">Factor</div><div class="v">1.40</div></div>
+        <div class="s hot"><div class="k">Total payback</div><div class="v">$28,000</div></div>
+        <div class="s"><div class="k">Term</div><div class="v">100<span style="font-size:12px"> pmts</span></div></div>
+        <div class="s"><div class="k">Daily</div><div class="v">$280</div></div>
+      </div>
+      <div class="callout c-warn"><b>Non-negotiable</b>A factor rate is not an APR. Never explain it as an interest rate — it's a fixed multiplier that sets the total payback. <span class="mono">$20,000 × 1.40 = $28,000</span>; <span class="mono">÷ 100 = $280</span>/day.</div>
+      <p class="lead" style="margin-top:16px">The five loops every MCA conversation closes — skip one and you create a surprise at funding:</p>
+      <table>
+        <tbody>
+          <tr><td><b>Funding amount</b></td><td>Exactly what lands in the account</td></tr>
+          <tr><td><b>Total payback</b></td><td>The real obligation — not the funded figure</td></tr>
+          <tr><td><b>Payment frequency</b></td><td>Daily/weekly draws shape day-to-day cash flow</td></tr>
+          <tr><td><b>Cash-flow fit</b></td><td>An approval still has to be survivable to be a good deal</td></tr>
+          <tr><td><b>No obligation</b></td><td>The merchant reviews the offer before committing</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 04 TRIAGE -->
+    <section id="triage">
+      <p class="eyebrow">04 — Triage</p>
+      <h2>Eligibility &amp; Lanes</h2>
+      <p class="lead">You're not underwriting. Your call is narrower: is this file worth pursuing, and which risks have to be on the table before it ships? Needing money and being fundable are not the same thing.</p>
+      <div class="lanes">
+        <div class="lane g">
+          <div class="hd"><h4>Green</h4><span class="big">PUSH</span></div>
+          <ul><li><span class="num">$20K+</span> deposits/mo</li><li><span class="num">12+</span> months</li><li><span class="num">570+</span> credit</li><li>Consistent pattern, low NSFs</li><li>Manageable debt, fast cooperation</li></ul>
+        </div>
+        <div class="lane y">
+          <div class="hd"><h4>Yellow</h4><span class="big">REVIEW</span></div>
+          <ul><li><span class="num">$10–20K</span> deposits/mo</li><li><span class="num">3–12</span> months</li><li><span class="num">500–570</span> credit</li><li>Some explainable NSFs</li><li>One advance, low avg balance</li></ul>
+        </div>
+        <div class="lane r">
+          <div class="hd"><h4>Red</h4><span class="big">WEAK</span></div>
+          <ul><li>Under <span class="num">$10K</span>/mo · neg. now</li><li>Under <span class="num">3</span> months</li><li>Frequent NSFs</li><li>Stacked advances, defaults</li><li>Liens/judgments · refuses docs</li></ul>
+        </div>
+      </div>
+      <div class="callout c-rule"><b>The rule</b>Don't pitch what sounds best — pitch what the file can actually support.</div>
+    </section>
+
+    <!-- 05 STATEMENTS -->
+    <section id="statements">
+      <p class="eyebrow">05 — Truth</p>
+      <h2>Reading the Bank Statements</h2>
+      <p class="lead">What a merchant says matters far less than what the statements show. Hit the first four in order, then work the full ten.</p>
+      <table>
+        <thead><tr><th>Review area</th><th>What good looks like</th><th>Risk signal</th></tr></thead>
+        <tbody>
+          <tr><td>Statement period</td><td>Recent &amp; complete</td><td>Old, missing, or gapped</td></tr>
+          <tr><td>Business / account name</td><td>Matches the file</td><td>Wrong owner or entity</td></tr>
+          <tr><td>Total monthly deposits</td><td>Real revenue volume</td><td>One-time transfers only</td></tr>
+          <tr><td>Number of deposits</td><td>Active business flow</td><td>Too few deposits</td></tr>
+          <tr><td>Average balance</td><td>An operating cushion</td><td>Constantly near zero</td></tr>
+          <tr><td>Negative days</td><td>Stays above zero</td><td>Repeated / recent negatives</td></tr>
+          <tr><td>NSFs / returned items</td><td>Clean history</td><td>Multiple or recent NSFs</td></tr>
+          <tr><td>Existing ACH pulls</td><td>Single, manageable</td><td>Multiple funders / pressure</td></tr>
+          <tr><td>Large withdrawals</td><td>Explained outflows</td><td>Irregular / unsupported</td></tr>
+          <tr><td>Authenticity</td><td>Consistent format &amp; sequence</td><td>Inconsistent / manipulated</td></tr>
+        </tbody>
+      </table>
+      <div class="callout c-warn"><b>First four, in order</b>Deposits → balance behavior → NSFs &amp; negative days → existing funder payments. They tell most of the story before the detail.</div>
+    </section>
+
+    <!-- 06 FILE -->
+    <section id="file">
+      <p class="eyebrow">06 — Collect</p>
+      <h2>The Minimum File</h2>
+      <p class="lead">A file moves when you collect the core package and the merchant cooperates fast. The core is non-negotiable; conditional items apply when the situation calls for them.</p>
+      <table>
+        <thead><tr><th>Required item</th><th>Why it's needed</th></tr></thead>
+        <tbody>
+          <tr><td>Completed application</td><td>Opens the formal review</td></tr>
+          <tr><td>Owner legal name + ID</td><td>Identity verification</td></tr>
+          <tr><td>Business name / DBA · EIN</td><td>Entity &amp; tax verification</td></tr>
+          <tr><td>Business address · ownership %</td><td>Verification &amp; signer authority</td></tr>
+          <tr><td><b>3–4 months bank statements</b></td><td>Revenue &amp; cash-flow review</td></tr>
+          <tr><td>Voided check</td><td>Verifies funding/payment account</td></tr>
+          <tr><td>Current loan / MCA balances</td><td>Existing-obligation review</td></tr>
+          <tr><td>Payoff letters <em style="color:var(--ink-3)">(if refinancing)</em></td><td>Confirms balances to be paid</td></tr>
+          <tr><td>Processing stmts / bank login <em style="color:var(--ink-3)">(if requested)</em></td><td>Card-sales / real-time verification</td></tr>
+        </tbody>
+      </table>
+      <div class="callout c-good"><b>Tax returns</b>Only for bank-funded products (e.g., SBA). Not required for an MCA. Confirm bank vs. non-bank before you ever ask.</div>
+    </section>
+
+    <!-- 07 PIPELINE -->
+    <section id="pipeline">
+      <p class="eyebrow">07 — Flow</p>
+      <h2>Pipeline &amp; Discovery</h2>
+      <p class="lead">Every file walks the same twelve stages. Never let one float — each active file has a next step, an owner, and a date.</p>
+      <div class="pipe">
+        <div class="step"><span class="n">01</span><span class="t">Prospecting</span><span class="d">Find the decision-maker</span></div>
+        <div class="step"><span class="n">02</span><span class="t">Discovery</span><span class="d">Understand the need</span></div>
+        <div class="step"><span class="n">03</span><span class="t">Pre-Qualify</span><span class="d">Check thresholds</span></div>
+        <div class="step"><span class="n">04</span><span class="t">Collection</span><span class="d">Build the file</span></div>
+        <div class="step"><span class="n">05</span><span class="t">Stmt. Review</span><span class="d">Spot the risks</span></div>
+        <div class="step"><span class="n">06</span><span class="t">Submission</span><span class="d">Send a clean file</span></div>
+        <div class="step"><span class="n">07</span><span class="t">Approval</span><span class="d">Understand terms</span></div>
+        <div class="step"><span class="n">08</span><span class="t">Offer Pitch</span><span class="d">Explain it clearly</span></div>
+        <div class="step"><span class="n">09</span><span class="t">Contracts</span><span class="d">Get signatures</span></div>
+        <div class="step"><span class="n">10</span><span class="t">Closing Stips</span><span class="d">Clear conditions</span></div>
+        <div class="step"><span class="n">11</span><span class="t">Funding</span><span class="d">Confirm the wire</span></div>
+        <div class="step"><span class="n">12</span><span class="t">Follow-Up</span><span class="d">Build the renewal</span></div>
+      </div>
+      <p class="lead" style="margin-top:18px">Nine discovery questions surface everything you need to lane a file:</p>
+      <table>
+        <thead><tr><th>#</th><th>Ask</th><th>What it reveals</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Monthly gross?</td><td>Revenue capacity</td></tr>
+          <tr><td class="num">2</td><td>Time in business?</td><td>Eligibility &amp; stability</td></tr>
+          <tr><td class="num">3</td><td>Current business debt or advances?</td><td>Existing obligations</td></tr>
+          <tr><td class="num">4</td><td>Funder, balance, payment schedule?</td><td>Cash-flow pressure</td></tr>
+          <tr><td class="num">5</td><td>Use of funds?</td><td>Business purpose</td></tr>
+          <tr><td class="num">6</td><td>Amount needed?</td><td>Funding target</td></tr>
+          <tr><td class="num">7</td><td>How urgent?</td><td>Timeline &amp; seriousness</td></tr>
+          <tr><td class="num">8</td><td>Recent NSFs, negatives, liens, judgments?</td><td>Risk profile</td></tr>
+          <tr><td class="num">9</td><td>Can you send 3–4 months of statements today?</td><td>Cooperation &amp; momentum</td></tr>
+        </tbody>
+      </table>
+      <div class="callout c-rule"><b>Discovery settles five things</b>Lane (G/Y/R) · doc speed · use of funds · whether debt is a problem · the defined next step.</div>
+    </section>
+
+    <!-- 08 OBJECTIONS -->
+    <section id="objections">
+      <p class="eyebrow">08 — Defense</p>
+      <h2>Objections, Deal Killers &amp; Compliance</h2>
+      <p class="lead">You're not overcoming resistance with pressure — you're reframing toward what the file can do. Acknowledge → clarify → reframe.</p>
+      <table>
+        <thead><tr><th>Objection</th><th>Your reframe</th></tr></thead>
+        <tbody>
+          <tr><td>"What's your rate?"</td><td>"I won't make a number up to keep you on the phone. The statements set the rate. Send them and I'll quote you real, today."</td></tr>
+          <tr><td>"I don't need funding."</td><td>"Best time to look at options is before cash flow gets tight. If the numbers don't make sense, there's no obligation."</td></tr>
+          <tr><td>"I already have funding."</td><td>"Who's the funder, what's the balance, how are payments structured? If the file supports it, we may improve your cash flow."</td></tr>
+          <tr><td>"I have bad credit."</td><td>"That's fine — the revenue does the heavy lifting here, not the score. Let's pull the statements and see."</td></tr>
+          <tr><td>"It's too expensive."</td><td>"Compared to what? If the money makes you more than it costs, the price answers itself. So what would you do with it?"</td></tr>
+          <tr><td>"Not interested."</td><td>"Understood — would it help to know what's there before you actually need the capital?"</td></tr>
+        </tbody>
+      </table>
+      <p class="lead" style="margin-top:20px">Deal killers — catch them early or they surface at the worst moment:</p>
+      <table>
+        <thead><tr><th>Issue</th><th>Your move</th></tr></thead>
+        <tbody>
+          <tr><td>Hidden balances</td><td>Ask directly and document</td></tr>
+          <tr><td>New funding mid-underwriting</td><td>Warn the merchant early</td></tr>
+          <tr><td>Negative balance at funding</td><td>Monitor before close</td></tr>
+          <tr><td>Sharp deposit drop</td><td>Request MTD transactions</td></tr>
+          <tr><td>Liens / judgments · prior default</td><td>Disclose early / immediately</td></tr>
+          <tr><td>Refuses bank verification</td><td>Set the expectation up front</td></tr>
+          <tr><td>Another broker submits · stops responding</td><td>Move quickly, set deadlines &amp; cadence</td></tr>
+        </tbody>
+      </table>
+      <p class="lead" style="margin-top:20px">Compliance language — how you say it is a compliance matter, not a style choice:</p>
+      <div class="compgrid">
+        <div class="h no l">Do not say</div><div class="h ok">Say instead</div>
+        <div class="l no-x">Guaranteed / definitely approved</div><div class="ok-x">Approval depends on underwriting</div>
+        <div class="l no-x">Cheap money</div><div class="ok-x">Review the total payback &amp; payment structure</div>
+        <div class="l no-x">Basically a bank loan</div><div class="ok-x">This is a different funding structure</div>
+        <div class="l no-x">Factor rate is an interest rate</div><div class="ok-x">Factor rate sets total payback; it's not APR</div>
+        <div class="l no-x">No risk / won't affect cash flow</div><div class="ok-x">Daily/weekly payments must fit cash flow</div>
+        <div class="l no-x">Funded today</div><div class="ok-x">Timing depends on underwriting &amp; closing</div>
+      </div>
+    </section>
+
+    <!-- 09 FOLLOWUPS -->
+    <section id="followups">
+      <p class="eyebrow">09 — Chase</p>
+      <h2>Follow-Ups</h2>
+      <p class="lead">Get the four months in, or get a callback. Never claim an offer before you've seen a file.</p>
+      <div class="fu">
+        <div class="card"><h4>After a strong call</h4>
+          <p class="tmpl"><b>Recap + ask · SMS</b>"Hey [Name], Ness from FinBiz — good talking. Send 4 months of business bank statements and I'll build your offer and come back with real numbers. No obligation."</p>
+          <p class="tmpl"><b>Same-day nudge · SMS</b>"[Name] — still got you on my list today. Fire over those 4 months and I'll get to work tonight."</p>
+        </div>
+        <div class="card"><h4>Went quiet</h4>
+          <p class="tmpl"><b>Soft bump · SMS</b>"[Name], didn't hear back — no rush. Just don't want to leave money on the table. Still want me to put options together?"</p>
+          <p class="tmpl"><b>Door-open · SMS</b>"All good if timing's off. When you're ready to look at capital I'm one text away. Check back end of week?"</p>
+        </div>
+        <div class="card"><h4>Already funded</h4>
+          <p class="tmpl"><b>Back pocket · SMS</b>"Glad you're handled. Keep my number — the day payments feel tight or you're ready for more, I can probably do better."</p>
+          <p class="tmpl"><b>Halfway check-in · SMS</b>"Figured you might be near halfway paid. That's usually when a top-up at better terms makes sense. Want me to look?"</p>
+        </div>
+        <div class="card"><h4>Light / not yet</h4>
+          <p class="tmpl"><b>Honest hold · SMS</b>"Numbers are a little light for the best products today — but I'm not writing you off. Couple stronger months and let's revisit."</p>
+          <p class="tmpl"><b>Circle-back · SMS</b>"Checking in like I said. How's revenue looking now? If it firmed up, let's pull statements and get you funded."</p>
+        </div>
+        <div class="card"><h4>Offer on the table</h4>
+          <p class="tmpl"><b>Walk-through · SMS</b>"Your numbers are ready. 5 minutes to walk the offer and total payback so you can decide? Today or tomorrow?"</p>
+          <p class="tmpl"><b>Decision nudge · SMS</b>"Offer's still good. No pressure — but the sooner we sign, the sooner it's in your account. Anything holding you up?"</p>
+        </div>
+        <div class="card"><h4>Funded — renewal + referral</h4>
+          <p class="tmpl"><b>Renewal watch · SMS</b>"Hope the funds did the job. Around halfway paid, you're eligible for fresh capital at better terms. Want me to flag you?"</p>
+          <p class="tmpl"><b>Referral ask · SMS</b>"Glad this worked out. Know another owner who could use capital? Send them my way — I'll take care of them."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 QA -->
+    <section id="qa">
+      <p class="eyebrow">10 — Pre-flight</p>
+      <h2>Final QA Before Submission</h2>
+      <p class="lead">A file passes only when all four blocks are clean. Never submit a file you can't explain.</p>
+      <table>
+        <thead><tr><th>Block</th><th>Every box checked</th></tr></thead>
+        <tbody>
+          <tr><td><b>Merchant</b></td><td>Decision-maker identified · ownership matches application · responsive · use of funds clear</td></tr>
+          <tr><td><b>Bank Statements</b></td><td>Recent &amp; complete · name matches · deposits, NSFs, negative days, ACH pulls reviewed</td></tr>
+          <tr><td><b>Existing Debt</b></td><td>Balances disclosed · schedule known · payoff letters if refinancing · no hidden advances</td></tr>
+          <tr><td><b>Next Step</b></td><td>Underwriting request clear · deadline documented · internal owner assigned · cadence set</td></tr>
+        </tbody>
+      </table>
+      <div class="callout c-warn"><b>The final rule</b>Never submit a file you don't understand. If you can't explain it, it's not ready.</div>
+      <footer>Built from the FinBiz SDR Onboarding Manual &amp; Call Script. Internal enablement only — final approvals depend on lender underwriting and complete file review. Confirm current advertised terms at <a href="https://finbizfunding.com/">finbizfunding.com</a> before quoting live.</footer>
+    </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  (function(){
+    var links = [].slice.call(document.querySelectorAll('nav a'));
+    var map = {}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    if(!('IntersectionObserver' in window)) return;
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          var a = map[e.target.id]; if(a) a.classList.add('active');
+        }
+      });
+    }, {rootMargin:'-15% 0px -75% 0px'});
+    document.querySelectorAll('section').forEach(function(s){ obs.observe(s); });
+  })();
+</script>
+</body>
+</html>
