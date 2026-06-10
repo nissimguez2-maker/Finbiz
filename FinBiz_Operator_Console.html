@@ -301,7 +301,8 @@
   }
   @media print{
     .oc-bar,.oc-rails,.oc-dock,.oc-drawer,.oc-coll,
-    .oc-calc-hd,.oc-calc-inputs,.oc-calc-note{display:none !important}
+    .oc-calc-hd,.oc-calc-inputs{display:none !important}
+    /* keep .oc-calc-note: the factor-is-not-APR disclaimer must print with the numbers */
     mark.oc-hit{background:transparent;box-shadow:none;color:inherit}
     body.oc-searching .beat,body.oc-searching tr{opacity:1 !important}
     section.oc-collapsed > *{display:revert !important}
@@ -722,7 +723,7 @@
       <p class="lead">Get the four months in, or get a callback. Never promise an offer before you've seen a file.</p>
       <div class="fu">
         <div class="card"><h4>After a strong call</h4>
-          <p class="tmpl"><b>Recap + ask · SMS</b>"Hey [Name], Ness from FinBiz — good talking just now. Send me 4 months of business bank statements and I'll build out your options and come back with real numbers. No obligation either way."</p>
+          <p class="tmpl"><b>Recap + ask · SMS</b>"Hey [Name], Ness from FinBiz — good talking just now. Send me 4 months of business bank statements and I'll come back with real numbers. No obligation either way."</p>
           <p class="tmpl"><b>Same-day nudge · SMS</b>"[Name] — still got you on my list for today. Shoot those 4 months over whenever and I'll get into it tonight."</p>
         </div>
         <div class="card"><h4>Went quiet</h4>
@@ -1012,7 +1013,7 @@
       var cost = payback - funded;
       oFunded.textContent  = usd0.format(funded);
       oPayback.textContent = usd0.format(payback);
-      oPer.textContent     = per < 1000 ? usd2.format(per) : usd0.format(per);
+      oPer.textContent     = (per < 1000 && per % 1 !== 0) ? usd2.format(per) : usd0.format(per);
       oCost.textContent    = usd0.format(cost);
       if(perKey) perKey.textContent = 'Per pmt · ' + freq.toLowerCase();
       if(perSub) perSub.textContent = '× ' + term + ' pmts';
