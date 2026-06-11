@@ -35,9 +35,12 @@ const config: Config = {
         clay: "var(--clay)",
       },
       fontFamily: {
+        // Two-font system, everywhere: Outfit for headings/labels (Semibold),
+        // Switzer for body/reading (Light). "mono" repointed to Outfit so the
+        // old font-mono labels render Outfit too — only tabular numerics differ.
         display: ['"Outfit"', "system-ui", "sans-serif"],
         sans: ['"Switzer"', '"Outfit"', "system-ui", "sans-serif"],
-        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
+        mono: ['"Outfit"', "system-ui", "sans-serif"],
       },
       borderRadius: {
         xl: "0.75rem",
