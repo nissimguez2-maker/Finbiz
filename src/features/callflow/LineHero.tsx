@@ -23,12 +23,12 @@ export function LineHero({
       data-say
       className={cn(
         // shared: quote marks in accent, like the Say primitive
-        "say-line max-w-[38ch] font-sans",
-        "before:font-bold before:text-accent before:content-['\\201C']",
-        "after:font-bold after:text-accent after:content-['\\201D']",
+        "say-line max-w-[40ch]",
+        "before:font-semibold before:text-accent before:content-['\\201C']",
+        "after:font-semibold after:text-accent after:content-['\\201D']",
         isHero
-          ? "text-[clamp(1.875rem,2vw+1.1rem,3.25rem)] font-bold leading-[1.1] tracking-[-0.015em] text-foreground"
-          : "text-lg font-medium leading-snug text-muted-foreground/90",
+          ? "font-display text-[clamp(1.875rem,2vw+1.1rem,3.25rem)] font-semibold leading-[1.28] tracking-[-0.01em] text-foreground"
+          : "font-sans text-lg font-light leading-relaxed text-muted-foreground",
       )}
     >
       {text}

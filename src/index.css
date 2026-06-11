@@ -45,7 +45,9 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.65;
+    letter-spacing: 0.005em;
+    font-weight: 400;
   }
   ::selection {
     background: rgba(0, 82, 255, 0.16);

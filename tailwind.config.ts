@@ -35,8 +35,8 @@ const config: Config = {
         clay: "var(--clay)",
       },
       fontFamily: {
-        display: ['"Calistoga"', "Georgia", "serif"],
-        sans: ['"Inter"', "system-ui", "sans-serif"],
+        display: ['"Outfit"', "system-ui", "sans-serif"],
+        sans: ['"Switzer"', '"Outfit"', "system-ui", "sans-serif"],
         mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
       borderRadius: {
