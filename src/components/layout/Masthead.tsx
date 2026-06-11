@@ -1,16 +1,12 @@
 import { motion } from "framer-motion";
 import { Headline } from "@/components/ui";
-import { HeroGraphic } from "./HeroGraphic";
 import { fadeInUp, stagger } from "@/lib/motion";
 import { brand, ticker } from "@/content/meta";
 
 /**
- * Hero masthead — the cockpit's opening statement.
- *
- * Asymmetric two-column layout on desktop (gradient headline + lead on the
- * left, the animated HeroGraphic on the right). Below sits "the floor": an
- * inverted (deep-slate) ticker band with a dot-grid texture and a radial accent
- * glow — the system's one dramatic colour-inversion for rhythm.
+ * Hero masthead — the cockpit's opening statement: gradient headline + lead,
+ * with "the floor" below — an inverted (deep-slate) ticker band with a dot-grid
+ * texture and a radial accent glow (the system's one dramatic colour-inversion).
  */
 export function Masthead() {
   return (
@@ -18,28 +14,16 @@ export function Masthead() {
       {/* ambient accent glow */}
       <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/[0.06] blur-[120px]" />
 
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={stagger}
-        className="relative grid items-center gap-8 lg:grid-cols-[1.15fr_1fr]"
-      >
-        <div>
-          <motion.div variants={fadeInUp}>
-            <Headline as="h1">{brand.title}</Headline>
-          </motion.div>
-          <motion.p
-            variants={fadeInUp}
-            className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted-foreground"
-          >
-            {brand.tagline}
-          </motion.p>
-        </div>
-
-        {/* signature animated hero graphic — desktop only */}
-        <motion.div variants={fadeInUp} className="hidden lg:block">
-          <HeroGraphic />
+      <motion.div initial="hidden" animate="visible" variants={stagger} className="relative">
+        <motion.div variants={fadeInUp}>
+          <Headline as="h1">{brand.title}</Headline>
         </motion.div>
+        <motion.p
+          variants={fadeInUp}
+          className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted-foreground"
+        >
+          {brand.tagline}
+        </motion.p>
       </motion.div>
 
       {/* "The floor" — the one inverted band: deep slate + dot texture + glow. */}
