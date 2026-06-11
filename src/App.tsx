@@ -1,12 +1,5 @@
-import { Shell } from "@/components/layout/Shell";
-import { sections } from "@/content/registry";
+import { CallConsole } from "@/features/callflow/CallConsole";
 
 export default function App() {
-  return (
-    <Shell>
-      {sections.map(({ meta, Component }) => (
-        <Component key={meta.id} />
-      ))}
-    </Shell>
-  );
+  return <CallConsole />;
 }
