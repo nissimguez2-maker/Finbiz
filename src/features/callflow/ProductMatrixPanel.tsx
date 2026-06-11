@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { Tag } from "@/components/ui/Tag";
 import { ticker } from "@/content/meta";
@@ -57,6 +58,15 @@ export function ProductMatrixPanel({
   const relationship = relationshipProducts();
   const green = ticker[3]?.v ?? "$20K · 12mo · 570";
 
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+  const toggle = (name: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+
   return (
     <div className="flex h-full min-h-0 flex-col">
       <header className="shrink-0 border-b border-border px-5 py-3">
@@ -90,7 +100,9 @@ export function ProductMatrixPanel({
               product={p}
               recommended={rec.has(p.name)}
               selected={selected === p.name}
+              expanded={expanded.has(p.name)}
               onSelect={() => onSelect(p.name)}
+              onToggle={() => toggle(p.name)}
             />
           ))}
         </ul>
@@ -106,7 +118,9 @@ export function ProductMatrixPanel({
                 product={p}
                 recommended={rec.has(p.name)}
                 selected={selected === p.name}
+                expanded={expanded.has(p.name)}
                 onSelect={() => onSelect(p.name)}
+                onToggle={() => toggle(p.name)}
                 quiet
               />
             ))}
@@ -121,50 +135,94 @@ function ProductRow({
   product,
   recommended,
   selected,
+  expanded,
   onSelect,
+  onToggle,
   quiet,
 }: {
   product: Product;
   recommended: boolean;
   selected: boolean;
+  expanded: boolean;
   onSelect: () => void;
+  onToggle: () => void;
   quiet?: boolean;
 }) {
+  const details = product.details ?? [];
   return (
-    <li>
-      <button
-        type="button"
-        onClick={onSelect}
-        aria-pressed={selected}
-        className={cn(
-          "focus-ring block w-full rounded-lg border px-3 py-2 text-left transition-colors",
-          selected
-            ? "border-accent bg-accent/[0.06]"
-            : recommended
-              ? "border-accent/40 bg-accent/[0.03] hover:border-accent/60"
-              : "border-border bg-card hover:border-accent/30",
-          quiet && !selected && !recommended && "opacity-80",
+    <li
+      className={cn(
+        "overflow-hidden rounded-lg border transition-colors",
+        selected
+          ? "border-accent bg-accent/[0.06]"
+          : recommended
+            ? "border-accent/40 bg-accent/[0.03]"
+            : "border-border bg-card",
+        quiet && !selected && !recommended && "opacity-80",
+      )}
+    >
+      <div className="flex items-stretch">
+        {/* Tap the body to set this as the pitch line on the left. */}
+        <button
+          type="button"
+          onClick={onSelect}
+          aria-pressed={selected}
+          className="focus-ring min-w-0 flex-1 px-3 py-2 text-left"
+        >
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag color={product.tag}>{product.name}</Tag>
+            {recommended && (
+              <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
+                ◆ Lead
+              </span>
+            )}
+            {selected && (
+              <span className="ml-auto font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
+                Selected
+              </span>
+            )}
+          </div>
+          <p className="mt-1 text-[12.5px] leading-snug text-foreground">{product.bestFit}</p>
+        </button>
+
+        {/* Chevron expands the detail collapsible (independent of selection). */}
+        {details.length > 0 && (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={expanded}
+            aria-label={`${expanded ? "Hide" : "Show"} ${product.name} details`}
+            className="focus-ring flex w-9 shrink-0 items-center justify-center border-l border-border/60 text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+          >
+            <span
+              aria-hidden="true"
+              className={cn("font-mono text-[11px] transition-transform", expanded && "rotate-90")}
+            >
+              ▸
+            </span>
+          </button>
         )}
-      >
-        <div className="flex flex-wrap items-center gap-2">
-          <Tag color={product.tag}>{product.name}</Tag>
-          {recommended && (
-            <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
-              ◆ Lead
-            </span>
-          )}
-          {selected && (
-            <span className="ml-auto font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
-              Selected
-            </span>
-          )}
-        </div>
-        <p className="mt-1 text-[12.5px] leading-snug text-foreground">{product.bestFit}</p>
-        <p
-          className="mt-0.5 text-[12px] leading-snug text-muted-foreground"
-          dangerouslySetInnerHTML={bold(product.terms)}
-        />
-      </button>
+      </div>
+
+      {expanded && details.length > 0 && (
+        <dl className="space-y-1.5 border-t border-border/60 bg-background/40 px-3 py-2.5">
+          {details.map((d) => (
+            <div key={d.label} className="grid grid-cols-[5.25rem_1fr] gap-2">
+              <dt className="font-mono text-[9.5px] uppercase tracking-wider text-muted-foreground">
+                {d.label}
+              </dt>
+              <dd
+                className="text-[12.5px] leading-snug text-foreground"
+                dangerouslySetInnerHTML={bold(d.value)}
+              />
+            </div>
+          ))}
+          <div className="grid grid-cols-[5.25rem_1fr] gap-2 border-t border-border/50 pt-1.5">
+            <dt className="font-mono text-[9.5px] uppercase tracking-wider text-accent">Say it</dt>
+            <dd className="text-[12.5px] italic leading-snug text-muted-foreground">{product.sayIt}</dd>
+          </div>
+        </dl>
+      )}
     </li>
   );
 }

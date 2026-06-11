@@ -28,6 +28,15 @@ export const products: ProductsContent = {
         "Factor rate + total payback (e.g. **$20K × 1.40 = $28K**) · daily/weekly · non-bank, no tax returns",
       speed: "Fastest",
       sayIt: "Purchase of future receivables. Never 'interest,' 'APR,' or 'bank loan.'",
+      details: [
+        { label: "Eligibility", value: "$15K+/mo deposits · 6+ months open · 500+ credit · active deposits" },
+        { label: "Amount", value: "Sized to monthly deposits / cash flow" },
+        { label: "Cost", value: "Factor rate (e.g. 1.40) — a multiplier, NOT an APR" },
+        { label: "Payback", value: "Funded × factor = total payback ($20K × 1.40 = $28K)" },
+        { label: "Payments", value: "Daily or weekly (e.g. ~$280/day)" },
+        { label: "Speed", value: "Fastest" },
+        { label: "Docs", value: "Non-bank — no tax returns · 3–4 months bank statements" },
+      ],
     },
     {
       name: "Term Loan",
@@ -36,6 +45,14 @@ export const products: ProductsContent = {
       terms: "From **~4.99% APR** · **$10K–$10M** · 1–10 yr monthly · no prepay penalty",
       speed: "Med–slow",
       sayIt: "APR is fine here — it's a real loan. Rate depends on underwriting.",
+      details: [
+        { label: "Eligibility", value: "Stable cash flow · stronger credit · room for a monthly payment" },
+        { label: "Amount", value: "$10K – $10M" },
+        { label: "Cost", value: "From ~4.99% APR · no prepay penalty" },
+        { label: "Term", value: "1–10 years, monthly payments" },
+        { label: "Speed", value: "Med–slow" },
+        { label: "Note", value: "The one product where APR language is fine — rate depends on underwriting" },
+      ],
     },
     {
       name: "Line of Credit",
@@ -44,6 +61,13 @@ export const products: ProductsContent = {
       terms: "**$250K–$500K** revolving · draw and repay as needed",
       speed: "Medium",
       sayIt: "Revolving — you only pay for what you draw.",
+      details: [
+        { label: "Eligibility", value: "Recurring / seasonal needs · cleaner profile" },
+        { label: "Amount", value: "$250K – $500K, revolving" },
+        { label: "Cost", value: "Pay only for what you draw" },
+        { label: "Payments", value: "Draw and repay as needed" },
+        { label: "Speed", value: "Medium" },
+      ],
     },
     {
       name: "Equipment Financing",
@@ -52,6 +76,14 @@ export const products: ProductsContent = {
       terms: "Up to **100%** financing · up to 7-yr terms",
       speed: "Medium",
       sayIt: "Financed against the equipment; possible write-offs — confirm w/ his CPA.",
+      details: [
+        { label: "Eligibility", value: "Buying equipment — new or used" },
+        { label: "Amount", value: "Up to 100% of the equipment cost" },
+        { label: "Term", value: "Up to 7 years" },
+        { label: "Security", value: "Financed against the equipment itself" },
+        { label: "Speed", value: "Medium" },
+        { label: "Note", value: "Possible write-offs — owner confirms with his CPA, not you" },
+      ],
     },
     {
       name: "HELOC",
@@ -61,6 +93,13 @@ export const products: ProductsContent = {
         "In-house indicative quote in **~5 min** · same-day funding if he cooperates · secured against his property",
       speed: "Same-day",
       sayIt: "Indicative number up front; final terms confirm against equity & title.",
+      details: [
+        { label: "Eligibility", value: "660+ credit AND real-estate equity" },
+        { label: "Quote", value: "In-house indicative number (amount + rate) in ~5 min" },
+        { label: "Speed", value: "Same-day funding if he cooperates" },
+        { label: "Security", value: "Secured against his property; final terms confirm vs equity & title" },
+        { label: "Note", value: "Indicative only — never present it as locked" },
+      ],
     },
     {
       name: "Renewal / Refi / Consol.",
@@ -69,6 +108,12 @@ export const products: ProductsContent = {
       terms: "Eligible **~50%** paid down · fresh capital · consolidate obligations",
       speed: "Fast–med",
       sayIt: "Better terms once paid down — and breathing room from daily payments.",
+      details: [
+        { label: "Eligibility", value: "Existing / prior-funded · ~50% paid down" },
+        { label: "Benefit", value: "Fresh capital · consolidate obligations · relief from daily pulls" },
+        { label: "Speed", value: "Fast–med" },
+        { label: "Play", value: "The second swing — lead with breathing room, then the top-up" },
+      ],
     },
     {
       name: "Asset-Based & Specialty",
@@ -77,6 +122,13 @@ export const products: ProductsContent = {
       terms: "Factoring on receivables · SBA/CRE for top profiles",
       speed: "Varies",
       sayIt: "SBA is bank-funded — needs tax returns. Confirm bank vs non-bank first.",
+      details: [
+        { label: "Eligibility", value: "A specific asset, or elite credit" },
+        { label: "Types", value: "Invoice factoring · SBA · CRE" },
+        { label: "Docs", value: "SBA/CRE are bank-funded — need tax returns" },
+        { label: "Speed", value: "Varies" },
+        { label: "Note", value: "Confirm bank vs non-bank before asking for returns" },
+      ],
     },
     {
       name: "CCP",
@@ -86,6 +138,11 @@ export const products: ProductsContent = {
       terms: "Card processing",
       speed: "—",
       sayIt: "Never an opener. Mid-conversation, to keep the door open.",
+      details: [
+        { label: "Use", value: "Hold an already-funded or not-yet-eligible merchant" },
+        { label: "Timing", value: "Never an opener — mid-conversation only" },
+        { label: "Play", value: "Keeps the door open while the relationship builds" },
+      ],
     },
     {
       name: "Credit Repair",
@@ -95,6 +152,13 @@ export const products: ProductsContent = {
       terms: "Up to **$6K** (scales with score) · **60–90 days** to take effect",
       speed: "—",
       sayIt: "Never an opener. CROA applies — never promise a score.",
+      details: [
+        { label: "Eligibility", value: "Not-yet-eligible prospect — clears the credit gate" },
+        { label: "Amount", value: "Up to $6K (scales with score)" },
+        { label: "Timeline", value: "60–90 days to take effect" },
+        { label: "Compliance", value: "CROA — never promise a specific score or outcome" },
+        { label: "Timing", value: "Never an opener; sets up a future deal" },
+      ],
     },
   ],
   pitches: [

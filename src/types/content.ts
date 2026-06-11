@@ -59,6 +59,12 @@ export interface CallFlowContent {
 }
 
 /** ---- Products ----------------------------------------------------------- */
+/** One labelled detail row in a product's collapsible (eligibility, amount, …). */
+export interface ProductDetailRow {
+  label: string;
+  value: string;
+}
+
 export interface Product {
   name: string;
   tag: TagColor;
@@ -71,6 +77,8 @@ export interface Product {
   speed: string;
   /** How to say it / the main caveat. */
   sayIt: string;
+  /** Expanded detail rows shown in the product matrix's collapsible. */
+  details?: ProductDetailRow[];
 }
 
 export interface ProductPitch {
