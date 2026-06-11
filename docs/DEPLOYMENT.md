@@ -1,58 +1,42 @@
 # Deployment
 
 ## Live site
-
-- **URL:** https://finbiz-operator-console.netlify.app
+- **URL:** https://finbiz-operator-console.netlify.app (unlisted · `noindex`)
 - **Netlify project:** `finbiz-operator-console` (team `nissimguez2`)
 - **Site ID:** `14bd8a31-376a-4941-a3f4-06e8c89015db`
-- **Build:** `npm run build` → publishes `dist/` (see `netlify.toml`, Node 22)
-- **Privacy:** unlisted + `noindex, nofollow` (meta tag + `X-Robots-Tag` header). The
-  URL is public to anyone who has the link — there is no password. To add one later,
-  see "Locking it down" below.
+- **Build:** `npm run build` → publishes `dist/` (Node 22, see `netlify.toml`)
 
-The first deploy was a direct upload of the production build. It is live and verified
-(all 11 sections render, the Approved-Offer calculator computes, search works, no
-console errors).
-
-## Turning on auto-deploy (recommended, one-time)
-
-Right now a redeploy is a manual step. To make "edit content → it goes live by itself"
-work, connect this Netlify project to the GitHub repo once:
+## Auto-deploy from GitHub (one-time setup)
+The repo is CI-ready: normal `npm run build`, `dist/` is gitignored (not committed),
+and a clean `npm ci && npm run build` is verified green. To turn on auto-deploys,
+link the repo to the Netlify project once (this is an OAuth step only an account
+admin can click — it can't be done via API):
 
 1. Netlify → **finbiz-operator-console** → **Site configuration → Build & deploy →
-   Continuous deployment → Link repository** → pick `nissimguez2-maker/Finbiz`.
-2. Set **Production branch** to the branch that holds this app
-   (`claude/gallant-darwin-8anzw0`), or merge it into `main` and use `main`.
-3. Build command `npm run build`, publish directory `dist` (already in `netlify.toml`).
-4. Create a **Build hook** (Build & deploy → Build hooks). Copy the URL — this is your
-   "Sync / Redeploy now" button and what the n8n workflow calls. Put it in `.env` as
-   `NETLIFY_BUILD_HOOK_URL` (see `.env.example`).
+   Continuous deployment → Link repository**.
+2. Choose **GitHub**, authorize the Netlify app, pick **`nissimguez2-maker/finbiz`**.
+3. **Production branch:** `claude/gallant-darwin-8anzw0` (or merge it to `main` and use `main`).
+4. Build command `npm run build`, publish directory `dist` (already in `netlify.toml`,
+   so Netlify will auto-fill them).
+5. Deploy. From then on, **every push to the production branch builds and publishes
+   automatically** — no manual step.
 
-Once connected, every push to the production branch rebuilds and redeploys automatically.
+> If a build ever fails, the full log is in Netlify → Deploys → (the deploy) → Deploy log.
 
-## The daily update loop
+## Editing content
+All script/product copy is typed data under `src/content/*.ts` (see
+`docs/CONTENT-MAP.md`). Edit a value → commit/push → auto-deploys. The two Google
+Docs remain the source of truth; `docs/N8N-SYNC.md` describes the optional
+Docs → repo → deploy sync.
 
-You edit the two Google Docs as the source of truth. Pick one path (full detail in
-`docs/DAILY-UPDATES.md` and `docs/N8N-SYNC.md`):
-
-- **n8n sync (recommended):** Docs → Claude transforms them into `src/content/*.ts` →
-  commit → auto-deploy. One button or a daily schedule.
-- **Direct edit:** change a value in `src/content/*.ts` (GitHub web editor is fine) →
-  commit → auto-deploy. See `docs/CONTENT-MAP.md` for which file holds what.
-- **Redeploy button:** hit the Netlify Build Hook URL to rebuild the current content.
-
-## Manual redeploy (no git connection)
-
-From the repo directory, rebuild and re-upload:
+## Manual deploy (fallback, no git connection)
+If you ever need to publish without the git connection, build locally and deploy
+the output directly:
 
 ```bash
-npm run build
-# then trigger a deploy for site 14bd8a31-376a-4941-a3f4-06e8c89015db
+npm run build           # produces dist/
+# then deploy dist/ to site 14bd8a31-376a-4941-a3f4-06e8c89015db
 ```
 
-## Locking it down (if you change your mind on access)
-
-- **Passcode gate:** a small password screen can be added to the app (works on the
-  free plan; "soft" protection since the page source is readable).
-- **Netlify password protection:** stronger, server-side — requires upgrading the team
-  to Netlify Pro, then Site configuration → Access control → Password protection.
+(Earlier we temporarily committed a prebuilt `dist/` with a no-op build command to
+bypass a flaky upload path; that's now removed in favor of the standard git build.)
