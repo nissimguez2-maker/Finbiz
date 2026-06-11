@@ -9,3 +9,6 @@ dist-ssr
 .netlify
 *.log
 .vite
+
+# TS incremental build info — never commit
+*.tsbuildinfo
