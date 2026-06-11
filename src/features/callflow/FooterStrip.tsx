@@ -72,9 +72,12 @@ function FooterButton({
       aria-pressed={ariaPressed}
       className={cn(
         "focus-ring inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 font-mono text-[11px] font-semibold uppercase tracking-label transition-colors",
+        // Base fill is the warm-sand resting pill. "After the call" keeps a
+        // subtle accent hint (border + label tint) so it still reads as the
+        // primary next-step, but rests on sand rather than white.
         accent
-          ? "border-accent/30 text-accent hover:bg-accent/[0.07]"
-          : "border-border text-muted-foreground hover:border-accent/30 hover:text-foreground",
+          ? "border-accent/40 bg-surface-2 text-accent hover:bg-accent/[0.07]"
+          : "border-surface-2-border bg-surface-2 text-surface-2-foreground hover:border-accent/30 hover:text-foreground",
         className,
       )}
     >

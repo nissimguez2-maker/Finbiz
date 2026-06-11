@@ -26,7 +26,7 @@ export function ObjectionsPanel() {
         onChange={(e) => setFilter(e.currentTarget.value)}
         placeholder="Filter — what's he saying?"
         aria-label="Filter objections"
-        className="focus-ring w-full shrink-0 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent/40"
+        className="focus-ring w-full shrink-0 rounded-lg border border-surface-2-border bg-surface-2 px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-surface-2-foreground/70 focus:border-accent/40"
       />
 
       <ul className="space-y-1">
@@ -49,9 +49,9 @@ export function ObjectionsPanel() {
         <Disclosure label="Deal killers" count={dealKillers.length}>
           <ul className="space-y-2">
             {dealKillers.map((dk) => (
-              <li key={dk.issue} className="rounded-lg border border-border bg-card px-3 py-2">
+              <li key={dk.issue} className="rounded-lg border border-surface-2-border bg-surface-2 px-3 py-2">
                 <span className="block text-[13px] font-semibold text-foreground">{dk.issue}</span>
-                <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">{dk.move}</span>
+                <span className="mt-0.5 block text-[12.5px] leading-snug text-surface-2-foreground">{dk.move}</span>
               </li>
             ))}
           </ul>
@@ -78,7 +78,7 @@ function ObjectionItem({
         aria-expanded={open}
         className={cn(
           "focus-ring flex w-full items-start gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
-          open ? "border-accent bg-accent/[0.05]" : "border-transparent hover:border-border hover:bg-muted/40",
+          open ? "border-accent bg-accent/[0.05]" : "border-surface-2-border hover:border-border hover:bg-muted/40",
         )}
       >
         <span aria-hidden="true" className={cn("mt-[3px] font-mono text-[11px] text-accent", open && "rotate-90")}>

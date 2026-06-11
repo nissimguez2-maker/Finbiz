@@ -13,7 +13,7 @@ export const statements: TableSection = {
     eyebrow: "Truth",
     title: "Reading the {Bank Statements}",
     lead:
-      "What a merchant says matters less than what the statements show — so get 4 months and read them. The numbered four tell most of the story before you touch the detail. Hit them in order, then work the rest.",
+      "What a merchant says matters less than what the statements show — so get 3 months and read them. The numbered four tell most of the story before you touch the detail. Hit them in order, then work the rest.",
   },
   columns: ["#", "Review area", "What good looks like", "Risk signal"],
   rows: [

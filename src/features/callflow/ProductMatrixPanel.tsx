@@ -79,13 +79,13 @@ export function ProductMatrixPanel({
           </span>
         </div>
         {/* Thresholds — always in view. */}
-        <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
-          <span className="text-muted-foreground">
-            <span className="font-mono uppercase tracking-wider text-muted-foreground/70">Floor </span>
+        <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-[11px]">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-surface-2-border bg-surface-2 px-2.5 py-0.5">
+            <span className="font-mono uppercase tracking-wider text-surface-2-foreground">Floor</span>
             <b className="font-semibold tabular-nums text-foreground">$15K/mo · 6+mo · 500+</b>
           </span>
-          <span className="text-muted-foreground">
-            <span className="font-mono uppercase tracking-wider text-muted-foreground/70">Green </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-surface-2-border bg-surface-2 px-2.5 py-0.5">
+            <span className="font-mono uppercase tracking-wider text-surface-2-foreground">Green</span>
             <b className="font-semibold tabular-nums text-foreground">{green}</b>
           </span>
         </div>

@@ -69,7 +69,7 @@ export const callFlow: CallFlowContent = {
     {
       label: "⑥ Close — hard, clean",
       says: [
-        "Here's what happens next: send me four months of bank statements today, I build your offer tonight, we talk tomorrow with real numbers.",
+        "Here's what happens next: send me three months of bank statements today, I build your offer tonight, we talk tomorrow with real numbers.",
         "This your cell? Texting you right now so you've got me.",
       ],
       cues: ["Daisy-chain — cell → text → email. Don't hang up until you've got the email."],

@@ -52,7 +52,7 @@ export function StagePanel({ flow, pitchProduct }: { flow: UseCallFlow; pitchPro
             "focus-ring inline-flex h-8 items-center gap-2 rounded-lg border px-3 font-mono text-[11px] font-semibold uppercase tracking-label transition-colors",
             objectionsOpen
               ? "border-accent bg-accent/[0.06] text-accent"
-              : "border-border text-muted-foreground hover:border-accent/40 hover:text-foreground",
+              : "border-surface-2-border bg-surface-2 text-surface-2-foreground hover:border-accent/40 hover:text-foreground",
           )}
         >
           {objectionsOpen ? "Back to script" : "Objections"}
@@ -68,15 +68,27 @@ export function StagePanel({ flow, pitchProduct }: { flow: UseCallFlow; pitchPro
               const current = i === lineIndex;
               return (
                 <li key={i} className="flex items-start gap-3">
+                  {/* Bullet auto-centers on the first text line: the wrapper is
+                      exactly one line-box tall (1lh) and shares the line's
+                      font-size + line-height, so `items-center` drops the dot at
+                      that line's optical middle — no magic mt offsets, scales
+                      with the clamped hero line and the small muted lines alike. */}
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "shrink-0 rounded-full transition-all",
+                      "flex h-[1lh] shrink-0 items-center",
                       current
-                        ? "mt-[0.7rem] h-2 w-2 bg-accent"
-                        : "mt-[0.5rem] h-1.5 w-1.5 bg-muted-foreground/30",
+                        ? "font-display text-[clamp(1.6rem,1.7vw+1rem,2.7rem)] leading-[1.25]"
+                        : "font-sans text-lg leading-snug",
                     )}
-                  />
+                  >
+                    <span
+                      className={cn(
+                        "rounded-full transition-all",
+                        current ? "h-2 w-2 bg-accent" : "h-1.5 w-1.5 bg-muted-foreground/30",
+                      )}
+                    />
+                  </span>
                   <p
                     data-say
                     className={cn(

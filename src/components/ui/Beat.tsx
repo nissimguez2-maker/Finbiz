@@ -29,8 +29,8 @@ export function Cue({ children, className }: { children: React.ReactNode; classN
 /** A literal text-message bubble, visually distinct from spoken lines. */
 export function TextBubble({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex max-w-full items-center gap-1.5 rounded-2xl rounded-bl-md bg-accent/[0.07] px-3 py-1.5 font-mono text-[12.5px] text-foreground">
-      <span className="text-accent">›</span>
+    <span className="inline-flex max-w-full items-center gap-1.5 rounded-2xl rounded-bl-md border border-surface-2-border bg-surface-2 px-3 py-1.5 font-mono text-[12.5px] text-foreground">
+      <span className="text-surface-2-foreground">›</span>
       {children}
     </span>
   );

@@ -72,7 +72,7 @@ export function StageStepper({ flow }: { flow: UseCallFlow }) {
           type="button"
           onClick={resetCall}
           aria-label="Start a new call"
-          className="focus-ring inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 font-mono text-[11px] font-semibold uppercase tracking-label text-muted-foreground transition-colors hover:border-accent/30 hover:text-foreground"
+          className="focus-ring inline-flex h-9 items-center gap-1.5 rounded-lg border border-surface-2-border bg-surface-2 px-3 font-mono text-[11px] font-semibold uppercase tracking-label text-surface-2-foreground transition-colors hover:border-accent/30 hover:text-foreground"
         >
           <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
           New call

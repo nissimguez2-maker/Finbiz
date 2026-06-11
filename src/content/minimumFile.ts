@@ -22,7 +22,7 @@ export const minimumFile: TableSection = {
     { cells: ["Owner legal name + ID", "Identity verification"] },
     { cells: ["Business name / DBA", "EIN / Entity & tax verification"] },
     { cells: ["Business address · ownership %", "Verification & signer authority"] },
-    { cells: ["**3–4 months bank statements**", "Revenue & cash-flow review"] },
+    { cells: ["**3 months bank statements**", "Revenue & cash-flow review"] },
     { cells: ["Voided check", "Verifies funding/payment account"] },
     { cells: ["Current loan / MCA balances", "Existing-obligation review"] },
     { subhead: "Conditional — only when it applies", cells: [] },
@@ -42,5 +42,5 @@ export const minimumFile: TableSection = {
       body: "Only for bank-funded products like SBA — never for an MCA. Confirm bank vs. non-bank before you ask, or you'll spook a merchant over a doc you don't even need.",
     },
   ],
-  note: "First text, keep it light: **4 months of bank statements + the application**. That's enough to start and lane the file — chase ID, voided check, and balances once they're moving.",
+  note: "First text, keep it light: **3 months of bank statements + the application**. That's enough to start and lane the file — chase ID, voided check, and balances once they're moving.",
 };

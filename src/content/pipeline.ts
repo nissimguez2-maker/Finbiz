@@ -44,7 +44,7 @@ export const pipeline: PipelineContent = {
     },
     {
       n: "9",
-      ask: "Can you send 3–4 months of statements today?",
+      ask: "Can you send 3 months of statements today?",
       reveals: "Cooperation & momentum",
     },
   ],

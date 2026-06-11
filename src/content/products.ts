@@ -35,7 +35,7 @@ export const products: ProductsContent = {
         { label: "Payback", value: "Funded × factor = total payback ($20K × 1.40 = $28K)" },
         { label: "Payments", value: "Daily or weekly (e.g. ~$280/day)" },
         { label: "Speed", value: "Fastest" },
-        { label: "Docs", value: "Non-bank — no tax returns · 3–4 months bank statements" },
+        { label: "Docs", value: "Non-bank — no tax returns · 3 months bank statements" },
       ],
     },
     {
