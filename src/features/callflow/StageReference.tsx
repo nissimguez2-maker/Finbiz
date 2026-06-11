@@ -3,13 +3,14 @@ import { cn } from "@/lib/cn";
 import { Callout } from "@/components/ui/Callout";
 import { Tag } from "@/components/ui/Tag";
 import { Say, Cue } from "@/components/ui/Beat";
+import { LineHero } from "./LineHero";
 import {
   gateLanes,
   gateRule,
   floorChips,
   pitchProducts,
-  primaryProduct,
-  pitchPitches,
+  productByName,
+  pitchForProduct,
   pitchRails,
   relationshipProducts,
   relationshipNote,
@@ -155,22 +156,78 @@ function ProductRow({ product }: { product: Product }) {
   );
 }
 
-function PitchReference() {
-  const primary = primaryProduct();
-  const rest = pitchProducts().filter((p) => !p.primary);
-  const ordered = primary ? [primary, ...rest] : rest;
-  // The ready-to-speak version of the primary product, when we have one.
-  const leadPitch = pitchPitches.find((p) => /mca/i.test(p.title)) ?? pitchPitches[0];
+/** Tap a product → it sets the line. Chip rail under the hero; the selected
+ *  product owns the ready-to-speak line + its terms. Compliance rails pinned. */
+function PitchReference({
+  selected,
+  onSelect,
+}: {
+  selected: string;
+  onSelect: (name: string) => void;
+}) {
+  const list = pitchProducts();
+  const active = productByName(selected) ?? list[0];
+  const pitch = active ? pitchForProduct(active.name) : undefined;
+  const spoken = pitch?.say ?? active?.sayIt ?? "";
 
   return (
     <div className="space-y-3">
-      <RefHeading>Point it — what the file can carry</RefHeading>
-      <div className="grid gap-2.5 sm:grid-cols-2">
-        {ordered.map((p) => (
-          <ProductRow key={p.name} product={p} />
-        ))}
+      <RefHeading>Tap the product you're pitching</RefHeading>
+
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Product to pitch">
+        {list.map((p, i) => {
+          const isActive = active?.name === p.name;
+          return (
+            <button
+              key={p.name}
+              type="button"
+              onClick={() => onSelect(p.name)}
+              aria-pressed={isActive}
+              className={cn(
+                "focus-ring inline-flex h-10 items-center gap-2 rounded-full border px-3.5 font-mono text-[11px] font-semibold uppercase tracking-wider transition-colors",
+                isActive
+                  ? "border-transparent bg-accent-gradient text-accent-foreground shadow-accent"
+                  : "border-border bg-card text-foreground hover:border-accent/40",
+              )}
+            >
+              <span
+                className={cn(
+                  "tnum text-[9px]",
+                  isActive ? "text-accent-foreground/70" : "text-muted-foreground/60",
+                )}
+              >
+                {i + 1}
+              </span>
+              {p.name}
+            </button>
+          );
+        })}
       </div>
-      {leadPitch && <SayItBlock title={leadPitch.title} say={leadPitch.say} cue={leadPitch.cue} />}
+
+      {active && (
+        <div className="console-card-accent space-y-2 p-3.5">
+          <div className="flex items-center gap-2">
+            <Tag color={active.tag}>{active.name}</Tag>
+            {active.primary && (
+              <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
+                Primary
+              </span>
+            )}
+            <span className="eyebrow ml-auto">Say it</span>
+          </div>
+          <LineHero text={spoken} size="secondary" />
+          {pitch?.cue && <Cue>{pitch.cue}</Cue>}
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 pt-1 text-[12.5px]">
+            <dt className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Best fit</dt>
+            <dd className="text-foreground" dangerouslySetInnerHTML={inlineHtml(active.bestFit)} />
+            <dt className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Terms</dt>
+            <dd className="text-muted-foreground" dangerouslySetInnerHTML={inlineHtml(active.terms)} />
+            <dt className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Speed</dt>
+            <dd className="text-muted-foreground">{active.speed}</dd>
+          </dl>
+        </div>
+      )}
+
       <Callout {...pitchRails} />
     </div>
   );
@@ -279,12 +336,21 @@ function FundedReference() {
  * shows depends entirely on the active step + branch; open/story/dig render no
  * reference (the spoken lines + cues carry those stages).
  */
-export function StageReference({ stage }: { stage: Step; branch: BranchId }) {
+export function StageReference({
+  stage,
+  pitchProduct,
+  onPitchProduct,
+}: {
+  stage: Step;
+  branch: BranchId;
+  pitchProduct: string;
+  onPitchProduct: (name: string) => void;
+}) {
   switch (stage) {
     case "gate":
       return <GateReference />;
     case "pitch":
-      return <PitchReference />;
+      return <PitchReference selected={pitchProduct} onSelect={onPitchProduct} />;
     case "close":
       return <CloseReference />;
     case "light":

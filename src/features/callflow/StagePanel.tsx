@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { Callout } from "@/components/ui/Callout";
 import { Cue, TextBubble } from "@/components/ui/Beat";
+import { isTypingTarget } from "@/features/search/useSearch";
 import { LineHero } from "./LineHero";
 import { StageReference } from "./StageReference";
 import { GateBranchControls } from "./GateBranchControls";
@@ -12,6 +13,9 @@ import {
   stepCues,
   stepTexts,
   branchTitle,
+  pitchProducts,
+  primaryProduct,
+  pitchFramePhrase,
   type Step,
 } from "./callScript";
 import type { UseCallFlow } from "./useCallFlow";
@@ -35,8 +39,33 @@ export function StagePanel({ flow }: { flow: UseCallFlow }) {
   const reduce = useReducedMotion();
   const { stage, lineIndex } = flow;
 
+  // Which product the rep is pitching (Pitch stage). Default = MCA (primary).
+  const pitchList = useMemo(() => pitchProducts(), []);
+  const [pitchProduct, setPitchProduct] = useState(
+    () => primaryProduct()?.name ?? pitchList[0]?.name ?? "",
+  );
+
+  // At Pitch, number keys 1–N set the product (guarded so typing never triggers).
+  useEffect(() => {
+    if (stage !== "pitch") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey || isTypingTarget(e.target)) return;
+      const n = Number(e.key);
+      if (Number.isInteger(n) && n >= 1 && n <= pitchList.length) {
+        e.preventDefault();
+        setPitchProduct(pitchList[n - 1].name);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [stage, pitchList]);
+
   const lines = stepLines(stage);
-  const heroLine = lines[lineIndex] ?? lines[lines.length - 1] ?? "";
+  let heroLine = lines[lineIndex] ?? lines[lines.length - 1] ?? "";
+  // The Pitch opener is a fill-in-the-blank — the tapped product completes it.
+  if (stage === "pitch" && lineIndex === 0) {
+    heroLine = heroLine.replace(/a \[[^\]]*\]/i, pitchFramePhrase(pitchProduct));
+  }
   const upcoming = lines.slice(lineIndex + 1);
   const cues = stepCues(stage);
   const isBranchScreen = stage === "light" || stage === "funded";
@@ -96,13 +125,28 @@ export function StagePanel({ flow }: { flow: UseCallFlow }) {
 
       {stage === "gate" && <GateBranchControls flow={flow} />}
 
-      <ReferenceSlot stage={stage} branch={flow.branch} />
+      <ReferenceSlot
+        stage={stage}
+        branch={flow.branch}
+        pitchProduct={pitchProduct}
+        onPitchProduct={setPitchProduct}
+      />
     </div>
   );
 }
 
 /** The contextual reference, wrapped so it eases in on stage change too. */
-function ReferenceSlot({ stage, branch }: { stage: Step; branch: UseCallFlow["branch"] }) {
+function ReferenceSlot({
+  stage,
+  branch,
+  pitchProduct,
+  onPitchProduct,
+}: {
+  stage: Step;
+  branch: UseCallFlow["branch"];
+  pitchProduct: string;
+  onPitchProduct: (name: string) => void;
+}) {
   const reduce = useReducedMotion();
   return (
     <motion.div
@@ -112,7 +156,12 @@ function ReferenceSlot({ stage, branch }: { stage: Step; branch: UseCallFlow["br
       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : 0.04 }}
       className="console-rule pt-4 empty:hidden empty:border-0 empty:pt-0"
     >
-      <StageReference stage={stage} branch={branch} />
+      <StageReference
+        stage={stage}
+        branch={branch}
+        pitchProduct={pitchProduct}
+        onPitchProduct={onPitchProduct}
+      />
     </motion.div>
   );
 }

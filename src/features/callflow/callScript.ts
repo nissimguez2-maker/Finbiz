@@ -125,6 +125,37 @@ export function primaryProduct(): Product | undefined {
 export const pitchPitches: ProductPitch[] = products.pitches;
 export const pitchRails: Callout = products.rails;
 
+/** Look up a product by its exact name. */
+export function productByName(name: string): Product | undefined {
+  return products.products.find((p) => p.name === name);
+}
+
+/** Short phrase that fills the Pitch opener's "a [term loan / line / advance]" blank. */
+const FRAME_PHRASES: { match: RegExp; phrase: string }[] = [
+  { match: /mca/i, phrase: "an advance" },
+  { match: /term loan/i, phrase: "a term loan" },
+  { match: /line of credit/i, phrase: "a line of credit" },
+  { match: /equip/i, phrase: "equipment financing" },
+  { match: /heloc/i, phrase: "a HELOC against your equity" },
+  { match: /renew|refi|consol/i, phrase: "a renewal" },
+];
+export function pitchFramePhrase(name: string): string {
+  return FRAME_PHRASES.find((f) => f.match.test(name))?.phrase ?? "the right product";
+}
+
+/** The ready-to-speak pitch line for a product, if one exists in products.pitches. */
+export function pitchForProduct(name: string): ProductPitch | undefined {
+  const keys: { match: RegExp; title: RegExp }[] = [
+    { match: /mca/i, title: /mca/i },
+    { match: /term loan/i, title: /term loan/i },
+    { match: /heloc/i, title: /heloc/i },
+    { match: /equip/i, title: /equip/i },
+    { match: /renew|refi|consol/i, title: /renew|refi|consol|second swing/i },
+  ];
+  const k = keys.find((x) => x.match.test(name));
+  return k ? products.pitches.find((p) => k.title.test(p.title)) : undefined;
+}
+
 /* ---- Light branch reference (relationship plays) ----------------------- */
 export function relationshipProducts(): Product[] {
   return products.products.filter((p) => p.relationshipPlay);
