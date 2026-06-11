@@ -112,7 +112,7 @@ function StepButton({
       {/* Signature accent bar marks the active stage. */}
       <span
         className={cn(
-          "absolute inset-x-3 -bottom-px h-[3px] rounded-full bg-accent-gradient transition-opacity duration-200",
+          "absolute inset-x-3 -bottom-px h-[3px] rounded-full bg-accent transition-opacity duration-200",
           active ? "opacity-100" : "opacity-0",
         )}
         aria-hidden="true"
@@ -145,7 +145,7 @@ function BranchSlot({ active, label }: { active: boolean; label: string | null }
     >
       <span
         className={cn(
-          "absolute inset-x-3 -bottom-px h-[3px] rounded-full bg-accent-gradient transition-opacity duration-200",
+          "absolute inset-x-3 -bottom-px h-[3px] rounded-full bg-accent transition-opacity duration-200",
           active ? "opacity-100" : "opacity-0",
         )}
         aria-hidden="true"

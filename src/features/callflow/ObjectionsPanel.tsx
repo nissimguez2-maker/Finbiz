@@ -1,26 +1,15 @@
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
-import {
-  objectionList,
-  dealKillers,
-  compliancePairs,
-} from "./callScript";
+import { objectionList, dealKillers, compliancePairs } from "./callScript";
 import type { Objection } from "@/types/content";
-import type { UseCallFlow } from "./useCallFlow";
 
 /**
- * The always-on right pane (GUIDED-FLOW §2 "Always-on: Objections pane").
- *
- *  - A filterable list of objections (`q` → `reframe`); typing narrows by `q`.
- *  - Clicking an objection expands its reframe large enough to read aloud.
- *  - Two collapsed sub-sections: deal killers (issue → move) and compliance
- *    pairs (don't → say), the latter clay/go tinted. Compliance wording is
- *    locked — rendered verbatim.
- *
- * On desktop it stays visible regardless of `flow.objectionsOpen`; that flag
- * only drives focus/emphasis (and hiding on narrow screens, handled by layout).
+ * The objection comebacks — folded into the LEFT (script) side, shown when the
+ * rep toggles "Objections" (`o`). A filterable list of `q` → `reframe`, with
+ * deal-killers and compliance pairs one tap down. The current line stays visible
+ * above this; this is just the lower area swapping from the collect-list.
  */
-export function ObjectionsPanel({ flow }: { flow: UseCallFlow }) {
+export function ObjectionsPanel() {
   const [filter, setFilter] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -31,25 +20,7 @@ export function ObjectionsPanel({ flow }: { flow: UseCallFlow }) {
   }, [filter]);
 
   return (
-    <aside
-      aria-label="Objections — say-this reference"
-      className={cn(
-        "flex h-full flex-col gap-3 transition-opacity",
-        !flow.objectionsOpen && "opacity-60",
-      )}
-    >
-      <header className="flex shrink-0 items-center justify-between gap-3">
-        <h2 className="eyebrow flex items-center gap-2">
-          Objections
-          <span className="font-sans text-[10px] font-normal normal-case tracking-normal text-muted-foreground/70">
-            {objectionList.length} reframes
-          </span>
-        </h2>
-        <kbd className="kbd-hint" aria-hidden="true">
-          o
-        </kbd>
-      </header>
-
+    <div className="flex h-full flex-col gap-3">
       <input
         type="text"
         value={filter}
@@ -59,7 +30,7 @@ export function ObjectionsPanel({ flow }: { flow: UseCallFlow }) {
         className="focus-ring w-full shrink-0 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent/40"
       />
 
-      <ul className="scroll-thin min-h-0 flex-1 space-y-1 overflow-y-auto pr-1">
+      <ul className="space-y-1">
         {filtered.map((o) => (
           <ObjectionItem
             key={o.q}
@@ -75,11 +46,35 @@ export function ObjectionsPanel({ flow }: { flow: UseCallFlow }) {
         )}
       </ul>
 
-      <div className="shrink-0 space-y-2 border-t border-border/60 pt-3">
-        <DealKillers />
-        <Compliance />
+      <div className="space-y-2 border-t border-border/60 pt-3">
+        <Disclosure label="Deal killers" count={dealKillers.length}>
+          <ul className="space-y-2">
+            {dealKillers.map((dk) => (
+              <li key={dk.issue} className="rounded-lg border border-border bg-card px-3 py-2">
+                <span className="block text-[13px] font-semibold text-foreground">{dk.issue}</span>
+                <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">{dk.move}</span>
+              </li>
+            ))}
+          </ul>
+        </Disclosure>
+        <Disclosure label="Compliance" count={compliancePairs.length}>
+          <ul className="space-y-2">
+            {compliancePairs.map((c) => (
+              <li key={c.dont} className="overflow-hidden rounded-lg border border-border">
+                <div className="border-b border-border bg-clay/[0.06] px-3 py-1.5">
+                  <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-clay">Don't</span>
+                  <span className="mt-0.5 block text-[12.5px] leading-snug text-foreground">{c.dont}</span>
+                </div>
+                <div className="bg-go/[0.06] px-3 py-1.5">
+                  <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-go">Say</span>
+                  <span className="mt-0.5 block text-[12.5px] leading-snug text-foreground">{c.say}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Disclosure>
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -99,30 +94,18 @@ function ObjectionItem({
         onClick={onToggle}
         aria-expanded={open}
         className={cn(
-          "focus-ring flex w-full items-start gap-2 rounded-lg border px-2.5 py-1.5 text-left transition-colors",
-          open
-            ? "console-card-accent shadow-none"
-            : "border-transparent hover:border-border hover:bg-muted/40",
+          "focus-ring flex w-full items-start gap-2 rounded-lg border px-2.5 py-2 text-left transition-colors",
+          open ? "border-accent bg-accent/[0.05]" : "border-transparent hover:border-border hover:bg-muted/40",
         )}
       >
-        <span
-          aria-hidden="true"
-          className={cn(
-            "mt-[3px] font-mono text-[11px] text-accent transition-transform",
-            open && "rotate-90",
-          )}
-        >
+        <span aria-hidden="true" className={cn("mt-[3px] font-mono text-[11px] text-accent", open && "rotate-90")}>
           ▸
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[13.5px] font-semibold leading-snug text-foreground">
-            “{objection.q}”
-          </span>
+          <span className="block text-[14px] font-semibold leading-snug text-foreground">“{objection.q}”</span>
           {open && (
             <>
-              <span className="mt-2 block text-[15px] leading-relaxed text-foreground">
-                {objection.reframe}
-              </span>
+              <span className="mt-2 block text-[16px] leading-relaxed text-foreground">{objection.reframe}</span>
               {objection.note && (
                 <span className="mt-1.5 block text-[12.5px] italic leading-snug text-muted-foreground">
                   {objection.note}
@@ -136,15 +119,7 @@ function ObjectionItem({
   );
 }
 
-function Disclosure({
-  label,
-  count,
-  children,
-}: {
-  label: string;
-  count: number;
-  children: React.ReactNode;
-}) {
+function Disclosure({ label, count, children }: { label: string; count: number; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div>
@@ -160,56 +135,5 @@ function Disclosure({
       </button>
       {open && <div className="mt-2">{children}</div>}
     </div>
-  );
-}
-
-function DealKillers() {
-  return (
-    <Disclosure label="Deal killers" count={dealKillers.length}>
-      <ul className="space-y-2">
-        {dealKillers.map((dk) => (
-          <li key={dk.issue} className="console-card px-3 py-2">
-            <span className="block text-[13px] font-semibold text-foreground">
-              {dk.issue}
-            </span>
-            <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">
-              {dk.move}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </Disclosure>
-  );
-}
-
-function Compliance() {
-  return (
-    <Disclosure label="Compliance" count={compliancePairs.length}>
-      <ul className="space-y-2">
-        {compliancePairs.map((c) => (
-          <li
-            key={c.dont}
-            className="overflow-hidden rounded-lg border border-border"
-          >
-            <div className="border-b border-border bg-clay/[0.06] px-3 py-1.5">
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-clay">
-                Don't
-              </span>
-              <span className="mt-0.5 block text-[12.5px] leading-snug text-foreground">
-                {c.dont}
-              </span>
-            </div>
-            <div className="bg-go/[0.06] px-3 py-1.5">
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-go">
-                Say
-              </span>
-              <span className="mt-0.5 block text-[12.5px] leading-snug text-foreground">
-                {c.say}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Disclosure>
   );
 }

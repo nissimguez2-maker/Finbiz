@@ -1,168 +1,104 @@
-import { useEffect, useMemo, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useState } from "react";
 import { cn } from "@/lib/cn";
-import { Callout } from "@/components/ui/Callout";
 import { Cue, TextBubble } from "@/components/ui/Beat";
-import { isTypingTarget } from "@/features/search/useSearch";
 import { LineHero } from "./LineHero";
 import { StageReference } from "./StageReference";
 import { GateBranchControls } from "./GateBranchControls";
-import {
-  flowRule,
-  stepLines,
-  stepCues,
-  stepTexts,
-  branchTitle,
-  pitchProducts,
-  primaryProduct,
-  pitchFramePhrase,
-  type Step,
-} from "./callScript";
+import { ObjectionsPanel } from "./ObjectionsPanel";
+import { flowRule, stepLines, stepCues, stepTexts, branchTitle, pitchFramePhrase } from "./callScript";
 import type { UseCallFlow } from "./useCallFlow";
 
 /**
- * The left main pane of the live-call console (GUIDED-FLOW §2/§3).
- *
- * Renders, top to bottom:
- *  - the persistent `flowRule` coaching strip (compact Callout),
- *  - on light/funded, the locked `branchTitle` as a heading,
- *  - the current hero line + the still-to-come lines of this step,
- *  - the step's coaching cues,
- *  - on `close`, the literal SMS bubbles with copy-to-clipboard,
- *  - the contextual `StageReference`,
- *  - and at the `gate`, the three branch buttons.
- *
- * A short fade-in-up plays on every stage/line change (skipped under
- * prefers-reduced-motion). All script copy comes through callScript selectors.
+ * The left pane — "what I say." The current line is always the hero at top; the
+ * lower area holds either the stage's collect-reference (Close) or, when toggled
+ * (`o`), the objection comebacks. Products live on the right matrix; tapping one
+ * there fills this stage's pitch line. No decorative motion — calm and legible.
  */
-export function StagePanel({ flow }: { flow: UseCallFlow }) {
-  const reduce = useReducedMotion();
-  const { stage, lineIndex } = flow;
-
-  // Which product the rep is pitching (Pitch stage). Default = MCA (primary).
-  const pitchList = useMemo(() => pitchProducts(), []);
-  const [pitchProduct, setPitchProduct] = useState(
-    () => primaryProduct()?.name ?? pitchList[0]?.name ?? "",
-  );
-
-  // At Pitch, number keys 1–N set the product (guarded so typing never triggers).
-  useEffect(() => {
-    if (stage !== "pitch") return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey || isTypingTarget(e.target)) return;
-      const n = Number(e.key);
-      if (Number.isInteger(n) && n >= 1 && n <= pitchList.length) {
-        e.preventDefault();
-        setPitchProduct(pitchList[n - 1].name);
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [stage, pitchList]);
+export function StagePanel({ flow, pitchProduct }: { flow: UseCallFlow; pitchProduct: string }) {
+  const { stage, lineIndex, objectionsOpen } = flow;
 
   const lines = stepLines(stage);
   let heroLine = lines[lineIndex] ?? lines[lines.length - 1] ?? "";
-  // The Pitch opener is a fill-in-the-blank — the tapped product completes it.
   if (stage === "pitch" && lineIndex === 0) {
     heroLine = heroLine.replace(/a \[[^\]]*\]/i, pitchFramePhrase(pitchProduct));
   }
   const upcoming = lines.slice(lineIndex + 1);
   const cues = stepCues(stage);
   const isBranchScreen = stage === "light" || stage === "funded";
-
-  // Mark where we are within a multi-line beat so the rep can see progress
-  // without it competing with the hero.
   const lineCount = lines.length;
+  const showReference = !objectionsOpen && stage === "close";
 
   return (
-    <div className="flex flex-col gap-4">
-      {flowRule && (
-        <Callout
-          {...flowRule}
-          className="shrink-0 border-border/70 bg-muted/40 py-1.5 text-[12.5px] text-muted-foreground"
-        />
-      )}
-
-      {/* Hero + upcoming lines re-key on stage/line so the entrance replays. */}
-      <motion.div
-        key={`${stage}-${lineIndex}`}
-        initial={reduce ? false : { opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-3.5"
-      >
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
+      {/* Header: where we are + the one toggle (script ⇄ objections). */}
+      <div className="flex shrink-0 items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          {isBranchScreen && (
-            <h2 className="eyebrow text-accent">{branchTitle(stage)}</h2>
-          )}
-          {lineCount > 1 && (
-            <span className="eyebrow tnum tracking-wider text-muted-foreground/70">
-              Line {lineIndex + 1} / {lineCount}
+          <h2 className={cn("eyebrow", isBranchScreen && !objectionsOpen && "text-accent")}>
+            {objectionsOpen ? "Objections" : isBranchScreen ? branchTitle(stage) : "Script"}
+          </h2>
+          {lineCount > 1 && !objectionsOpen && (
+            <span className="eyebrow tnum text-muted-foreground/70">
+              Line {lineIndex + 1}/{lineCount}
             </span>
           )}
         </div>
+        <button
+          type="button"
+          onClick={flow.toggleObjections}
+          aria-pressed={objectionsOpen}
+          className={cn(
+            "focus-ring inline-flex h-8 items-center gap-2 rounded-lg border px-3 font-mono text-[11px] font-semibold uppercase tracking-label transition-colors",
+            objectionsOpen
+              ? "border-accent bg-accent/[0.06] text-accent"
+              : "border-border text-muted-foreground hover:border-accent/40 hover:text-foreground",
+          )}
+        >
+          {objectionsOpen ? "Back to script" : "Objections"}
+          <kbd className="kbd-hint" aria-hidden="true">o</kbd>
+        </button>
+      </div>
 
-        <LineHero text={heroLine} size="hero" />
-
-        {upcoming.length > 0 && (
-          <div className="flex flex-col gap-1.5">
-            {upcoming.map((line, i) => (
-              <LineHero key={i} text={line} size="secondary" />
-            ))}
-          </div>
+      {/* The current line — always on top, the one thing the eye lands on. */}
+      <div className="flex shrink-0 flex-col gap-3">
+        {flowRule && !objectionsOpen && (
+          <p className="text-[12.5px] leading-snug text-muted-foreground">
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground/70">
+              {flowRule.label}{" · "}
+            </span>
+            {flowRule.body}
+          </p>
         )}
 
-        {cues.length > 0 && (
-          <div className="flex flex-col gap-1.5">
-            {cues.map((cue, i) => (
-              <Cue key={i}>{cue}</Cue>
-            ))}
-          </div>
+        {!objectionsOpen && (
+          <>
+            <LineHero text={heroLine} size="hero" />
+            {upcoming.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                {upcoming.map((line, i) => (
+                  <LineHero key={i} text={line} size="secondary" />
+                ))}
+              </div>
+            )}
+            {cues.length > 0 && (
+              <div className="flex flex-col gap-1.5">
+                {cues.map((c, i) => (
+                  <Cue key={i}>{c}</Cue>
+                ))}
+              </div>
+            )}
+            {stage === "close" && <CloseTexts texts={stepTexts("close")} />}
+            {stage === "gate" && <GateBranchControls flow={flow} />}
+          </>
         )}
+      </div>
 
-        {stage === "close" && <CloseTexts texts={stepTexts("close")} />}
-      </motion.div>
-
-      {stage === "gate" && <GateBranchControls flow={flow} />}
-
-      <ReferenceSlot
-        stage={stage}
-        branch={flow.branch}
-        pitchProduct={pitchProduct}
-        onPitchProduct={setPitchProduct}
-      />
+      {/* Lower area: objections (toggled, any stage) or the Close collect list. */}
+      {(objectionsOpen || showReference) && (
+        <div className="min-h-0 flex-1 overflow-y-auto scroll-thin border-t border-border/60 pt-4">
+          {objectionsOpen ? <ObjectionsPanel /> : <StageReference stage={stage} branch={flow.branch} />}
+        </div>
+      )}
     </div>
-  );
-}
-
-/** The contextual reference, wrapped so it eases in on stage change too. */
-function ReferenceSlot({
-  stage,
-  branch,
-  pitchProduct,
-  onPitchProduct,
-}: {
-  stage: Step;
-  branch: UseCallFlow["branch"];
-  pitchProduct: string;
-  onPitchProduct: (name: string) => void;
-}) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      key={`ref-${stage}-${branch}`}
-      initial={reduce ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : 0.04 }}
-      className="console-rule pt-4 empty:hidden empty:border-0 empty:pt-0"
-    >
-      <StageReference
-        stage={stage}
-        branch={branch}
-        pitchProduct={pitchProduct}
-        onPitchProduct={onPitchProduct}
-      />
-    </motion.div>
   );
 }
 
@@ -194,10 +130,7 @@ function CopyableText({ text }: { text: string }) {
       type="button"
       onClick={copy}
       aria-label={`Copy text: ${text}`}
-      className={cn(
-        "focus-ring group rounded-2xl transition-opacity",
-        copied && "opacity-70",
-      )}
+      className={cn("focus-ring rounded-2xl", copied && "opacity-70")}
     >
       <TextBubble>
         {text}

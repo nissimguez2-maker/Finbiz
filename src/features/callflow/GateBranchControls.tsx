@@ -27,9 +27,9 @@ const toneIdle: Record<BranchButton["tone"], string> = {
 };
 
 const toneSelected: Record<BranchButton["tone"], string> = {
-  go: "border-go bg-go text-white shadow-md",
-  amber: "border-amber bg-amber text-white shadow-md",
-  accent: "border-transparent bg-accent-gradient text-accent-foreground shadow-accent",
+  go: "border-go bg-go text-white",
+  amber: "border-amber bg-amber text-white",
+  accent: "border-accent bg-accent text-accent-foreground",
 };
 
 const keyTone: Record<BranchButton["tone"], string> = {
@@ -49,18 +49,10 @@ export function GateBranchControls({ flow }: { flow: UseCallFlow }) {
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border p-3.5 shadow-sm transition-colors",
-        awaiting ? "border-accent/40 bg-accent/[0.03]" : "border-border bg-card/50",
+        "rounded-xl border p-3.5 transition-colors",
+        awaiting ? "border-accent/40 bg-accent/[0.03]" : "border-border",
       )}
     >
-      {/* signature accent rail — lights up when a lane is owed. */}
-      <span
-        className={cn(
-          "absolute inset-y-0 left-0 w-1 transition-opacity",
-          awaiting ? "bg-accent-gradient opacity-100" : "opacity-0",
-        )}
-        aria-hidden="true"
-      />
       <div className="mb-2.5 flex items-center justify-between pl-1.5">
         <span className="eyebrow">Where do the two numbers land?</span>
         {awaiting && (
@@ -80,8 +72,7 @@ export function GateBranchControls({ flow }: { flow: UseCallFlow }) {
               onClick={() => flow.setBranch(b.branch)}
               aria-pressed={selected}
               className={cn(
-                "focus-ring group flex min-h-[44px] flex-col gap-1.5 rounded-xl border px-3.5 py-3 text-left transition-all duration-200",
-                "hover:-translate-y-0.5",
+                "focus-ring flex min-h-[44px] flex-col gap-1.5 rounded-xl border px-3.5 py-3 text-left transition-colors",
                 selected ? toneSelected[b.tone] : toneIdle[b.tone],
                 awaiting && !selected && "ring-1 ring-accent/20",
               )}

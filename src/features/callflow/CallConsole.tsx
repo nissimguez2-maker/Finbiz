@@ -1,73 +1,60 @@
 import { useState } from "react";
 import { NotesDrawer } from "@/features/notes/NotesDrawer";
 import { useCallTimer } from "@/features/notes/useCallTimer";
-import { cn } from "@/lib/cn";
+import { primaryProduct } from "./callScript";
 import { TopBar } from "./TopBar";
 import { StageStepper } from "./StageStepper";
 import { FooterStrip } from "./FooterStrip";
 import { StagePanel } from "./StagePanel";
-import { ObjectionsPanel } from "./ObjectionsPanel";
+import { ProductMatrixPanel } from "./ProductMatrixPanel";
 import { AfterCallPanel } from "./AfterCallPanel";
 import { useCallFlow } from "./useCallFlow";
 import { useKeyboardFlow } from "./useKeyboardFlow";
 
 /**
- * The guided live-call console — the new app root (replaces the scrolling Shell).
+ * The guided live-call console.
  *
- * Layout (desktop two-pane, §3): a fixed-height column that fills the viewport
- * and never page-scrolls — TopBar, StageStepper, a main row holding the
- * StagePanel (left, ~64%) and the persistent ObjectionsPanel (right, ~36%),
- * then the FooterStrip. The AfterCallPanel overlays on demand and the existing
- * NotesDrawer mounts its own fixed dock. Only the inner panes scroll.
+ *  LEFT  — "what I say": the script (current line + stage context), with the
+ *          objection comebacks folded in (toggled by `o` / the header button).
+ *  RIGHT — "what I sell": the persistent product matrix (thresholds +
+ *          branch-driven recommendation); tapping a product sets the pitch line.
  *
- * Below `lg`, the two panes stack and the objections pane drops out of the row;
- * it becomes a bottom sheet toggled by `flow.toggleObjections` (footer button /
- * `o`). The StagePanel owns the per-stage fade-in-up entrance.
+ * Stripped to the essentials — no decorative motion, gradients, or glow. The
+ * current line and the matrix are the only things meant to pull the eye.
  */
 export function CallConsole() {
   const flow = useCallFlow();
   useKeyboardFlow(flow);
   const timer = useCallTimer();
   const [notesOpen, setNotesOpen] = useState(false);
+  const [pitchProduct, setPitchProduct] = useState(() => primaryProduct()?.name ?? "");
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-background text-foreground">
       <TopBar timer={timer} />
       <StageStepper flow={flow} />
 
-      {/* Main row: stage pane (left) + persistent objections pane (right).
-          Stacks vertically below lg. min-h-0 lets the children own their own
-          overflow so the page itself never scrolls. */}
       <main className="flex min-h-0 flex-1 flex-col lg:flex-row">
+        {/* LEFT — the script (talk track + objections) */}
         <section
-          aria-label="Current stage"
-          className="pane-scroll flex min-w-0 flex-col px-5 py-5 sm:px-7 sm:py-6 lg:basis-[64%]"
+          aria-label="Script"
+          className="flex min-w-0 flex-col px-5 py-5 sm:px-7 sm:py-6 lg:basis-[60%]"
         >
-          <StagePanel flow={flow} />
+          <StagePanel flow={flow} pitchProduct={pitchProduct} />
         </section>
 
-        {/* Desktop: persistent right pane. Narrow: rendered as a bottom sheet
-            controlled by flow.objectionsOpen (handled inside ObjectionsPanel),
-            so it is always mounted but visually repositions. */}
+        {/* RIGHT — the product matrix (what I sell) */}
         <aside
-          aria-label="Objections"
-          className={cn(
-            // Narrow: `contents` removes the aside from layout so the panel can
-            // position itself as a bottom sheet. lg: a fixed ~36% bordered rail.
-            "contents",
-            "lg:flex lg:min-h-0 lg:shrink-0 lg:basis-[36%] lg:flex-col lg:border-l lg:border-border lg:bg-muted/20 lg:px-5 lg:py-5",
-          )}
+          aria-label="Product matrix"
+          className="flex min-h-0 shrink-0 flex-col border-t border-border lg:basis-[40%] lg:border-l lg:border-t-0"
         >
-          <ObjectionsPanel flow={flow} />
+          <ProductMatrixPanel branch={flow.branch} selected={pitchProduct} onSelect={setPitchProduct} />
         </aside>
       </main>
 
       <FooterStrip flow={flow} onOpenNotes={() => setNotesOpen(true)} />
 
-      {/* After-the-call overlay (slides in; dismiss = Esc / close). */}
       <AfterCallPanel flow={flow} />
-
-      {/* Controlled call-notes drawer, sharing the console's single timer. */}
       <NotesDrawer open={notesOpen} onClose={() => setNotesOpen(false)} timer={timer} />
     </div>
   );

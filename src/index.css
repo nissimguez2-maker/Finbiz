@@ -110,7 +110,7 @@
      one quiet lift. Every reference block, lane card, product row and objection
      row inherits this so radii/borders/shadows never drift between panels. */
   .console-card {
-    @apply rounded-xl border border-border bg-card shadow-sm;
+    @apply rounded-xl border border-border bg-card;
   }
 
   /* A primary/active surface: the accent-tinted variant of console-card, used
@@ -138,16 +138,10 @@
     @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-border bg-background px-1 font-mono text-[10px] font-semibold leading-none text-muted-foreground;
   }
 
-  /* The "live" pulse dot — the single permitted looping motion in the live
-     view (a heartbeat next to the running timer). Stilled under reduced-motion. */
+  /* A static "live" dot next to the running timer. No looping motion — the
+     console stays calm so nothing competes with the line you're reading. */
   .live-dot {
     @apply h-2 w-2 rounded-full bg-go;
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .live-dot {
-      animation: none;
-    }
   }
 }
 

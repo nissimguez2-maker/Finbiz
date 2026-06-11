@@ -47,7 +47,7 @@ export function useCallFlow(): UseCallFlow {
   const [stage, setStage] = useState<Step>("open");
   const [branch, setBranchState] = useState<BranchId>(null);
   const [lineIndex, setLineIndex] = useState(0);
-  const [objectionsOpen, setObjectionsOpen] = useState(true);
+  const [objectionsOpen, setObjectionsOpen] = useState(false);
   const [afterCallOpen, setAfterCallOpen] = useState(false);
   const [afterCallTab, setAfterCallTab] = useState<AfterCallTab>("statements");
 
