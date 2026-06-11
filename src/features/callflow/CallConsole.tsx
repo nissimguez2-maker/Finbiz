@@ -37,7 +37,7 @@ export function CallConsole() {
       <main className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <section
           aria-label="Current stage"
-          className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:basis-[64%]"
+          className="pane-scroll flex min-w-0 flex-col px-5 py-5 sm:px-7 sm:py-6 lg:basis-[64%]"
         >
           <StagePanel flow={flow} />
         </section>
@@ -51,7 +51,7 @@ export function CallConsole() {
             // Narrow: `contents` removes the aside from layout so the panel can
             // position itself as a bottom sheet. lg: a fixed ~36% bordered rail.
             "contents",
-            "lg:flex lg:min-h-0 lg:shrink-0 lg:basis-[36%] lg:flex-col lg:border-l lg:border-border",
+            "lg:flex lg:min-h-0 lg:shrink-0 lg:basis-[36%] lg:flex-col lg:border-l lg:border-border lg:bg-muted/20 lg:px-5 lg:py-5",
           )}
         >
           <ObjectionsPanel flow={flow} />

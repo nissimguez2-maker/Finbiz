@@ -28,9 +28,7 @@ export function FooterStrip({ flow }: { flow: UseCallFlow }) {
     <footer className="no-print flex h-12 shrink-0 items-center gap-3 border-t border-border bg-muted/30 px-4 sm:px-6">
       {/* Compliance rails — the lines a rep must always hold. */}
       <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto scroll-thin">
-        <span className="shrink-0 font-mono text-[10px] uppercase tracking-label text-muted-foreground">
-          Rails
-        </span>
+        <span className="eyebrow shrink-0">Rails</span>
         <ul className="flex items-center gap-2 whitespace-nowrap">
           {rails.map((r) => (
             <li

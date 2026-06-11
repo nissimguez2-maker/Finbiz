@@ -39,10 +39,13 @@ export function ObjectionsPanel({ flow }: { flow: UseCallFlow }) {
       )}
     >
       <header className="flex shrink-0 items-center justify-between gap-3">
-        <h2 className="font-mono text-[11px] font-semibold uppercase tracking-label text-muted-foreground">
+        <h2 className="eyebrow flex items-center gap-2">
           Objections
+          <span className="font-sans text-[10px] font-normal normal-case tracking-normal text-muted-foreground/70">
+            {objectionList.length} reframes
+          </span>
         </h2>
-        <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+        <kbd className="kbd-hint" aria-hidden="true">
           o
         </kbd>
       </header>
@@ -56,7 +59,7 @@ export function ObjectionsPanel({ flow }: { flow: UseCallFlow }) {
         className="focus-ring w-full shrink-0 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-accent/40"
       />
 
-      <ul className="min-h-0 flex-1 space-y-1.5 overflow-y-auto pr-1">
+      <ul className="scroll-thin min-h-0 flex-1 space-y-1 overflow-y-auto pr-1">
         {filtered.map((o) => (
           <ObjectionItem
             key={o.q}
@@ -96,23 +99,23 @@ function ObjectionItem({
         onClick={onToggle}
         aria-expanded={open}
         className={cn(
-          "focus-ring flex w-full items-start gap-2 rounded-lg border px-3 py-2 text-left transition-colors",
+          "focus-ring flex w-full items-start gap-2 rounded-lg border px-2.5 py-1.5 text-left transition-colors",
           open
-            ? "border-accent/30 bg-accent/[0.04]"
+            ? "console-card-accent shadow-none"
             : "border-transparent hover:border-border hover:bg-muted/40",
         )}
       >
         <span
           aria-hidden="true"
           className={cn(
-            "mt-0.5 font-mono text-xs text-accent transition-transform",
+            "mt-[3px] font-mono text-[11px] text-accent transition-transform",
             open && "rotate-90",
           )}
         >
           ▸
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold leading-snug text-foreground">
+          <span className="block text-[13.5px] font-semibold leading-snug text-foreground">
             “{objection.q}”
           </span>
           {open && (
@@ -149,7 +152,7 @@ function Disclosure({
         type="button"
         onClick={() => setOpen((s) => !s)}
         aria-expanded={open}
-        className="focus-ring flex w-full items-center gap-1.5 rounded-md py-1 font-mono text-[11px] font-semibold uppercase tracking-label text-muted-foreground transition-colors hover:text-foreground"
+        className="eyebrow focus-ring flex w-full items-center gap-1.5 rounded-md py-1 transition-colors hover:text-foreground"
       >
         <span aria-hidden="true">{open ? "▾" : "▸"}</span>
         {label}
@@ -165,10 +168,7 @@ function DealKillers() {
     <Disclosure label="Deal killers" count={dealKillers.length}>
       <ul className="space-y-2">
         {dealKillers.map((dk) => (
-          <li
-            key={dk.issue}
-            className="rounded-lg border border-border bg-card px-3 py-2"
-          >
+          <li key={dk.issue} className="console-card px-3 py-2">
             <span className="block text-[13px] font-semibold text-foreground">
               {dk.issue}
             </span>

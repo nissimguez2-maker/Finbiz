@@ -27,8 +27,8 @@ export function LineHero({
         "before:font-bold before:text-accent before:content-['\\201C']",
         "after:font-bold after:text-accent after:content-['\\201D']",
         isHero
-          ? "text-[clamp(1.875rem,2.2vw+1rem,3rem)] font-bold leading-[1.12] tracking-tight text-foreground"
-          : "text-xl font-semibold leading-snug text-muted-foreground",
+          ? "text-[clamp(1.875rem,2vw+1.1rem,3.25rem)] font-bold leading-[1.1] tracking-[-0.015em] text-foreground"
+          : "text-lg font-medium leading-snug text-muted-foreground/90",
       )}
     >
       {text}

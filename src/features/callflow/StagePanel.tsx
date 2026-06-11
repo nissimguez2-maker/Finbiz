@@ -41,10 +41,17 @@ export function StagePanel({ flow }: { flow: UseCallFlow }) {
   const cues = stepCues(stage);
   const isBranchScreen = stage === "light" || stage === "funded";
 
+  // Mark where we are within a multi-line beat so the rep can see progress
+  // without it competing with the hero.
+  const lineCount = lines.length;
+
   return (
-    <div className="flex h-full flex-col gap-6">
+    <div className="flex flex-col gap-4">
       {flowRule && (
-        <Callout {...flowRule} className="shrink-0 py-2 text-[13px]" />
+        <Callout
+          {...flowRule}
+          className="shrink-0 border-border/70 bg-muted/40 py-1.5 text-[12.5px] text-muted-foreground"
+        />
       )}
 
       {/* Hero + upcoming lines re-key on stage/line so the entrance replays. */}
@@ -53,18 +60,23 @@ export function StagePanel({ flow }: { flow: UseCallFlow }) {
         initial={reduce ? false : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-3.5"
       >
-        {isBranchScreen && (
-          <h2 className="font-display text-lg text-muted-foreground">
-            {branchTitle(stage)}
-          </h2>
-        )}
+        <div className="flex items-center gap-2.5">
+          {isBranchScreen && (
+            <h2 className="eyebrow text-accent">{branchTitle(stage)}</h2>
+          )}
+          {lineCount > 1 && (
+            <span className="eyebrow tnum tracking-wider text-muted-foreground/70">
+              Line {lineIndex + 1} / {lineCount}
+            </span>
+          )}
+        </div>
 
         <LineHero text={heroLine} size="hero" />
 
         {upcoming.length > 0 && (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {upcoming.map((line, i) => (
               <LineHero key={i} text={line} size="secondary" />
             ))}
@@ -98,7 +110,7 @@ function ReferenceSlot({ stage, branch }: { stage: Step; branch: UseCallFlow["br
       initial={reduce ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : 0.04 }}
-      className="border-t border-border/60 pt-5 empty:hidden empty:border-0 empty:pt-0"
+      className="console-rule pt-4 empty:hidden empty:border-0 empty:pt-0"
     >
       <StageReference stage={stage} branch={branch} />
     </motion.div>

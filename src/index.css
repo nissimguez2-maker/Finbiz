@@ -94,6 +94,61 @@
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring;
   }
+
+  /* ---- Live-call console primitives -------------------------------------
+     Shared so the three panels read as one surface: consistent eyebrow,
+     card chrome, and a single padded scroll region per pane. */
+
+  /* Mono eyebrow label used across every panel heading (Objections, refs…).
+     One typographic idiom for every section label in the console so the three
+     panels read as a single surface. */
+  .eyebrow {
+    @apply font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground;
+  }
+
+  /* The cohesive reference/objection card — one radius, one border, one fill,
+     one quiet lift. Every reference block, lane card, product row and objection
+     row inherits this so radii/borders/shadows never drift between panels. */
+  .console-card {
+    @apply rounded-xl border border-border bg-card shadow-sm;
+  }
+
+  /* A primary/active surface: the accent-tinted variant of console-card, used
+     for the primary product, the active objection, and awaiting states. */
+  .console-card-accent {
+    @apply rounded-xl border;
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    background-color: color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+
+  /* A thin section divider that collapses cleanly when its block is empty. */
+  .console-rule {
+    @apply border-t;
+    border-top-color: color-mix(in srgb, var(--border) 60%, transparent);
+  }
+
+  /* The pane scroll region: the only place the live view ever scrolls. */
+  .pane-scroll {
+    @apply min-h-0 flex-1 overflow-y-auto scroll-thin;
+  }
+
+  /* One hotkey-chip idiom across the whole console (stepper hints, objections
+     `o`, footer). Small, mono, quiet — a consistent keyboard vocabulary. */
+  .kbd-hint {
+    @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-border bg-background px-1 font-mono text-[10px] font-semibold leading-none text-muted-foreground;
+  }
+
+  /* The "live" pulse dot — the single permitted looping motion in the live
+     view (a heartbeat next to the running timer). Stilled under reduced-motion. */
+  .live-dot {
+    @apply h-2 w-2 rounded-full bg-go;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot {
+      animation: none;
+    }
+  }
 }
 
 /* Thin, unobtrusive scrollbars inside scroll regions */

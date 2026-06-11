@@ -35,10 +35,18 @@ function inlineHtml(s: string): { __html: string } {
 }
 
 function RefHeading({ children }: { children: React.ReactNode }) {
+  return <h3 className="eyebrow">{children}</h3>;
+}
+
+/** The ready-to-speak version of a product — one consistent card across Pitch
+ *  and Funded so the "here's the exact line" idiom never drifts. */
+function SayItBlock({ title, say, cue }: { title: string; say: string; cue: string }) {
   return (
-    <h3 className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground">
-      {children}
-    </h3>
+    <div className="console-card space-y-1.5 bg-muted/30 p-3">
+      <span className="eyebrow">{title}</span>
+      <Say>{say}</Say>
+      <Cue>{cue}</Cue>
+    </div>
   );
 }
 
@@ -56,13 +64,13 @@ const laneAccent: Record<Lane["tone"], string> = {
 
 function GateReference() {
   return (
-    <div className="space-y-4">
-      <RefHeading>Where do the two numbers land?</RefHeading>
-      <div className="grid gap-3 sm:grid-cols-3">
+    <div className="space-y-3">
+      <RefHeading>Lane read — floor & verdict</RefHeading>
+      <div className="grid gap-2.5 sm:grid-cols-3">
         {gateLanes.map((lane) => (
           <div
             key={lane.name}
-            className={cn("rounded-xl border p-3", laneTint[lane.tone])}
+            className={cn("rounded-xl border p-2.5", laneTint[lane.tone])}
           >
             <div className="mb-2 flex items-baseline justify-between">
               <span className="text-sm font-bold text-foreground">{lane.name}</span>
@@ -116,12 +124,7 @@ function GateReference() {
 function ProductRow({ product }: { product: Product }) {
   const primary = product.primary;
   return (
-    <div
-      className={cn(
-        "rounded-xl border p-3",
-        primary ? "border-accent/30 bg-accent/[0.04]" : "border-border bg-card",
-      )}
-    >
+    <div className={cn("p-2.5", primary ? "console-card-accent" : "console-card")}>
       <div className="mb-1.5 flex flex-wrap items-center gap-2">
         <Tag color={product.tag}>{product.name}</Tag>
         {primary && (
@@ -160,22 +163,14 @@ function PitchReference() {
   const leadPitch = pitchPitches.find((p) => /mca/i.test(p.title)) ?? pitchPitches[0];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <RefHeading>Point it — what the file can carry</RefHeading>
-      <div className="grid gap-3">
+      <div className="grid gap-2.5 sm:grid-cols-2">
         {ordered.map((p) => (
           <ProductRow key={p.name} product={p} />
         ))}
       </div>
-      {leadPitch && (
-        <div className="space-y-1.5 rounded-xl border border-border bg-muted/30 p-3">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground">
-            {leadPitch.title}
-          </span>
-          <Say>{leadPitch.say}</Say>
-          <Cue>{leadPitch.cue}</Cue>
-        </div>
-      )}
+      {leadPitch && <SayItBlock title={leadPitch.title} say={leadPitch.say} cue={leadPitch.cue} />}
       <Callout {...pitchRails} />
     </div>
   );
@@ -212,7 +207,7 @@ function CloseReference() {
   const core = coreFileRows();
   const conditional = conditionalFileRows();
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {fileNote && (
         <p className="text-lg font-bold leading-snug text-foreground">{fileNote}</p>
       )}
@@ -254,9 +249,9 @@ function CloseReference() {
 /* ---- LIGHT ----------------------------------------------------------------- */
 function LightReference() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <RefHeading>Relationship plays — hold the door</RefHeading>
-      <div className="grid gap-3">
+      <div className="grid gap-2.5 sm:grid-cols-2">
         {relationshipProducts().map((p) => (
           <ProductRow key={p.name} product={p} />
         ))}
@@ -271,18 +266,10 @@ function FundedReference() {
   const product = renewalProduct();
   const pitch = renewalPitch();
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <RefHeading>Renewal / refi — the second swing</RefHeading>
       {product && <ProductRow product={product} />}
-      {pitch && (
-        <div className="space-y-1.5 rounded-xl border border-border bg-muted/30 p-3">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground">
-            {pitch.title}
-          </span>
-          <Say>{pitch.say}</Say>
-          <Cue>{pitch.cue}</Cue>
-        </div>
-      )}
+      {pitch && <SayItBlock title={pitch.title} say={pitch.say} cue={pitch.cue} />}
     </div>
   );
 }

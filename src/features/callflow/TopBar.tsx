@@ -44,12 +44,16 @@ export function TopBar(_props: { flow: UseCallFlow }) {
 function TimerReadout({ timer }: { timer: ReturnType<typeof useCallTimer> }) {
   return (
     <div className="flex shrink-0 items-center gap-2">
-      <span
-        className="font-mono text-[10px] uppercase tracking-label text-muted-foreground sm:inline"
-        aria-hidden="true"
-      >
-        Call
-      </span>
+      {timer.running ? (
+        <span className="live-dot" aria-hidden="true" />
+      ) : (
+        <span
+          className="font-mono text-[10px] uppercase tracking-label text-muted-foreground sm:inline"
+          aria-hidden="true"
+        >
+          Call
+        </span>
+      )}
       <span
         className={cn(
           "tnum font-mono text-base font-semibold leading-none tabular-nums",

@@ -31,7 +31,7 @@ export function StageStepper({ flow }: { flow: UseCallFlow }) {
   return (
     <nav
       aria-label="Call stages"
-      className="no-print flex h-16 shrink-0 items-center gap-1 overflow-x-auto border-b border-border bg-muted/30 px-4 scroll-thin sm:px-6"
+      className="no-print flex h-14 shrink-0 items-center gap-1 overflow-x-auto border-b border-border bg-muted/30 px-4 scroll-thin sm:px-6"
     >
       <ol className="flex flex-1 items-center gap-0.5">
         {CANONICAL.map((step, i) => {
@@ -172,6 +172,8 @@ function Hints() {
     >
       <Hint k="←/→" v="step" />
       <Hint k="1·2·3" v="lane" />
+      <Hint k="o" v="obj" />
+      <Hint k="a" v="after" />
     </div>
   );
 }
@@ -179,9 +181,7 @@ function Hints() {
 function Hint({ k, v }: { k: string; v: string }) {
   return (
     <span className="inline-flex items-center gap-1">
-      <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-        {k}
-      </kbd>
+      <kbd className="kbd-hint">{k}</kbd>
       {v}
     </span>
   );

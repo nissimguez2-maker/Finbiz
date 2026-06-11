@@ -49,21 +49,28 @@ export function GateBranchControls({ flow }: { flow: UseCallFlow }) {
   return (
     <div
       className={cn(
-        "rounded-2xl border p-4 transition-colors",
+        "relative overflow-hidden rounded-xl border p-3.5 shadow-sm transition-colors",
         awaiting ? "border-accent/40 bg-accent/[0.03]" : "border-border bg-card/50",
       )}
     >
-      <div className="mb-3 flex items-center justify-between">
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground">
-          Where do the two numbers land?
-        </span>
+      {/* signature accent rail — lights up when a lane is owed. */}
+      <span
+        className={cn(
+          "absolute inset-y-0 left-0 w-1 transition-opacity",
+          awaiting ? "bg-accent-gradient opacity-100" : "opacity-0",
+        )}
+        aria-hidden="true"
+      />
+      <div className="mb-2.5 flex items-center justify-between pl-1.5">
+        <span className="eyebrow">Where do the two numbers land?</span>
         {awaiting && (
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-accent">
+          <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-label text-accent">
+            <span className="live-dot bg-accent" aria-hidden="true" />
             Pick a lane
           </span>
         )}
       </div>
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-2.5 sm:grid-cols-3">
         {BUTTONS.map((b) => {
           const selected = flow.branch === b.branch;
           return (
@@ -73,7 +80,7 @@ export function GateBranchControls({ flow }: { flow: UseCallFlow }) {
               onClick={() => flow.setBranch(b.branch)}
               aria-pressed={selected}
               className={cn(
-                "focus-ring group flex flex-col gap-2 rounded-xl border px-4 py-4 text-left transition-all duration-200",
+                "focus-ring group flex min-h-[44px] flex-col gap-1.5 rounded-xl border px-3.5 py-3 text-left transition-all duration-200",
                 "hover:-translate-y-0.5",
                 selected ? toneSelected[b.tone] : toneIdle[b.tone],
                 awaiting && !selected && "ring-1 ring-accent/20",
