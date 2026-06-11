@@ -21,6 +21,15 @@
   --go: #0f9d6b;
   --amber: #b45309;
   --clay: #dc2626;
+
+  /* surface-2 — a soft warm sand for resting pill/bubble fills.
+     The one neutral-but-not-gray fill that gives chips and SMS bubbles a
+     calm, clearly-non-white contrast on the near-white page. Accent blue
+     stays reserved for active/selected/recommended; sand is the resting fill.
+     Contrast on #F4EFE6: slate fg 15.6:1, warm-taupe fg 5.7:1, accent 5.0:1. */
+  --surface-2: #f4efe6;
+  --surface-2-foreground: #6b5b47;
+  --surface-2-border: #e7decd;
 }
 
 @layer base {
@@ -137,7 +146,7 @@
   /* One hotkey-chip idiom across the whole console (stepper hints, objections
      `o`, footer). Small, mono, quiet — a consistent keyboard vocabulary. */
   .kbd-hint {
-    @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-border bg-background px-1 font-mono text-[10px] font-semibold leading-none text-muted-foreground;
+    @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-surface-2-border bg-surface-2 px-1 font-mono text-[10px] font-semibold leading-none text-surface-2-foreground;
   }
 
   /* A static "live" dot next to the running timer. No looping motion — the

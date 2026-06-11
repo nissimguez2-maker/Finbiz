@@ -25,7 +25,7 @@ export const ticker: { k: string; v: string; sub?: string }[] = [
   { k: "Time in biz", v: "6+", sub: "mo" },
   { k: "Credit", v: "500+" },
   { k: "Green lane", v: "$20K · 12mo · 570" },
-  { k: "To start a file", v: "4", sub: "mo stmts" },
+  { k: "To start a file", v: "3", sub: "mo stmts" },
 ];
 
 /** The always-on compliance rails (also rendered as a sticky strip). */

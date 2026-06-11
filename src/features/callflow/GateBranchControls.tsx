@@ -80,7 +80,11 @@ export function GateBranchControls({ flow }: { flow: UseCallFlow }) {
               <span
                 className={cn(
                   "inline-flex h-6 w-6 items-center justify-center rounded-md border font-mono text-xs font-bold",
-                  selected ? "border-white/40 text-white" : keyTone[b.tone],
+                  // Idle: sand chip so the hotkey reads as a distinct badge against
+                  // the lane's tinted fill; keeps the tone-coded text/border.
+                  selected
+                    ? "border-white/40 text-white"
+                    : cn("bg-surface-2", keyTone[b.tone]),
                 )}
                 aria-hidden="true"
               >

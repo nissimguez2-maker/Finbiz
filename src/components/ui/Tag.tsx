@@ -5,7 +5,7 @@ const tagStyles: Record<TagColor, string> = {
   gold: "bg-accent/10 text-accent border-accent/25",
   blue: "bg-accent-secondary/10 text-accent-secondary border-accent-secondary/25",
   teal: "bg-go/10 text-go border-go/25",
-  slate: "bg-muted text-muted-foreground border-border",
+  slate: "bg-surface-2 text-surface-2-foreground border-surface-2-border",
 };
 
 export function Tag({

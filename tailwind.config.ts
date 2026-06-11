@@ -33,6 +33,12 @@ const config: Config = {
         go: "var(--go)",
         amber: "var(--amber)",
         clay: "var(--clay)",
+        // surface-2 — warm-sand resting fill for pills/bubbles (non-white, non-blue)
+        "surface-2": {
+          DEFAULT: "var(--surface-2)",
+          foreground: "var(--surface-2-foreground)",
+          border: "var(--surface-2-border)",
+        },
       },
       fontFamily: {
         // Two-font system, everywhere: Outfit for headings/labels (Semibold),

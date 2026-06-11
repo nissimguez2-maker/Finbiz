@@ -15,7 +15,7 @@ export const followUps: FollowUpsContent = {
     eyebrow: "Chase",
     title: "{Follow-Ups}",
     lead:
-      "Get the four months in, or get a callback. Never promise an offer before you've seen a file.",
+      "Get the three months in, or get a callback. Never promise an offer before you've seen a file.",
   },
   scenarios: [
     {
@@ -23,11 +23,11 @@ export const followUps: FollowUpsContent = {
       templates: [
         {
           label: "Recap + ask · SMS",
-          text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 4 months of business bank statements and I'll come back with real numbers. No obligation either way.",
+          text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 3 months of business bank statements and I'll come back with real numbers. No obligation either way.",
         },
         {
           label: "Same-day nudge · SMS",
-          text: "[Name] — still got you on my list for today. Shoot those 4 months over whenever and I'll get into it tonight.",
+          text: "[Name] — still got you on my list for today. Shoot those 3 months over whenever and I'll get into it tonight.",
         },
       ],
     },

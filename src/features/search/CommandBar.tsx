@@ -104,7 +104,7 @@ export function CommandBar() {
           onKeyDown={onInputKeyDown}
           autoComplete="off"
           spellCheck={false}
-          className="h-10 w-full rounded-xl border border-border bg-card pl-9 pr-24 font-mono text-[13px] text-foreground shadow-sm transition-shadow placeholder:text-muted-foreground focus-ring focus-visible:border-accent/40 focus-visible:shadow-accent"
+          className="h-10 w-full rounded-xl border border-surface-2-border bg-surface-2 pl-9 pr-24 font-mono text-[13px] text-foreground shadow-sm transition-shadow placeholder:text-surface-2-foreground/70 focus-ring focus-visible:border-accent/40 focus-visible:shadow-accent"
         />
 
         {/* Match count + clear, right-aligned inside the input. */}
