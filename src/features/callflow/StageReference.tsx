@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { cn } from "@/lib/cn";
-import { Callout } from "@/components/ui/Callout";
 import {
   coreFileRows,
   conditionalFileRows,
   fileNote,
-  fileCallouts,
   type Step,
   type BranchId,
 } from "./callScript";
@@ -89,9 +87,6 @@ function CloseReference() {
           )}
         </div>
       )}
-      {fileCallouts.map((c, i) => (
-        <Callout key={i} {...c} />
-      ))}
     </div>
   );
 }

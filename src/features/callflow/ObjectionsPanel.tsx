@@ -1,13 +1,12 @@
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
-import { objectionList, dealKillers, compliancePairs } from "./callScript";
+import { objectionList, dealKillers } from "./callScript";
 import type { Objection } from "@/types/content";
 
 /**
  * The objection comebacks — folded into the LEFT (script) side, shown when the
  * rep toggles "Objections" (`o`). A filterable list of `q` → `reframe`, with
- * deal-killers and compliance pairs one tap down. The current line stays visible
- * above this; this is just the lower area swapping from the collect-list.
+ * deal-killers one tap down. The current line stays visible above this.
  */
 export function ObjectionsPanel() {
   const [filter, setFilter] = useState("");
@@ -53,22 +52,6 @@ export function ObjectionsPanel() {
               <li key={dk.issue} className="rounded-lg border border-border bg-card px-3 py-2">
                 <span className="block text-[13px] font-semibold text-foreground">{dk.issue}</span>
                 <span className="mt-0.5 block text-[12.5px] leading-snug text-muted-foreground">{dk.move}</span>
-              </li>
-            ))}
-          </ul>
-        </Disclosure>
-        <Disclosure label="Compliance" count={compliancePairs.length}>
-          <ul className="space-y-2">
-            {compliancePairs.map((c) => (
-              <li key={c.dont} className="overflow-hidden rounded-lg border border-border">
-                <div className="border-b border-border bg-clay/[0.06] px-3 py-1.5">
-                  <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-clay">Don't</span>
-                  <span className="mt-0.5 block text-[12.5px] leading-snug text-foreground">{c.dont}</span>
-                </div>
-                <div className="bg-go/[0.06] px-3 py-1.5">
-                  <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-go">Say</span>
-                  <span className="mt-0.5 block text-[12.5px] leading-snug text-foreground">{c.say}</span>
-                </div>
               </li>
             ))}
           </ul>
