@@ -1,35 +1,37 @@
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { Cue, TextBubble } from "@/components/ui/Beat";
-import { LineHero } from "./LineHero";
 import { StageReference } from "./StageReference";
 import { GateBranchControls } from "./GateBranchControls";
 import { ObjectionsPanel } from "./ObjectionsPanel";
-import { flowRule, stepLines, stepCues, stepTexts, branchTitle, pitchFramePhrase } from "./callScript";
+import { stepLines, stepCues, stepTexts, branchTitle, pitchFramePhrase } from "./callScript";
 import type { UseCallFlow } from "./useCallFlow";
 
 /**
- * The left pane — "what I say." The current line is always the hero at top; the
- * lower area holds either the stage's collect-reference (Close) or, when toggled
- * (`o`), the objection comebacks. Products live on the right matrix; tapping one
- * there fills this stage's pitch line. No decorative motion — calm and legible.
+ * The left pane — "what I say." Every line of the current beat stays on screen
+ * as a bulleted list; the line you're on is large + high-contrast, the others
+ * (said or upcoming) shrink back and mute so you always know where you are
+ * without anything vanishing. The lower area is the Close collect-list or, when
+ * toggled (`o`), the objection comebacks. No coaching/compliance chrome.
  */
 export function StagePanel({ flow, pitchProduct }: { flow: UseCallFlow; pitchProduct: string }) {
   const { stage, lineIndex, objectionsOpen } = flow;
 
-  const lines = stepLines(stage);
-  let heroLine = lines[lineIndex] ?? lines[lines.length - 1] ?? "";
-  if (stage === "pitch" && lineIndex === 0) {
-    heroLine = heroLine.replace(/a \[[^\]]*\]/i, pitchFramePhrase(pitchProduct));
-  }
-  const upcoming = lines.slice(lineIndex + 1);
+  const raw = stepLines(stage);
+  // Resolve the Pitch opener's "[term loan / line / advance]" blank from the
+  // product selected on the right matrix.
+  const lines =
+    stage === "pitch"
+      ? raw.map((l, i) => (i === 0 ? l.replace(/a \[[^\]]*\]/i, pitchFramePhrase(pitchProduct)) : l))
+      : raw;
+
   const cues = stepCues(stage);
   const isBranchScreen = stage === "light" || stage === "funded";
   const lineCount = lines.length;
   const showReference = !objectionsOpen && stage === "close";
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-4">
+    <div className="flex min-h-0 flex-1 flex-col gap-5">
       {/* Header: where we are + the one toggle (script ⇄ objections). */}
       <div className="flex shrink-0 items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
@@ -58,39 +60,51 @@ export function StagePanel({ flow, pitchProduct }: { flow: UseCallFlow; pitchPro
         </button>
       </div>
 
-      {/* The current line — always on top, the one thing the eye lands on. */}
-      <div className="flex shrink-0 flex-col gap-3">
-        {flowRule && !objectionsOpen && (
-          <p className="text-[12.5px] leading-snug text-muted-foreground">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground/70">
-              {flowRule.label}{" · "}
-            </span>
-            {flowRule.body}
-          </p>
-        )}
+      {!objectionsOpen && (
+        <div className="flex shrink-0 flex-col gap-5">
+          {/* Every line stays; the current one is the hero, the rest recede. */}
+          <ol className="flex flex-col gap-3.5">
+            {lines.map((line, i) => {
+              const current = i === lineIndex;
+              return (
+                <li key={i} className="flex items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "shrink-0 rounded-full transition-all",
+                      current
+                        ? "mt-[0.7rem] h-2 w-2 bg-accent"
+                        : "mt-[0.5rem] h-1.5 w-1.5 bg-muted-foreground/30",
+                    )}
+                  />
+                  <p
+                    data-say
+                    className={cn(
+                      "min-w-0 max-w-[42ch] transition-all",
+                      current
+                        ? "font-display text-[clamp(1.6rem,1.7vw+1rem,2.7rem)] font-semibold leading-[1.25] tracking-[-0.01em] text-foreground"
+                        : "font-sans text-lg font-light leading-snug text-muted-foreground/60",
+                    )}
+                  >
+                    {line}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
 
-        {!objectionsOpen && (
-          <>
-            <LineHero text={heroLine} size="hero" />
-            {upcoming.length > 0 && (
-              <div className="flex flex-col gap-1.5">
-                {upcoming.map((line, i) => (
-                  <LineHero key={i} text={line} size="secondary" />
-                ))}
-              </div>
-            )}
-            {cues.length > 0 && (
-              <div className="flex flex-col gap-1.5">
-                {cues.map((c, i) => (
-                  <Cue key={i}>{c}</Cue>
-                ))}
-              </div>
-            )}
-            {stage === "close" && <CloseTexts texts={stepTexts("close")} />}
-            {stage === "gate" && <GateBranchControls flow={flow} />}
-          </>
-        )}
-      </div>
+          {cues.length > 0 && (
+            <div className="flex flex-col gap-1.5">
+              {cues.map((c, i) => (
+                <Cue key={i}>{c}</Cue>
+              ))}
+            </div>
+          )}
+
+          {stage === "close" && <CloseTexts texts={stepTexts("close")} />}
+          {stage === "gate" && <GateBranchControls flow={flow} />}
+        </div>
+      )}
 
       {/* Lower area: objections (toggled, any stage) or the Close collect list. */}
       {(objectionsOpen || showReference) && (
