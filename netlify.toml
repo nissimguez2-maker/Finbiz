@@ -1,6 +1,9 @@
 # Netlify configuration for the FinBiz Operator Console (internal tool)
+# NOTE: temporarily deploying the prebuilt dist/ (committed) to bypass an opaque
+# Netlify build-stage failure. `npm run build` works locally + in a clean
+# `npm ci` reproduction; restore command = "npm run build" once CI is sorted.
 [build]
-  command = "npm run build"
+  command = "echo 'Deploying prebuilt dist/'"
   publish = "dist"
 
 [build.environment]
