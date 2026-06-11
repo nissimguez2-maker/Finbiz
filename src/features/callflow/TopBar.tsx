@@ -4,19 +4,14 @@ import { CommandBar } from "@/features/search/CommandBar";
 import { useCallTimer } from "@/features/notes/useCallTimer";
 import { cn } from "@/lib/cn";
 import { brand } from "@/content/meta";
-import type { UseCallFlow } from "./useCallFlow";
 
 /**
  * Sticky top bar (h-14): compact FinBiz brand mark, the existing CommandBar
- * (find-on-page / "what do I say"), and a live call-timer readout + controls
- * from the existing useCallTimer hook. Chrome — never printed.
- *
- * `flow` is accepted to satisfy the layout contract; the top bar itself is
- * stage-agnostic (search + timer are call-global).
+ * (find-on-page / "what do I say"), and the console's single live call-timer
+ * readout + controls (the same timer the Notes drawer shows). Chrome — never
+ * printed.
  */
-export function TopBar(_props: { flow: UseCallFlow }) {
-  const timer = useCallTimer();
-
+export function TopBar({ timer }: { timer: ReturnType<typeof useCallTimer> }) {
   return (
     <header className="no-print sticky top-0 z-40 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur sm:px-6">
       {/* Brand mark — collapsed from the masthead per spec §7. */}

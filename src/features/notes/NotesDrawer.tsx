@@ -8,25 +8,28 @@ import { NOTE_FIELDS, useNotes, type NoteKey, type SaveState } from "./useNotes"
 import { useCallTimer } from "./useCallTimer";
 
 /**
- * Live call-notes scratchpad + call timer.
+ * Live call-notes scratchpad + call timer — a controlled right-side drawer.
  *
- * A fixed dock button (bottom-right) shows "Call notes" and the live timer and
- * toggles a right-side drawer. The drawer holds the timer controls, the
- * persisted discovery fields, and copy/clear actions. State lives in
- * `useNotes` (localStorage) and `useCallTimer` so it survives open/close.
+ * Opened/closed by the parent (the footer "Notes" button) and sharing the
+ * console's single call timer, so there's exactly one timer and one Notes entry
+ * point (no floating dock). Notes persist via `useNotes` (localStorage).
  */
-export function NotesDrawer() {
-  const [open, setOpen] = useState(false);
+export function NotesDrawer({
+  open,
+  onClose,
+  timer,
+}: {
+  open: boolean;
+  onClose: () => void;
+  timer: ReturnType<typeof useCallTimer>;
+}) {
   const reduceMotion = useReducedMotion();
-
-  const timer = useCallTimer();
   const notes = useNotes();
 
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const close = useCallback(() => setOpen(false), []);
+  const close = onClose;
 
   // Esc closes the drawer — but never steal Escape from an open search field
   // (e.g. the command bar) by only acting when focus is inside the drawer or
@@ -37,8 +40,7 @@ export function NotesDrawer() {
       if (event.key !== "Escape") return;
       const active = document.activeElement;
       const insideDrawer = panelRef.current?.contains(active) ?? false;
-      const onTrigger = active === triggerRef.current;
-      if (insideDrawer || onTrigger || active === document.body || active === null) {
+      if (insideDrawer || active === document.body || active === null) {
         event.stopPropagation();
         close();
       }
@@ -47,21 +49,14 @@ export function NotesDrawer() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, close]);
 
-  // Focus management: move focus into the panel on open, restore to the
-  // trigger on close. Guard against stealing focus from fields elsewhere by
-  // only restoring when focus is still inside the (closing) drawer.
+  // Move focus into the panel once it has animated in.
   const onPanelEnter = useCallback(() => {
     panelRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus();
   }, []);
 
-  const restoreFocus = useCallback(() => {
-    const active = document.activeElement;
-    if (active === document.body || active === null) triggerRef.current?.focus();
-  }, []);
-
   return (
-    <div className="no-print fixed bottom-5 right-5 z-50">
-      <AnimatePresence onExitComplete={restoreFocus}>
+    <div className="no-print">
+      <AnimatePresence>
         {open && (
           <>
             {/* Click-away scrim — non-visual, just an accessibility-neutral catch. */}
@@ -117,27 +112,6 @@ export function NotesDrawer() {
           </>
         )}
       </AnimatePresence>
-
-      <button
-        ref={triggerRef}
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-label={`Call notes${timer.running ? ` — recording, ${timer.display}` : ""}`}
-        className="inline-flex items-center gap-2 rounded-xl bg-foreground px-4 py-3 font-mono text-[12px] font-medium text-background shadow-lg transition-colors hover:bg-foreground/90 focus-ring"
-      >
-        <NotebookPen className="h-4 w-4" aria-hidden="true" />
-        Call notes
-        <span
-          className={cn(
-            "tnum",
-            timer.running ? "text-accent-secondary" : "text-background/60",
-          )}
-        >
-          {timer.display}
-        </span>
-      </button>
     </div>
   );
 }

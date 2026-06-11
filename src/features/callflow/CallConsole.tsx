@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { NotesDrawer } from "@/features/notes/NotesDrawer";
+import { useCallTimer } from "@/features/notes/useCallTimer";
 import { cn } from "@/lib/cn";
 import { TopBar } from "./TopBar";
 import { StageStepper } from "./StageStepper";
@@ -25,10 +27,12 @@ import { useKeyboardFlow } from "./useKeyboardFlow";
 export function CallConsole() {
   const flow = useCallFlow();
   useKeyboardFlow(flow);
+  const timer = useCallTimer();
+  const [notesOpen, setNotesOpen] = useState(false);
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-background text-foreground">
-      <TopBar flow={flow} />
+      <TopBar timer={timer} />
       <StageStepper flow={flow} />
 
       {/* Main row: stage pane (left) + persistent objections pane (right).
@@ -58,14 +62,13 @@ export function CallConsole() {
         </aside>
       </main>
 
-      <FooterStrip flow={flow} />
+      <FooterStrip flow={flow} onOpenNotes={() => setNotesOpen(true)} />
 
       {/* After-the-call overlay (slides in; dismiss = Esc / close). */}
       <AfterCallPanel flow={flow} />
 
-      {/* Existing live call-notes drawer + timer — self-mounted fixed dock.
-          Hidden on print along with the rest of the chrome. */}
-      <NotesDrawer />
+      {/* Controlled call-notes drawer, sharing the console's single timer. */}
+      <NotesDrawer open={notesOpen} onClose={() => setNotesOpen(false)} timer={timer} />
     </div>
   );
 }
