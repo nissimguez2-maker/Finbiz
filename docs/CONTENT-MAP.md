@@ -200,9 +200,9 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ```ts
 // before — a core row
-{ cells: ["**3–4 months bank statements**", "Revenue & cash-flow review"] },
-// after — asked for 4–6 months
-{ cells: ["**4–6 months bank statements**", "Revenue & cash-flow review"] },
+{ cells: ["**3 months bank statements**", "Revenue & cash-flow review"] },
+// after — asked for 4 months
+{ cells: ["**4 months bank statements**", "Revenue & cash-flow review"] },
 ```
 
 ---
@@ -258,9 +258,9 @@ The `scenarios` array. Each scenario has a `scenario` name and two `templates`, 
 
 ```ts
 // before
-{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 4 months of business bank statements and I'll come back with real numbers. No obligation either way." },
+{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 3 months of business bank statements and I'll come back with real numbers. No obligation either way." },
 // after — shorter
-{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — great talking. Send 4 months of bank statements and I'll come back with real numbers. No obligation." },
+{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — great talking. Send 3 months of bank statements and I'll come back with real numbers. No obligation." },
 ```
 
 > Keep "No obligation" in, and never promise an offer or approval before a file exists.

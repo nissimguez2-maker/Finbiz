@@ -23,7 +23,7 @@ Always secure **both** the merchant's **cell and email** — the info we were ha
 ### The pipeline (the spine every call rides)
 
 1. **Prospecting** — reach the owner / authorized signer. Killers: inactive Secretary of State, wrong EIN/SSN, another broker submits first.
-2. **Discovery** — need + urgency; open with the CTA: send 3–4 months of statements today.
+2. **Discovery** — need + urgency; open with the CTA: send 3 months of statements today.
 3. **Pre-qualify** — apply the floor above.
 4. **Collection** — get the minimum file (below).
 5. **Statement review** — run the 10-point inspection + MCA hard gates (below).
@@ -37,7 +37,7 @@ Always secure **both** the merchant's **cell and email** — the info we were ha
 
 ### Minimum file (collection)
 
-- **Core (always):** completed application + owner ID / driver's license · EIN & ownership % · 3–4 months bank statements · voided check & business address · merchant cell + email.
+- **Core (always):** completed application + owner ID / driver's license · EIN & ownership % · 3 months bank statements · voided check & business address · merchant cell + email.
 - **Conditional:** payoff letters / bank logins · processing statements · current loan/advance balances.
 - **Past default (since paid off):** require a **ZBL (Zero Balance Letter)** from the merchant, on top of bank statements and the product's docs.
 - **Tax returns:** only for bank-funded products (e.g. SBA). Not for MCA. Confirm bank vs. non-bank before asking.
@@ -159,7 +159,7 @@ When one owner controls two related companies and one can't qualify (or only on 
 
 ### ① Open — set the frame
 
-- "Hi ___, it's Ness. I work with owners in your line putting money to work in the business. Two minutes — worth it or not, I'll tell you flat."
+- "Hi ___, it's Ness. I work with owners in your line putting money to work in the business. Five minutes — worth it or not, I'll tell you flat."
 - "I work with owners like you on growth capital — and I'm good at it."
 - "Give me five minutes. By the end, either I see a real way to put money to work in your business, or I don't — and I'll tell you flat. Fair?"
 
