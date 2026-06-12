@@ -28,7 +28,7 @@ At `gate`, the rep picks the lane the two numbers land in. Branch state is indep
 
 | Branch id | Trigger | Path after Gate | Content source |
 |-----------|---------|-----------------|----------------|
-| `qualifies` | Clears floor ($15K+/mo · 6+ mo · 500+) | Full `dig → pitch → close` | main beats ④⑤⑥; lane = `triage.lanes` Green/Yellow |
+| `qualifies` | Clears floor ($15K+/mo · 6+ mo · 500+) | Full `dig → risk → pitch → close` | main beats ④ ④.5 ⑤ ⑥; lane = `triage.lanes` (Floor / MCA hard gates) |
 | `light` | Numbers light / below floor | **Light branch screen** → credit-repair / CCP / "two stronger months & callback" → optional `close` to book callback | `callFlow.branches[1]` ("↪ Light") + `products.products` where `relationshipPlay` (CCP, Credit Repair) + `products.relationshipNote` |
 | `funded` | Already funded | **All-set branch screen** → refi for breathing room / halfway top-up / back-pocket → if door cracks, jump to `close` | `callFlow.branches[0]` ("↪ All set") + `products.products` "Renewal / Refi / Consol." + Renewal pitch `products.pitches[?]` |
 
@@ -163,9 +163,9 @@ Rendering rules:
 - **Branch controls:** none.
 
 ### Stage: `close` (all qualifying + branch fallthrough)
-- **Main — large bold:** `callFlow.beats[5].says[0..1]` ("send me four months of bank statements today… This your cell?").
+- **Main — large bold:** `callFlow.beats[6].says[0..1]` ("send me your last three months of bank statements today… This your cell?").
 - **Text bubbles:** `callFlow.beats[5].texts` rendered as `TextBubble`s, each with copy-to-clipboard.
-- **Reference (sub) — what to collect (minimum file):** render `minimumFile.rows` filtered to the **Core — non-negotiable** subhead block as a tight checklist; conditional rows behind a "more" disclosure. Pull the light-first-text note `minimumFile.note` ("4 months of bank statements + the application") as the hero collect instruction. `minimumFile.callouts` (tax-returns caveat) as a footnote.
+- **Reference (sub) — what to collect (minimum file):** render `minimumFile.rows` filtered to the **Core — non-negotiable** subhead block as a tight checklist; conditional rows behind a "more" disclosure. Pull the light-first-text note `minimumFile.note` ("3 months of bank statements + the application") as the hero collect instruction. `minimumFile.callouts` (tax-returns caveat) as a footnote.
 - **Capture-to-Notes:** nextStep → `useNotes.nextStep`.
 - **Objections pane:** unchanged.
 

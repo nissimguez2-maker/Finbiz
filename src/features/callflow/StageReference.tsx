@@ -47,7 +47,12 @@ function CloseReference() {
   const conditional = conditionalFileRows();
   return (
     <div className="space-y-3">
-      {fileNote && <p className="text-base font-semibold leading-snug text-foreground">{fileNote}</p>}
+      {fileNote && (
+        <p
+          className="text-base font-semibold leading-snug text-foreground"
+          dangerouslySetInnerHTML={inlineBold(fileNote)}
+        />
+      )}
       <div>
         <p className="font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground">
           Core — non-negotiable
