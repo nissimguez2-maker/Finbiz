@@ -220,6 +220,15 @@ HARD REQUIREMENTS — output must be valid TypeScript that satisfies TYPES_TS:
 - Keep the file header comments (the /** ... */ block describing voice and compliance) — update
   them only if a Doc changes the underlying policy.
 
+THE DOC IS A STRICT WHITELIST:
+- The Master Doc dictates the content — in both directions. If a product, script line, scenario,
+  threshold, play, or fact exists in CURRENT_FILES but is no longer in the Doc, the owner deleted
+  it: REMOVE it from the regenerated file. Never keep content because it "doesn't conflict" with
+  the Doc, and never resurrect anything from an older version of the Doc or the files.
+- Do not invent speakable copy (lines, SMS templates, pitches) the Doc doesn't contain. Site
+  structure may re-present Doc facts (checklists, tables), but every fact and every spoken or
+  written line must trace to the current Doc.
+
 PRESERVE EVERY NUMBER:
 - Reproduce all canonical figures exactly as the Doc states them: the single qualify floor
   ($15K+/mo revenue · 6+ months in business · 500+ FICO · business bank account), 3 months of
