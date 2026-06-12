@@ -177,7 +177,6 @@ function Hints() {
     >
       <Hint k="←/→" v="step" />
       <Hint k="1·2·3" v="lane" />
-      <Hint k="r" v="risk" />
       <Hint k="o" v="obj" />
       <Hint k="a" v="after" />
     </div>

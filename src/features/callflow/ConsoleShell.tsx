@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { NotesDrawer } from "@/features/notes/NotesDrawer";
 import { useCallTimer } from "@/features/notes/useCallTimer";
 import { TopBar } from "./TopBar";
 import { ModeBar, type ConsoleMode } from "./ModeBar";
 import { CallConsole } from "./CallConsole";
 import { LookupMode } from "./LookupMode";
-import { isTypingTarget } from "./useKeyboardFlow";
 
 /**
  * ConsoleShell — the root of the 2.0 "tabs for different uses" IA.
@@ -17,8 +16,8 @@ import { isTypingTarget } from "./useKeyboardFlow";
  * CommandBar + timer) sits above whichever mode body is active, with the Notes
  * drawer rendered once at the shell level.
  *
- * Keyboard: Tab / Shift+Tab cycle the mode from anywhere on the page, guarded by
- * isTypingTarget so it never fires while typing in Notes / the search field.
+ * Mode is switched by clicking the ModeBar tabs — no keyboard shortcut. Arrows
+ * drive the call (stage to stage); the mouse drives the modes.
  */
 export function ConsoleShell() {
   const [mode, setMode] = useState<ConsoleMode>("live");
@@ -27,20 +26,6 @@ export function ConsoleShell() {
 
   const openNotes = useCallback(() => setNotesOpen(true), []);
   const closeNotes = useCallback(() => setNotesOpen(false), []);
-
-  // Tab / Shift+Tab cycle modes (only two, so both directions just toggle).
-  // Guarded so focus traversal inside any text field is never hijacked.
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (isTypingTarget(e.target)) return;
-      e.preventDefault();
-      setMode((m) => (m === "live" ? "lookup" : "live"));
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-background text-foreground">

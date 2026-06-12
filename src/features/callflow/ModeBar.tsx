@@ -13,8 +13,7 @@ const MODES: { id: ConsoleMode; label: string; Icon: typeof PhoneCall }[] = [
  * The two-mode switch (Live Call · Quick Lookup) — the spine of the 2.0 shell.
  * Active mode wears the signature accent-gradient pill (the same idiom the
  * After-call tabs use), idle modes stay quiet so this reads as a tool control,
- * not a nav bar. A single Tab hint sits alongside; the shortcut itself lives in
- * ConsoleShell. Minimal by design — no extra chrome.
+ * not a nav bar. Click to switch — minimal by design, no extra chrome.
  */
 export function ModeBar({
   mode,
@@ -50,13 +49,6 @@ export function ModeBar({
           </button>
         );
       })}
-      <kbd
-        className="kbd-hint ml-0.5 hidden sm:inline-flex"
-        aria-hidden="true"
-        title="Tab / Shift+Tab to switch mode"
-      >
-        Tab
-      </kbd>
     </div>
   );
 }
