@@ -57,8 +57,8 @@ rails: [
 ```
 
 The **brand name, tagline, and nav order** are in `meta.ts` too (`brand` object and the `nav`
-array). The nav order must match `registry.tsx` — if you only ever edit wording, you won't need
-to touch either.
+array). The nav array records the canonical section order — if you only ever edit wording, you
+won't need to touch it.
 
 ---
 
@@ -326,8 +326,8 @@ meta: {
 }
 ```
 
-Don't change `id` or `navNo` inside `meta` — those wire the section into the nav and the
-registry, and changing them can break the page order.
+Don't change `id` or `navNo` inside `meta` — those wire the section into the nav order, and
+changing them can break how sections are referenced.
 
 ---
 

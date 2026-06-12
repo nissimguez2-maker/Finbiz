@@ -1,6 +1,13 @@
 # GUIDED-FLOW — FinBiz Operator Console rebuild spec
 
-> **Status:** design spec, no code written yet. **Owner:** UX Architect (AgentsNess).
+> **Status:** IMPLEMENTED (`src/features/callflow/`). This document is the original build spec,
+> kept as the design reference. Notable deviations shipped since: the master doc added a
+> **④.5 Risk check** stage between Dig and Pitch (the happy path is now 7 stages); `useCallFlow`
+> gained a `lineIndex` sub-cursor (decision D1: line-by-line) and **persists stage/branch/line
+> to localStorage** (`finbiz.callflow.v1` — decision D6 revisited; reload keeps your place);
+> capture-to-Notes shipped manual (D5); `LineHero.tsx` was folded into `StagePanel` rather than
+> kept as a separate component (D4). Where this spec and the code disagree, the code is right.
+> **Owner:** UX Architect (AgentsNess).
 > **Goal:** replace the 11-section scrolling reference with a **guided live-call flow** — compact, stage-by-stage, two-pane desktop, "show only what's relevant now," with the line-to-say always large+bold and objections always one reach away.
 >
 > **Hard rule for implementers:** all spoken/reference copy is **locked** in `src/content/*.ts`. This rebuild **reuses** that content verbatim — it re-maps it onto stages. Nothing in `src/content/*` or `src/types/content.ts` gets reworded. New code only *reads* it (plus one thin derived index module, `callScript.ts`, that references — not copies — existing fields).
@@ -17,10 +24,11 @@
 | 1 | `story` | Open the story | Get his goal in his words (paint it back later) | `callFlow.beats[1]` (② Open the story) |
 | 2 | `gate` | Gate | Two numbers → branch decision | `callFlow.beats[2]` (③ Gate) + `triage.lanes` + `meta.ticker` |
 | 3 | `dig` | Dig | Make the gap real, surface pain + payoff | `callFlow.beats[3]` (④ Dig) |
-| 4 | `pitch` | Pitch | Point it + paint it, **product matrix woven in** | `callFlow.beats[4]` (⑤) + `products.products` / `products.pitches` |
-| 5 | `close` | Close | Hard clean close + collect the file | `callFlow.beats[5]` (⑥) + `minimumFile.rows` |
+| 4 | `risk` | Risk | Risk check — defaults / modified positions (HELOC rescue pivot) | `callFlow.beats[4]` (④.5 Risk check) |
+| 5 | `pitch` | Pitch | Point it + paint it, **product matrix woven in** | `callFlow.beats[5]` (⑤) + `products.products` / `products.pitches` |
+| 6 | `close` | Close | Hard clean close + collect the file | `callFlow.beats[6]` (⑥) + `minimumFile.rows` |
 
-Linear path is `open → story → gate → dig → pitch → close`. The **Gate** is the only branch point.
+Linear path is `open → story → gate → dig → risk → pitch → close`. The **Gate** is the only branch point.
 
 ### 1.2 Gate branches (three live paths — no gatekeeper branch)
 
@@ -46,7 +54,8 @@ stateDiagram-v2
     gate --> dig: branch=qualifies
     gate --> light: branch=light
     gate --> funded: branch=funded
-    dig --> pitch
+    dig --> risk
+    risk --> pitch
     pitch --> close
     light --> close: book callback (door cracks)
     funded --> close: door cracks → get statements
@@ -60,10 +69,10 @@ All transitions are reversible (back/prev). Branch never auto-advances stage; it
 
 ### 1.4 State shape
 
-Single source of truth, owned by `useCallFlow` (see §5). Mirror the existing `useNotes` localStorage pattern (key `finbiz.callflow.v1`), but session-only is acceptable for stage/branch.
+Single source of truth, owned by `useCallFlow` (see §5). Mirrors the existing `useNotes` localStorage pattern (key `finbiz.callflow.v1`) — stage/branch/lineIndex survive a reload; `resetCall()` clears the key.
 
 ```ts
-type StageId = "open" | "story" | "gate" | "dig" | "pitch" | "close";
+type StageId = "open" | "story" | "gate" | "dig" | "risk" | "pitch" | "close";
 type BranchId = "qualifies" | "light" | "funded" | null; // null until Gate is resolved
 
 interface CallFlowState {
@@ -91,11 +100,11 @@ interface UseCallFlow extends CallFlowState {
 ```
 
 **Path resolution (derived, not stored):**
-- `branch === "qualifies"` or `null` → `["open","story","gate","dig","pitch","close"]`
-- `branch === "light"` → `["open","story","gate","light","close"]` (light screen replaces dig/pitch)
+- `branch === "qualifies"` or `null` → `["open","story","gate","dig","risk","pitch","close"]`
+- `branch === "light"` → `["open","story","gate","light","close"]` (light screen replaces dig/risk/pitch)
 - `branch === "funded"` → `["open","story","gate","funded","close"]`
 
-`next()`/`back()` walk `path`. The stepper always shows the **6 canonical stages**; light/funded render *inside* the position between Gate and Close (visually a sub-state, labeled on the stepper as "Branch").
+`next()`/`back()` walk `path`. The stepper always shows the **7 canonical stages**; light/funded render *inside* the position between Gate and Close (visually a sub-state, labeled on the stepper as "Branch").
 
 ### 1.5 Keyboard map (owned by `useKeyboardFlow`, guarded by `isTypingTarget` from `useSearch`)
 
@@ -155,7 +164,7 @@ Rendering rules:
 - **Objections pane:** unchanged.
 
 ### Stage: `pitch` (branch = `qualifies`) — **product matrix woven in**
-- **Main — large bold:** `callFlow.beats[4].says[0..2]` ("Here's what I'd put in front of you… Picture it… Depending on your numbers…").
+- **Main — large bold:** `callFlow.beats[5].says[0..2]` ("Here's what I'd put in front of you… Picture it… Depending on your numbers…").
 - **Reference (sub) — woven product matrix:** a **compact, filterable** render of `products.products`. Default surfaces the **primary** (`MCA`, `primary: true`) plus the 1–2 fits implied by the file; the rep can expand to the full menu. For each shown product: `name`, `tag` (via `Tag`), `bestFit`, `terms`, `speed`, `sayIt`. The matching **pitch** line from `products.pitches` (the `say` + `cue`) renders as the ready-to-speak version.
   - Suppress `relationshipPlay` products (CCP, Credit Repair) here — `products.relationshipNote` says they never open; they live in the `light`/`funded` branches.
   - Footer: `products.rails` callout ("No guaranteed. No rate before the file…") — compliance, always visible in pitch.
@@ -164,7 +173,7 @@ Rendering rules:
 
 ### Stage: `close` (all qualifying + branch fallthrough)
 - **Main — large bold:** `callFlow.beats[6].says[0..1]` ("send me your last three months of bank statements today… This your cell?").
-- **Text bubbles:** `callFlow.beats[5].texts` rendered as `TextBubble`s, each with copy-to-clipboard.
+- **Text bubbles:** `callFlow.beats[6].texts` rendered as `TextBubble`s, each with copy-to-clipboard.
 - **Reference (sub) — what to collect (minimum file):** render `minimumFile.rows` filtered to the **Core — non-negotiable** subhead block as a tight checklist; conditional rows behind a "more" disclosure. Pull the light-first-text note `minimumFile.note` ("3 months of bank statements + the application") as the hero collect instruction. `minimumFile.callouts` (tax-returns caveat) as a footnote.
 - **Capture-to-Notes:** nextStep → `useNotes.nextStep`.
 - **Objections pane:** unchanged.
@@ -198,7 +207,7 @@ Target: desktop / big monitor. Use the width. Single screen, **no vertical page 
 │ TOP BAR (h-14, sticky)   FinBiz·SDR    [ / search "what do I say?" ]   ⏱ 04:12 �+ │  ← search (existing CommandBar) + call timer (useCallTimer)
 ├──────────────────────────────────────────────────────────────────────────────────┤
 │ STAGE STEPPER (h-16)                                                               │
-│  ① Open ─ ② Story ─ ③ Gate ─[ Branch ]─ ④ Dig ─ ⑤ Pitch ─ ⑥ Close      [ New call ]│  ← clickable; active highlighted w/ accent-gradient bar
+│ ① Open ─ ② Story ─ ③ Gate ─[ Branch ]─ ④ Dig ─ ④.5 Risk ─ ⑤ Pitch ─ ⑥ Close [ New call ]│  ← clickable; active highlighted w/ accent-gradient bar
 ├───────────────────────────────────────────────┬──────────────────────────────────┤
 │ MAIN STAGE PANE  (≈ 64% width, left)           │ OBJECTIONS PANE (≈ 36%, right)    │
 │ ┌─ rule strip: "Let him talk ~60%…" ─────────┐ │  PERSISTENT  [ o ] filter…        │
@@ -242,7 +251,7 @@ Responsive note (desktop-first per requirement): below `lg`, panes stack (object
 
 | # | Current section (`content/*.ts`) | New home | How it surfaces |
 |---|-----------------------------------|----------|-----------------|
-| 01 | Call Flow (`callFlow`) | **The spine** | `beats[0..5]` → stages Open/Story/Gate/Dig/Pitch/Close; `branches[0]`→`funded`, `branches[1]`→`light`; `rule`→persistent main-pane strip |
+| 01 | Call Flow (`callFlow`) | **The spine** | `beats[0..6]` → stages Open/Story/Gate/Dig/Risk/Pitch/Close; `branches[0]`→`funded`, `branches[1]`→`light`; `rule`→persistent main-pane strip |
 | 02 | Products (`products`) | **Woven into Pitch** (+ branch screens) | `products`/`pitches` in `pitch` reference; `relationshipPlay` (CCP, Credit Repair) in `light`; Renewal in `funded`; `rails` shown in Pitch |
 | 03 | MCA Structure (`mca`) | **After the call** (rep education) + 1-line in Pitch | Full structure in After-call (it's NOT quoted live, per its own header). The live "factor ≠ APR" rail comes from `meta.rails` + `products.pitches` MCA cue |
 | 04 | Triage & Lanes (`triage`) | **Gate** | `lanes` → 3 lane cards; `rule` → footnote; drives branch-button color semantics |
@@ -278,7 +287,7 @@ New top-level feature folder: **`src/features/callflow/`**. Clear file ownership
 | File | Responsibility | Reads | Props |
 |------|----------------|-------|-------|
 | `src/features/callflow/CallConsole.tsx` | New root. Replaces `Shell` as the app entry view. Holds `useCallFlow` + `useKeyboardFlow`, lays out top bar / stepper / two panes / footer / after-call overlay. | `useCallFlow`, `useCallTimer`, `CommandBar` | none (top-level) |
-| `src/features/callflow/StageStepper.tsx` | Horizontal clickable stepper; shows 6 stages + resolved branch slot; active highlight via `accent-gradient`. | — | `{ path, stage, branch, onGoTo }` |
+| `src/features/callflow/StageStepper.tsx` | Horizontal clickable stepper; shows the 7 stages + resolved branch slot; active highlight via `accent-gradient`. | — | `{ path, stage, branch, onGoTo }` |
 | `src/features/callflow/TopBar.tsx` | Brand + mounts existing `CommandBar` + `CallTimer` display/controls. | `brand` (meta), `useCallTimer` | — |
 | `src/features/callflow/FooterStrip.tsx` | `meta.rails` ticker + Notes trigger + After-call toggle. | `rails` (meta) | `{ onOpenNotes, onOpenAfterCall }` |
 
@@ -291,7 +300,7 @@ New top-level feature folder: **`src/features/callflow/`**. Clear file ownership
 | `src/features/callflow/GateBranchControls.tsx` | The three branch buttons + lane-tinted styling + hotkey labels. | `triage` tones | `{ onSetBranch }` |
 | `src/features/callflow/ObjectionsPanel.tsx` | The always-on right pane. Live list + filter + collapsed dealKillers/compliance tabs. | `objections.*` | `{ open, onToggle }` |
 | `src/features/callflow/AfterCallPanel.tsx` | The overlay with tabs (Statements / Final QA / Approved Offer / Pipeline / MCA). Renders existing section components (read-only) or thin re-renders of their content. | `statements`, `finalQa`, `offer`, `pipeline`, `mca`, `followUps` | `{ open, tab, onSelectTab, onClose }` |
-| `src/features/callflow/LineHero.tsx` | The LARGE+BOLD current-line renderer (typography contract, §6). Used by StagePanel for the hero say. | — | `{ text, size?: "hero" \| "secondary" }` |
+| ~~`src/features/callflow/LineHero.tsx`~~ | *(Folded into `StagePanel` during implementation — the hero typography contract from §6 lives there now; the separate file was removed.)* | — | — |
 
 ### 5.4 Reused as-is (no edits)
 - `src/components/ui/*` — `Say`, `Cue`, `TextBubble`, `Callout`, `Tag`, `Card`, `DataTable`, `StatBlock`. (Beat-level `Say` gets a larger size variant — add a `size` prop in a follow-up, or wrap with `LineHero`. Prefer `LineHero` wrapper to avoid touching the primitive.)
@@ -321,7 +330,7 @@ Stays within the existing Minimalist Modern system (`tailwind.config.ts`, `index
 ## 7. What gets simpler / cut (the compaction)
 
 - **`Shell` + `Masthead` + scrolling stack are replaced.** No more `space-y-16` 11-section vertical scroll; no scroll-spy `Sidebar`. The console is one non-scrolling screen per stage.
-- **`Sidebar` (scroll-spy index rail) → `StageStepper`** (6 stages, horizontal, top). The 11-item nav (`meta.nav`) is no longer the navigation model; it survives only as the After-call tab order for the 5 surviving sections.
+- **`Sidebar` (scroll-spy index rail) → `StageStepper`** (7 stages, horizontal, top). The 11-item nav (`meta.nav`) is no longer the navigation model; it survives only as the canonical section order for the 5 surviving After-call sections.
 - **`Masthead` hero/tagline cut** from the live view (it's onboarding chrome, not call-time). Brand collapses to a small mark in `TopBar`.
 - **5 of 11 sections leave the live view entirely** (MCA, Statements, Pipeline, Final QA, Approved Offer → After-call). They're never needed mid-cold-call.
 - **Product matrix stops being a standalone section** — it's surfaced contextually only in Pitch (and the relevant slices in branches).

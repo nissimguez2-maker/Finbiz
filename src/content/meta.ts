@@ -1,7 +1,9 @@
 /**
  * Global console metadata: brand, the masthead ticker, and the canonical nav
- * order. The nav list here is the single source of truth for section order and
- * must stay in sync with src/content/registry.tsx.
+ * order. The guided console (src/features/callflow/) reads brand, ticker and
+ * rails directly; the nav list records the canonical section order for the
+ * section components in src/components/sections/* (the post-call ones are
+ * mounted by AfterCallPanel).
  */
 
 export interface NavItem {
@@ -44,7 +46,7 @@ export const rails: string[] = [
   "In SMS/email, never write “MCA” — say “funding”",
 ];
 
-/** Canonical nav order. Section ids must match registry + content metas. */
+/** Canonical nav order. Section ids must match the content metas. */
 export const nav: NavItem[] = [
   { id: "call", navNo: "01", navLabel: "Call Flow" },
   { id: "products", navNo: "02", navLabel: "Products" },

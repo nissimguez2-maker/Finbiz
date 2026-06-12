@@ -272,7 +272,7 @@ OUTPUT FORMAT — return ONLY a single JSON object, no prose, no markdown fences
 }
 Each value is the complete, ready-to-commit TypeScript source for that file (including imports and
 the header comment). Include a file ONLY if its Doc-driven content changed; if a file is unchanged,
-omit it from "files" so it isn't needlessly re-committed. Do not include registry.tsx. Output must
+omit it from "files" so it isn't needlessly re-committed. Never output .tsx files. Output must
 be parseable by JSON.parse — escape newlines and quotes correctly inside the string values.
 ```
 

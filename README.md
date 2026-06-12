@@ -68,13 +68,13 @@ The app is deliberately split so wording lives apart from layout.
         │  (n8n sync — optional, see docs/N8N-SYNC.md)
         ▼
   src/content/*.ts        ← typed data: the words, numbers, SMS templates
-        │  imported by
+        │  referenced by (never copied)
         ▼
-  src/components/sections/*.tsx   ← layout only: how the data is rendered
-        │  registered in
+  src/features/callflow/callScript.ts   ← the one bridge from content to the console
+        │  read by
         ▼
-  src/content/registry.tsx + src/content/meta.ts   ← section order + nav
-        │  built by
+  src/features/callflow/CallConsole.tsx ← the live guided console (App.tsx renders this)
+        │  (post-call tabs mount src/components/sections/*.tsx, same data)
         ▼
   npm run build → dist/   ← static site Netlify serves
 ```
@@ -95,17 +95,18 @@ Three layers, each with one job:
    `callFlow` · `products` · `mca` · `triage` · `statements` · `minimumFile` ·
    `pipeline` · `objections` · `followUps` · `finalQa` · `offer` — plus `meta`.
 
-3. **The layout — `src/components/sections/*.tsx`.** A component per section. It imports its
-   data object and renders it with shared UI pieces (`Section`, `Beat`, `Say`, `Cue`,
-   `Callout`, `Card`, `TextBubble`, …). It contains **no script copy** — only structure.
+3. **The layout — `src/features/callflow/*` and `src/components/sections/*.tsx`.** The live
+   view is the guided **CallConsole** (stage stepper, hero line, objections pane, product
+   matrix — see [docs/GUIDED-FLOW.md](docs/GUIDED-FLOW.md)). It reaches into the content
+   through exactly one bridge module, `src/features/callflow/callScript.ts`, which references
+   fields — it never copies text. The post-call reference tabs (Statements, Final QA, Approved
+   Offer, Pipeline, MCA) mount the per-section components in `src/components/sections/*`, which
+   render their data objects with shared UI pieces (`Section`, `Beat`, `Say`, `Cue`, `Callout`,
+   `Card`, `TextBubble`, …). None of these files contain script copy — only structure.
 
-   Example: `CallFlow.tsx` reads `callFlow.beats` and maps each beat to a `<Beat>`, each spoken
-   line to a `<Say>`, each text bubble to a `<TextBubble>`, each coaching note to a `<Cue>`.
-   Change a line in `callFlow.ts` and the rendered output changes; the component never moves.
-
-`src/content/registry.tsx` lists every section in order and pairs each data object's `meta`
-with its component. `src/content/meta.ts` holds the canonical nav order — keep the two in sync
-(both files say so in a comment).
+   Example: `callFlow.ts` holds the beats; the console walks them stage by stage and renders
+   each spoken line as the hero. Change a line in `callFlow.ts` and the rendered output
+   changes; the components never move.
 
 **Why this matters for a non-technical owner:** to change what Ness says, you edit one
 `src/content/*.ts` field. You never read or touch a `.tsx` file. See
@@ -201,9 +202,10 @@ Finbiz/
    ├─ content/                ← THE DATA: one typed module per section (edit these)
    │   ├─ meta.ts             ← brand, ticker, compliance rails, nav order
    │   ├─ callFlow.ts  products.ts  mca.ts  triage.ts  statements.ts
-   │   ├─ minimumFile.ts  pipeline.ts  objections.ts  followUps.ts  finalQa.ts  offer.ts
-   │   └─ registry.tsx        ← pairs each section's meta with its component, in order
-   └─ components/sections/    ← THE LAYOUT: one component per section (don't edit for copy)
+   │   └─ minimumFile.ts  pipeline.ts  objections.ts  followUps.ts  finalQa.ts  offer.ts
+   ├─ features/callflow/      ← THE LIVE VIEW: the guided console (callScript.ts is the
+   │                            only file that reaches into content/ — see GUIDED-FLOW.md)
+   └─ components/sections/    ← post-call reference tabs (don't edit for copy)
 ```
 
 ## Compliance rails (baked into the content)
