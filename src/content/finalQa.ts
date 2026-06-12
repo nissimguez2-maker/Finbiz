@@ -21,7 +21,7 @@ export const finalQa: TableSection = {
       emphasize: true,
       cells: [
         "**Merchant**",
-        "Decision-maker identified · ownership matches application · responsive · use of funds clear",
+        "Decision-maker identified · ownership matches application · both cell and email captured · responsive · use of funds clear",
       ],
     },
     {
@@ -35,7 +35,7 @@ export const finalQa: TableSection = {
       emphasize: true,
       cells: [
         "**Existing Debt**",
-        "Balances disclosed · schedule known · payoff letters if refinancing · no hidden advances",
+        "Balances disclosed · schedule known · payoff letters if refinancing · Zero Balance Letter if there was a prior default · no hidden advances",
       ],
     },
     {
@@ -53,5 +53,5 @@ export const finalQa: TableSection = {
       body: "Never submit a file you don't understand. If you can't explain it, it's not ready.",
     },
   ],
-  note: "Built from the FinBiz SDR Onboarding Manual & Call Script. Internal enablement only — final approvals depend on lender underwriting and complete file review. Confirm current advertised terms at finbizfunding.com before quoting live.",
+  note: "Built from the FinBiz Master Doc. Internal enablement only — final approvals depend on lender underwriting and complete file review. Confirm current advertised terms at finbizfunding.com before quoting live.",
 };

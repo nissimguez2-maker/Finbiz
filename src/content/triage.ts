@@ -13,7 +13,7 @@ export const triage: TriageContent = {
     eyebrow: "Triage",
     title: "Eligibility & {Lanes}",
     lead:
-      "You're not underwriting — you're triaging. The only question right now: is this file worth pursuing, and what risk has to be on the table before it ships? Floor to even start: $15K+/mo deposits, 6+ months, 500+ credit. Below that, needing money isn't the same as being fundable.",
+      "You're not underwriting — you're triaging. The only question right now: is this file worth pursuing, and what risk has to be on the table before it ships? Floor to even start: $15K+/mo deposits, 6+ months, 500+ credit, and revenue deposited into a business bank account. Below that, needing money isn't the same as being fundable.",
   },
   lanes: [
     {

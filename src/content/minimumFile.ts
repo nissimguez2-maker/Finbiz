@@ -33,6 +33,12 @@ export const minimumFile: TableSection = {
         "Card-sales / real-time verification",
       ],
     },
+    {
+      cells: [
+        "Zero Balance Letter (ZBL) [[if past default since paid off]]",
+        "Required on top of statements + the product's docs",
+      ],
+    },
     { cells: ["Tax returns [[bank-funded only]]", "Income proof for SBA / bank products"] },
   ],
   callouts: [

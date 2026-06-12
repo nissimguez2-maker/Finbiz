@@ -1,9 +1,10 @@
 import type { TableSection } from "@/types/content";
 
 /**
- * How to read a merchant's bank statements during triage. The numbered four are
- * the priority read — hit them in order and you can lane the file before the
- * fine print. Voice: Ness — plainspoken. Compliance: triage, not underwriting.
+ * How to read a merchant's bank statements during triage — the full 10-point
+ * review, healthy vs. red-flag. Voice: Ness — plainspoken. Compliance: triage,
+ * not underwriting. Reading deposits → balance behavior → negative days/NSFs →
+ * existing ACH pulls lanes the file before you ever open the fine print.
  */
 export const statements: TableSection = {
   meta: {
@@ -13,41 +14,66 @@ export const statements: TableSection = {
     eyebrow: "Truth",
     title: "Reading the {Bank Statements}",
     lead:
-      "What a merchant says matters less than what the statements show — so get 3 months and read them. The numbered four tell most of the story before you touch the detail. Hit them in order, then work the rest.",
+      "What a merchant says matters less than what the statements show — so get 3 months and read them. Walk all ten points, healthy vs. red flag. Deposits → balance behavior → negative days/NSFs → existing ACH pulls lane the file before you touch the detail.",
   },
   columns: ["#", "Review area", "What good looks like", "Risk signal"],
   rows: [
     {
       no: "1",
       emphasize: true,
-      cells: ["**Total monthly deposits**", "Real revenue volume", "One-time transfers only"],
+      cells: ["**Period**", "Recent & complete", "Old, missing, or gapped"],
     },
     {
       no: "2",
       emphasize: true,
-      cells: ["**Average balance**", "An operating cushion", "Constantly near zero"],
+      cells: ["**Name**", "Matches the entity / file", "Wrong owner or entity"],
     },
     {
       no: "3",
       emphasize: true,
-      cells: ["**NSFs & negative days**", "Clean, stays above zero", "Repeated or recent hits"],
+      cells: ["**Monthly deposits**", "Real revenue volume", "Transfers, not revenue"],
     },
     {
       no: "4",
       emphasize: true,
-      cells: ["**Existing ACH pulls**", "Single, manageable", "Multiple funders / pressure"],
+      cells: ["**Deposit count**", "Active business flow", "Sparse — too few deposits"],
     },
-    { no: "", cells: ["Statement period", "Recent & complete", "Old, missing, or gapped"] },
-    { no: "", cells: ["Business / account name", "Matches the file", "Wrong owner or entity"] },
-    { no: "", cells: ["Number of deposits", "Active business flow", "Too few deposits"] },
-    { no: "", cells: ["Large withdrawals", "Explained outflows", "Irregular / unsupported"] },
-    { no: "", cells: ["Authenticity", "Consistent format & sequence", "Inconsistent / manipulated"] },
+    {
+      no: "5",
+      emphasize: true,
+      cells: ["**Average balance**", "An operating cushion", "Constantly near zero"],
+    },
+    {
+      no: "6",
+      emphasize: true,
+      cells: ["**Negative days**", "Stable, stays above zero", "Repeated negatives"],
+    },
+    {
+      no: "7",
+      emphasize: true,
+      cells: ["**NSFs**", "Clean — no failed payments", "Failed payments / NSF hits"],
+    },
+    {
+      no: "8",
+      emphasize: true,
+      cells: ["**ACH pulls**", "Single, manageable", "Stacking — multiple funders / pressure"],
+    },
+    {
+      no: "9",
+      emphasize: true,
+      cells: ["**Withdrawals**", "Clear business purpose", "Irregular / unsupported"],
+    },
+    {
+      no: "10",
+      emphasize: true,
+      cells: ["**Authenticity**", "Consistent format & sequence", "Inconsistent / manipulated"],
+    },
   ],
   callouts: [
     {
       tone: "clay",
-      label: "First four, in order",
-      body: "Deposits → balance behavior → NSFs & negative days → existing funder payments. Read those four and you can lane the file before you ever open the fine print.",
+      label: "Lane it first, in order",
+      body: "Deposits → balance behavior → negative days & NSFs → existing ACH pulls. Read those lanes and you can lane the file before you ever open the fine print.",
     },
   ],
 };

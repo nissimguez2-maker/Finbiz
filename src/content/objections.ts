@@ -46,6 +46,11 @@ export const objections: ObjectionsContent = {
       reframe:
         "Best time to look at options is before cash flow gets tight. If the numbers don't make sense, there's no obligation.",
     },
+    {
+      q: "I don't want to put my house / equity on the line.",
+      reframe:
+        "I hear you — and that's exactly why it's smart, not risky. This is the fastest money you can get, funded in about a day, and it's a line, not a lump you owe. You only draw what you need and you stay in control. It's there to solve the problem, not to be spent. Used right, it's the cheapest, fastest tool you've got.",
+    },
   ],
   dealKillers: [
     { issue: "Hidden balances", move: "Ask directly and document" },
@@ -53,6 +58,8 @@ export const objections: ObjectionsContent = {
     { issue: "Negative balance at funding", move: "Monitor before close" },
     { issue: "Sharp deposit drop", move: "Request MTD transactions" },
     { issue: "Liens / judgments · prior default", move: "Disclose early" },
+    { issue: "Modified / restructured position", move: "Surface it early — funders treat modifying almost as bad as defaulting" },
+    { issue: "Prior default", move: "Disclose up front; if 650+ and owns real estate, HELOC can pay it off" },
     { issue: "Refuses bank verification", move: "Set the expectation up front" },
     { issue: "Another broker submits · stops responding", move: "Move fast, set deadlines & cadence" },
   ],
@@ -63,5 +70,7 @@ export const objections: ObjectionsContent = {
     { dont: "Factor rate is an interest rate", say: "Factor rate sets total payback; it's not APR" },
     { dont: "No risk / won't affect cash flow", say: "Daily/weekly payments must fit cash flow" },
     { dont: "Funded today", say: "Timing depends on underwriting & closing" },
+    { dont: "Name a parent / holding company", say: "It's FinBiz / FinBiz Funding — no parent named" },
+    { dont: 'Write "MCA" in a text or email', say: 'Call it "funding" in writing' },
   ],
 };
