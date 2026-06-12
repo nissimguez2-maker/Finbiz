@@ -32,7 +32,7 @@ Nothing else to run.
   (the approved-offer math).
 - **Part 2 — Scripts → `src/content/callFlow.ts`** — the stage talk track
   (Open→Close, including ④.5 Risk check) + the All-set/Light branch cards; plus
-  `objections.ts`, `followUps.ts`, `finalQa.ts`, and the triage **LIGHT** track as the
+  `objections.ts`, `finalQa.ts`, and the triage **LIGHT** track as the
   script evolves.
 - **Qualifying threshold** (the single qualify floor) → `src/content/meta.ts` +
   `src/content/triage.ts`.

@@ -13,7 +13,7 @@ import type { OfferContent } from "@/types/content";
 export const offer: OfferContent = {
   meta: {
     id: "offer",
-    navNo: "11",
+    navNo: "10",
     navLabel: "Approved Offer",
     eyebrow: "Post-Approval",
     title: "Approved {Offer} Desk",

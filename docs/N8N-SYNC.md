@@ -200,7 +200,7 @@ WHICH PART OF THE MASTER DOC FEEDS WHICH FILE:
   src/content/pipeline.ts.
 - PART 1 — PRODUCT MATRIX → src/content/products.ts, src/content/mca.ts, src/content/offer.ts.
 - PART 2 — SCRIPTS → src/content/callFlow.ts (beats ①–⑥ + ④.5 Risk check + All-set/Light
-  branches), src/content/objections.ts, src/content/followUps.ts, src/content/finalQa.ts, and the
+  branches), src/content/objections.ts, src/content/finalQa.ts, and the
   triage.ts LIGHT track.
 - Global (in meta.ts): only change brand, `ticker`, `rails`, or `nav` fields the Doc clearly
   changes; never reorder `nav` or change any `id`/`navNo` unless the Doc explicitly restructures
@@ -265,7 +265,6 @@ OUTPUT FORMAT — return ONLY a single JSON object, no prose, no markdown fences
     "src/content/minimumFile.ts": "<full file contents>",
     "src/content/pipeline.ts":    "<full file contents>",
     "src/content/objections.ts":  "<full file contents>",
-    "src/content/followUps.ts":   "<full file contents>",
     "src/content/finalQa.ts":     "<full file contents>",
     "src/content/offer.ts":       "<full file contents>"
   }

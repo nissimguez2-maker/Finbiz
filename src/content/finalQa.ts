@@ -10,7 +10,7 @@ import type { TableSection } from "@/types/content";
 export const finalQa: TableSection = {
   meta: {
     id: "qa",
-    navNo: "10",
+    navNo: "09",
     navLabel: "Final QA",
     eyebrow: "Pre-flight",
     title: "Final {QA} Before Submission",
@@ -37,7 +37,7 @@ export const finalQa: TableSection = {
       emphasize: true,
       cells: [
         "**Existing Debt & Risk**",
-        "Balances disclosed · payment schedule known · payoff letters if refinancing · ZBL if past default · no hidden positions",
+        "Balances disclosed · payment schedule known · payoff letters [[if positions are being paid off]] · ZBL if past default · no hidden positions",
       ],
     },
     {

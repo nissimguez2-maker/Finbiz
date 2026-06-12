@@ -7,7 +7,7 @@ import {
   pitchProducts,
   relationshipProducts,
   primaryProduct,
-  renewalProduct,
+  productByName,
   type BranchId,
 } from "./callScript";
 import type { Product } from "@/types/content";
@@ -15,8 +15,11 @@ import type { Product } from "@/types/content";
 /** Which product(s) the call should lead with, given the resolved branch. */
 function recommendedNames(branch: BranchId): string[] {
   if (branch === "funded") {
-    const r = renewalProduct()?.name;
-    return r ? [r] : [];
+    // ↪ All set: the second swing is a refi/top-up of his position (an MCA
+    // underneath); CCP is the hold for an already-funded merchant.
+    return [primaryProduct()?.name, productByName("CCP")?.name].filter(
+      (n): n is string => !!n,
+    );
   }
   if (branch === "light") return relationshipProducts().map((p) => p.name);
   const mca = primaryProduct()?.name; // qualifies / undecided → bread-and-butter
@@ -24,7 +27,7 @@ function recommendedNames(branch: BranchId): string[] {
 }
 
 function recLabel(branch: BranchId): string {
-  if (branch === "funded") return "Already funded — lead with the refi / renewal";
+  if (branch === "funded") return "Already funded — push for the second swing (refi / renewal)";
   if (branch === "light") return "Not yet fundable — relationship plays only";
   return "Qualifies — lead with MCA; reach for the rest only if the file earns it";
 }

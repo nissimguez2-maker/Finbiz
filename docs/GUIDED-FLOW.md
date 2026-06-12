@@ -181,7 +181,7 @@ Rendering rules:
 ### Branch screen: `light` (between Gate and Close)
 - **Main — large bold:** `callFlow.branches[1].says[0]` ("Straight with you — the numbers are a little light today… But I'm not writing you off.").
 - **Cue / play menu:** `callFlow.branches[1].cues[0]` broken into the three plays: **credit repair** (60–90 days, never promise a score) · **CCP** (hold the line) · **"two stronger months & callback."** Surface the two `relationshipPlay` products from `products.products` (CCP, Credit Repair — `bestFit`/`sayIt`) and `products.relationshipNote`.
-- **CTA:** "Book the callback" → advance to `close` (re-purposed as callback-booking; collect cadence into Notes). Optionally deep-link the matching `followUps` scenario ("Light / not yet") in After-call.
+- **CTA:** "Book the callback" → advance to `close` (re-purposed as callback-booking; collect cadence into Notes).
 - **Objections pane:** unchanged.
 
 ### Branch screen: `funded` (between Gate and Close)
@@ -259,7 +259,7 @@ Responsive note (desktop-first per requirement): below `lg`, panes stack (object
 | 06 | Minimum File (`minimumFile`) | **Close** | Core rows = collect checklist; `note` = first-text hero; conditional rows behind disclosure |
 | 07 | Pipeline (`pipeline`) | **After the call** | Pipeline tab (file-management view, not live). `questions` (discovery 1–9) optionally surfaced as a Gate/Dig reference disclosure |
 | 08 | Objections (`objections`) | **Always-on right pane** | `objections` = live list; `dealKillers` + `compliance` = collapsed reference tabs in the same pane |
-| 09 | Follow-Ups (`followUps`) | **After the call** (deep-linked from branches) | SMS templates; Light/Funded/Close branches deep-link the matching scenario |
+| 09 | Follow-Ups (`followUps`) | **Removed** | The master doc carries no SMS templates — only the written wording rail (never "MCA" in writing) and the Close beat's texts. The module was deleted; the rail lives in `meta.rails` + `objections.compliance`. |
 | 10 | Final QA (`finalQa`) | **After the call** | Pre-submission checklist tab |
 | 11 | Approved Offer (`offer`) | **After the call** | Approved-Offer desk tab; its `gate` callout ("after approval only") stays — keeps it out of the live cold-call view |
 
@@ -299,7 +299,7 @@ New top-level feature folder: **`src/features/callflow/`**. Clear file ownership
 | `src/features/callflow/StageReference.tsx` | The contextual reference block inside StagePanel: lane cards (Gate), product matrix (Pitch), collect checklist (Close), relationship plays (Light), renewal (Funded). | `triage.lanes`, `products`, `minimumFile` via selectors | `{ stage, branch }` |
 | `src/features/callflow/GateBranchControls.tsx` | The three branch buttons + lane-tinted styling + hotkey labels. | `triage` tones | `{ onSetBranch }` |
 | `src/features/callflow/ObjectionsPanel.tsx` | The always-on right pane. Live list + filter + collapsed dealKillers/compliance tabs. | `objections.*` | `{ open, onToggle }` |
-| `src/features/callflow/AfterCallPanel.tsx` | The overlay with tabs (Statements / Final QA / Approved Offer / Pipeline / MCA). Renders existing section components (read-only) or thin re-renders of their content. | `statements`, `finalQa`, `offer`, `pipeline`, `mca`, `followUps` | `{ open, tab, onSelectTab, onClose }` |
+| `src/features/callflow/AfterCallPanel.tsx` | The overlay with tabs (Statements / Final QA / Approved Offer / Pipeline / MCA). Renders existing section components (read-only) or thin re-renders of their content. | `statements`, `finalQa`, `offer`, `pipeline`, `mca` | `{ open, tab, onSelectTab, onClose }` |
 | ~~`src/features/callflow/LineHero.tsx`~~ | *(Folded into `StagePanel` during implementation — the hero typography contract from §6 lives there now; the separate file was removed.)* | — | — |
 
 ### 5.4 Reused as-is (no edits)

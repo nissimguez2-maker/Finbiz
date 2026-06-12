@@ -56,7 +56,6 @@ export const nav: NavItem[] = [
   { id: "file", navNo: "06", navLabel: "Minimum File" },
   { id: "pipeline", navNo: "07", navLabel: "Pipeline" },
   { id: "objections", navNo: "08", navLabel: "Objections" },
-  { id: "followups", navNo: "09", navLabel: "Follow-Ups" },
-  { id: "qa", navNo: "10", navLabel: "Final QA" },
-  { id: "offer", navNo: "11", navLabel: "Approved Offer" },
+  { id: "qa", navNo: "09", navLabel: "Final QA" },
+  { id: "offer", navNo: "10", navLabel: "Approved Offer" },
 ];

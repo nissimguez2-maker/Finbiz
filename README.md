@@ -93,7 +93,7 @@ Three layers, each with one job:
    rails, and the canonical nav order):
 
    `callFlow` · `products` · `mca` · `triage` · `statements` · `minimumFile` ·
-   `pipeline` · `objections` · `followUps` · `finalQa` · `offer` — plus `meta`.
+   `pipeline` · `objections` · `finalQa` · `offer` — plus `meta`.
 
 3. **The layout — `src/features/callflow/*` and `src/components/sections/*.tsx`.** The live
    view is the guided **CallConsole** (stage stepper, hero line, objections pane, product
@@ -202,7 +202,7 @@ Finbiz/
    ├─ content/                ← THE DATA: one typed module per section (edit these)
    │   ├─ meta.ts             ← brand, ticker, compliance rails, nav order
    │   ├─ callFlow.ts  products.ts  mca.ts  triage.ts  statements.ts
-   │   └─ minimumFile.ts  pipeline.ts  objections.ts  followUps.ts  finalQa.ts  offer.ts
+   │   └─ minimumFile.ts  pipeline.ts  objections.ts  finalQa.ts  offer.ts
    ├─ features/callflow/      ← THE LIVE VIEW: the guided console (callScript.ts is the
    │                            only file that reaches into content/ — see GUIDED-FLOW.md)
    └─ components/sections/    ← post-call reference tabs (don't edit for copy)

@@ -27,7 +27,7 @@ into three parts. Here's which part feeds which file:
 | --- | --- |
 | **Base** (company facts, qualify floor, contact rule, the 12-stage pipeline, minimum file, MCA hard gates, risk terms) | `meta.ts` (ticker + rails), `triage.ts`, `statements.ts` (the hard gates), `minimumFile.ts`, `pipeline.ts` |
 | **Part 1 — Product Matrix** (routing, MCA, Bridge/Term/LOC/HELOC/Equipment, Asset-Based & Specialty, CCP, Credit Repair, structuring play) | `products.ts`, `mca.ts`, `offer.ts` |
-| **Part 2 — Scripts** (posture, follow-up wording rail, discovery list, beats ①–⑥ + ④.5 Risk check, All-set/Light branches, objections) | `callFlow.ts`, `objections.ts`, `followUps.ts`, `finalQa.ts` (+ the triage **LIGHT** track) |
+| **Part 2 — Scripts** (posture, follow-up wording rail, discovery list, beats ①–⑥ + ④.5 Risk check, All-set/Light branches, objections) | `callFlow.ts`, `objections.ts`, `finalQa.ts` (+ the triage **LIGHT** track). The doc has **no SMS templates** — the only texts on the site are the Close beat's, and the written wording rail lives in `meta.ts` + `objections.ts`. |
 
 ---
 
@@ -247,33 +247,13 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ---
 
-## 09 — Follow-Ups (SMS templates)
-
-**Master Doc:** Part 2 — Scripts → the written-follow-up wording rail. **File:** `src/content/followUps.ts`.
-
-The `scenarios` array. Each scenario has a `scenario` name and two `templates`, each with a
-`label` and the actual `text` of the SMS.
-
-```ts
-// before
-{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 3 months of business bank statements and I'll come back with real numbers. No obligation either way." },
-// after — shorter
-{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — great talking. Send 3 months of bank statements and I'll come back with real numbers. No obligation." },
-```
-
-> Keep "No obligation" in, and never promise an offer or approval before a file exists.
-> In writing, never use the word "MCA" — call it "funding." `[Name]` is a merge
-> placeholder Ness fills in — leave it as literal text.
-
----
-
-## 10 — Final QA
+## 09 — Final QA
 
 **Master Doc:** Part 2 — Scripts → ⑥ Close + Base → minimum file (the pre-submission checklist). **File:** `src/content/finalQa.ts`.
 
 Same table shape as the other tables. Four emphasized rows (Merchant / Bank Statements /
-Existing Debt / Next Step), each a `cells` pair. `callouts` is the rule band; `note` is the
-footer paragraph.
+Existing Debt & Risk / Contract & Funding), each a `cells` pair. `callouts` is the rule band;
+`note` is the footer paragraph.
 
 ```ts
 // before — the Bank Statements check
@@ -284,7 +264,7 @@ cells: ["**Bank Statements**", "Recent, complete, no gaps · name matches · dep
 
 ---
 
-## 11 — Approved Offer Desk (post-approval only)
+## 10 — Approved Offer Desk (post-approval only)
 
 **Master Doc:** Part 1 — Product Matrix → MCA (PRIMARY) terms + the structuring play (the approved-offer walkthrough). **File:** `src/content/offer.ts`.
 

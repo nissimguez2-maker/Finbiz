@@ -142,7 +142,6 @@ const FRAME_PHRASES: { match: RegExp; phrase: string }[] = [
   { match: /line of credit/i, phrase: "a line of credit" },
   { match: /equip/i, phrase: "equipment financing" },
   { match: /heloc/i, phrase: "a HELOC against your equity" },
-  { match: /renew|refi|consol/i, phrase: "a renewal" },
 ];
 export function pitchFramePhrase(name: string): string {
   return FRAME_PHRASES.find((f) => f.match.test(name))?.phrase ?? "the right product";
@@ -155,7 +154,6 @@ export function pitchForProduct(name: string): ProductPitch | undefined {
     { match: /term loan/i, title: /term loan/i },
     { match: /heloc/i, title: /heloc/i },
     { match: /equip/i, title: /equip/i },
-    { match: /renew|refi|consol/i, title: /renew|refi|consol|second swing/i },
   ];
   const k = keys.find((x) => x.match.test(name));
   return k ? products.pitches.find((p) => k.title.test(p.title)) : undefined;
@@ -166,14 +164,6 @@ export function relationshipProducts(): Product[] {
   return products.products.filter((p) => p.relationshipPlay);
 }
 export const relationshipNote: Callout = products.relationshipNote;
-
-/* ---- Funded branch reference (renewal / refi) -------------------------- */
-export function renewalProduct(): Product | undefined {
-  return products.products.find((p) => /renew|refi|consol/i.test(p.name));
-}
-export function renewalPitch(): ProductPitch | undefined {
-  return products.pitches.find((p) => /renew|refi|consol|second swing/i.test(p.title));
-}
 
 /* ---- Close reference (minimum file) ------------------------------------ */
 function rowsAfterSubhead(match: RegExp): TableRow[] {

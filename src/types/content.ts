@@ -204,22 +204,6 @@ export interface ObjectionsContent {
   compliance: CompliancePair[];
 }
 
-/** ---- Follow-ups --------------------------------------------------------- */
-export interface SmsTemplate {
-  label: string;
-  text: string;
-}
-
-export interface FollowUpScenario {
-  scenario: string;
-  templates: SmsTemplate[];
-}
-
-export interface FollowUpsContent {
-  meta: SectionMeta;
-  scenarios: FollowUpScenario[];
-}
-
 /** ---- Approved-Offer calculator (post-approval only) -------------------- */
 export interface OfferContent {
   meta: SectionMeta;
