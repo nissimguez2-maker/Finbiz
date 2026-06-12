@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
-import { objectionList, dealKillers } from "./callScript";
+import { objectionList, dealKillers, compliancePairs } from "./callScript";
 import type { Objection } from "@/types/content";
 
 /**
@@ -11,6 +11,14 @@ import type { Objection } from "@/types/content";
 export function ObjectionsPanel() {
   const [filter, setFilter] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // The panel mounts fresh each time objections open (`o`), so a mount-time
+  // focus lands the cursor in the filter — type-to-find without a second reach.
+  // isTypingTarget then guards the rest of the keymap while focus is here.
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase();
@@ -21,6 +29,7 @@ export function ObjectionsPanel() {
   return (
     <div className="flex h-full flex-col gap-3">
       <input
+        ref={inputRef}
         type="text"
         value={filter}
         onChange={(e) => setFilter(e.currentTarget.value)}
@@ -52,6 +61,29 @@ export function ObjectionsPanel() {
               <li key={dk.issue} className="rounded-lg border border-surface-2-border bg-surface-2 px-3 py-2">
                 <span className="block text-[13px] font-semibold text-foreground">{dk.issue}</span>
                 <span className="mt-0.5 block text-[12.5px] leading-snug text-surface-2-foreground">{dk.move}</span>
+              </li>
+            ))}
+          </ul>
+        </Disclosure>
+
+        {/* Compliance reference — the "don't say X → say Y" pairs, one tap down
+            so the live objection list stays clean (GUIDED-FLOW §2 objections). */}
+        <Disclosure label="Compliance" count={compliancePairs.length}>
+          <ul className="space-y-2">
+            {compliancePairs.map((pair) => (
+              <li key={pair.dont} className="rounded-lg border border-surface-2-border bg-surface-2 px-3 py-2">
+                <span className="block text-[12.5px] leading-snug text-surface-2-foreground">
+                  <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-clay">
+                    Don&rsquo;t
+                  </span>{" "}
+                  {pair.dont}
+                </span>
+                <span className="mt-1 block text-[13px] font-semibold leading-snug text-foreground">
+                  <span className="font-mono text-[10px] font-semibold uppercase tracking-label text-go">
+                    Say
+                  </span>{" "}
+                  {pair.say}
+                </span>
               </li>
             ))}
           </ul>
@@ -114,7 +146,7 @@ function Disclosure({ label, count, children }: { label: string; count: number; 
       >
         <span aria-hidden="true">{open ? "▾" : "▸"}</span>
         {label}
-        <span className="text-accent">({count})</span>
+        <span className="text-accent-strong">({count})</span>
       </button>
       {open && <div className="mt-2">{children}</div>}
     </div>

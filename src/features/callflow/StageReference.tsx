@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { inlineBold } from "@/lib/inlineBold";
 import {
   coreFileRows,
   conditionalFileRows,
@@ -8,16 +9,6 @@ import {
   type BranchId,
 } from "./callScript";
 import type { TableRow } from "@/types/content";
-
-/* Inline **bold** emphasis used in the file rows / note. */
-function inlineHtml(s: string): { __html: string } {
-  const html = s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-foreground">$1</strong>');
-  return { __html: html };
-}
 
 /**
  * The only stage-contextual reference that stays on the LEFT (script) side: the
@@ -42,7 +33,7 @@ function FileRow({ row }: { row: TableRow }) {
               "block leading-snug",
               i === 0 ? "text-sm font-semibold text-foreground" : "text-[12.5px] text-muted-foreground",
             )}
-            dangerouslySetInnerHTML={inlineHtml(cell)}
+            dangerouslySetInnerHTML={inlineBold(cell)}
           />
         ))}
       </div>

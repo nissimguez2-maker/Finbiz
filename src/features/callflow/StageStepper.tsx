@@ -1,3 +1,4 @@
+import { forwardRef, useEffect, useRef } from "react";
 import { RotateCcw } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { STEP_LABELS, type Step } from "./callScript";
@@ -28,6 +29,23 @@ export function StageStepper({ flow }: { flow: UseCallFlow }) {
   const onBranchScreen = stage === "light" || stage === "funded";
   const postGateLocked = branch === null;
 
+  // Keep the active step in view: with 7 stages + the branch slot the row can
+  // overflow on a laptop, so the current step is scrolled to centre when it
+  // changes (jump, not glide, under reduced motion).
+  const activeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const el = activeRef.current;
+    if (!el) return;
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [stage]);
+
   return (
     <nav
       aria-label="Call stages"
@@ -44,6 +62,7 @@ export function StageStepper({ flow }: { flow: UseCallFlow }) {
           return (
             <li key={step} className="flex items-center">
               <StepButton
+                ref={isActive ? activeRef : undefined}
                 no={i + 1}
                 label={STEP_LABELS[step]}
                 active={isActive}
@@ -82,27 +101,25 @@ export function StageStepper({ flow }: { flow: UseCallFlow }) {
   );
 }
 
-function StepButton({
-  no,
-  label,
-  active,
-  disabled,
-  onClick,
-}: {
-  no: number;
-  label: string;
-  active: boolean;
-  disabled: boolean;
-  onClick: () => void;
-}) {
+const StepButton = forwardRef<
+  HTMLButtonElement,
+  {
+    no: number;
+    label: string;
+    active: boolean;
+    disabled: boolean;
+    onClick: () => void;
+  }
+>(function StepButton({ no, label, active, disabled, onClick }, ref) {
   return (
     <button
+      ref={ref}
       type="button"
       onClick={onClick}
       disabled={disabled}
       aria-current={active ? "step" : undefined}
       className={cn(
-        "focus-ring relative flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition-colors",
+        "focus-ring relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-[13px] transition-colors lg:px-3",
         active
           ? "font-semibold text-foreground"
           : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -112,14 +129,16 @@ function StepButton({
       {/* Signature accent bar marks the active stage. */}
       <span
         className={cn(
-          "absolute inset-x-3 -bottom-px h-[3px] rounded-full bg-accent transition-opacity duration-200",
+          "absolute inset-x-2.5 -bottom-px h-[3px] rounded-full bg-accent transition-opacity duration-200 lg:inset-x-3",
           active ? "opacity-100" : "opacity-0",
         )}
         aria-hidden="true"
       />
+      {/* Numerals are the first thing to go on a narrow laptop — the labels +
+          accent bar carry "where am I"; the 02-style numbers return at lg. */}
       <span
         className={cn(
-          "tnum font-mono text-[11px] font-semibold",
+          "tnum hidden font-mono text-[11px] font-semibold lg:inline",
           active ? "text-accent" : "text-muted-foreground/70",
         )}
       >
@@ -128,7 +147,7 @@ function StepButton({
       {label}
     </button>
   );
-}
+});
 
 function BranchSlot({ active, label }: { active: boolean; label: string | null }) {
   return (
@@ -159,7 +178,9 @@ function Connector() {
   return (
     <span
       aria-hidden="true"
-      className="mx-0.5 h-px w-4 shrink-0 bg-border sm:w-6"
+      // Hairline below lg so 7 stages + the branch slot fit a laptop; the full
+      // connector returns at lg/xl where there's room.
+      className="mx-px h-px w-1.5 shrink-0 bg-border lg:mx-0.5 lg:w-6"
     />
   );
 }

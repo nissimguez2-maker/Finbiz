@@ -163,6 +163,16 @@
   .live-dot {
     @apply h-2 w-2 rounded-full bg-go;
   }
+
+  /* Spoken-line marker. A stable, documented hook on every line the rep reads
+     aloud (the `Say` primitive + the console hero line), so spoken copy can be
+     targeted as a unit — print styling, search emphasis, future typographic
+     tuning — without leaning on utility-class ordering. Visuals stay on the
+     utilities; this class only guarantees the longhand below always wins over
+     them and gives spoken lines one stable, balanced wrap. */
+  .say-line {
+    text-wrap: balance;
+  }
 }
 
 /* Thin, unobtrusive scrollbars inside scroll regions */

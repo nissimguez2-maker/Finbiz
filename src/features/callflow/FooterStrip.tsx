@@ -1,11 +1,14 @@
 import { ArrowUpRight, MessageSquareWarning, NotebookPen, PanelRightOpen } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { rails } from "@/content/meta";
 import type { UseCallFlow } from "./useCallFlow";
 
 /**
- * Slim footer strip (h-12): the call's chrome controls — a Notes trigger, an
- * "After the call" toggle, and (narrow screens only) an objections toggle.
- * Right-aligned. Chrome — never printed.
+ * Slim footer strip (h-12): the always-on compliance rails on the left (the
+ * reminders that must stay on the live screen — "No rate before the file ·
+ * Factor ≠ APR …"), the call's chrome controls on the right (Notes, an "After
+ * the call" toggle, and, on narrow screens, an objections toggle). Chrome —
+ * never printed.
  */
 export function FooterStrip({
   flow,
@@ -15,7 +18,16 @@ export function FooterStrip({
   onOpenNotes: () => void;
 }) {
   return (
-    <footer className="no-print flex h-12 shrink-0 items-center justify-end gap-2 border-t border-border bg-muted/30 px-4 sm:px-6">
+    <footer className="no-print flex h-12 shrink-0 items-center justify-between gap-4 border-t border-border bg-muted/30 px-4 sm:px-6">
+      {/* Rails ticker — quiet, mono, truncates before it can shove the buttons
+          off; the first two (rate-before-file, factor≠APR) always stay in view. */}
+      <p
+        className="hidden min-w-0 flex-1 truncate font-mono text-[10px] uppercase tracking-label text-muted-foreground sm:block"
+        aria-label="Compliance rails"
+      >
+        {rails.join("  ·  ")}
+      </p>
+
       <div className="flex shrink-0 items-center gap-2">
         {/* Objections toggle — only needed on narrow screens where the right
             pane collapses into a bottom sheet. */}

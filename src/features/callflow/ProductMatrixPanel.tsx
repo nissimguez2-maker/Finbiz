@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Tag } from "@/components/ui/Tag";
+import { inlineBold } from "@/lib/inlineBold";
 import { ticker } from "@/content/meta";
 import {
   pitchProducts,
@@ -10,16 +11,6 @@ import {
   type BranchId,
 } from "./callScript";
 import type { Product } from "@/types/content";
-
-/* Inline **bold** emphasis used in product terms (mirrors the rest of the app). */
-function bold(s: string): { __html: string } {
-  const html = s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\*\*([^*]+)\*\*/g, '<b class="font-semibold text-foreground">$1</b>');
-  return { __html: html };
-}
 
 /** Which product(s) the call should lead with, given the resolved branch. */
 function recommendedNames(branch: BranchId): string[] {
@@ -53,10 +44,17 @@ export function ProductMatrixPanel({
   selected: string;
   onSelect: (name: string) => void;
 }) {
-  const rec = new Set(recommendedNames(branch));
-  const funding = pitchProducts();
-  const relationship = relationshipProducts();
-  const green = ticker[3]?.v ?? "$20K · 12mo · 570";
+  // Branch-derived lists only change when the branch does.
+  const rec = useMemo(() => new Set(recommendedNames(branch)), [branch]);
+  const funding = useMemo(() => pitchProducts(), []);
+  const relationship = useMemo(() => relationshipProducts(), []);
+  // The single qualify floor, straight from the locked ticker (first three
+  // chips) plus the fourth floor condition (business bank account).
+  const floor = ticker
+    .slice(0, 3)
+    .map((t) => `${t.v}${t.sub ? t.sub.startsWith("/") ? t.sub : ` ${t.sub}` : ""}`)
+    .join(" · ");
+  const bankAcct = ticker[3];
 
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   const toggle = (name: string) =>
@@ -82,12 +80,14 @@ export function ProductMatrixPanel({
         <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-[11px]">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-surface-2-border bg-surface-2 px-2.5 py-0.5">
             <span className="font-mono uppercase tracking-wider text-surface-2-foreground">Floor</span>
-            <b className="font-semibold tabular-nums text-foreground">$15K/mo · 6+mo · 500+</b>
+            <b className="font-semibold tabular-nums text-foreground">{floor}</b>
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-surface-2-border bg-surface-2 px-2.5 py-0.5">
-            <span className="font-mono uppercase tracking-wider text-surface-2-foreground">Green</span>
-            <b className="font-semibold tabular-nums text-foreground">{green}</b>
-          </span>
+          {bankAcct && (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-surface-2-border bg-surface-2 px-2.5 py-0.5">
+              <span className="font-mono uppercase tracking-wider text-surface-2-foreground">{bankAcct.k}</span>
+              <b className="font-semibold tabular-nums text-foreground">{bankAcct.v}</b>
+            </span>
+          )}
         </div>
         {/* recLabel: 13px on accent-strong (7.07:1) clears AA for small text;
             the 12px accent it replaced grazed the 4.5:1 line. */}
@@ -215,7 +215,7 @@ function ProductRow({
               </dt>
               <dd
                 className="text-[12.5px] leading-snug text-foreground"
-                dangerouslySetInnerHTML={bold(d.value)}
+                dangerouslySetInnerHTML={inlineBold(d.value)}
               />
             </div>
           ))}

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { UseCallFlow } from "./useCallFlow";
 import type { BranchId } from "./callScript";
@@ -42,21 +43,39 @@ const keyTone: Record<BranchButton["tone"], string> = {
 
 /**
  * The three live branch buttons shown at the Gate (GUIDED-FLOW §2). Each carries
- * its hotkey label and lane-coded tone. When the rep has reached the decision
- * point (`awaitingBranch`) the controls lift and pulse-attention so it's clear a
- * choice is owed; once a branch is chosen it stays highlighted.
+ * its hotkey label and lane-coded tone. When the rep reaches the decision point
+ * (`awaitingBranch`) the controls take on a solid accent border + tint, bolder
+ * labels, and a single one-shot lift so it's clear a choice is owed — no looping
+ * motion. If Space/→ is pressed with no lane picked, the controls flash an
+ * accent ring (driven by `flow.branchNudge`) instead of silently doing nothing.
  */
 export function GateBranchControls({ flow }: { flow: UseCallFlow }) {
   const awaiting = flow.awaitingBranch;
+
+  // Flash a one-shot ring whenever a refused next() bumps branchNudge.
+  const [flash, setFlash] = useState(false);
+  const firstNudge = useRef(flow.branchNudge);
+  useEffect(() => {
+    // Ignore the mount-time value; only react to real bumps.
+    if (flow.branchNudge === firstNudge.current) return;
+    setFlash(true);
+    const t = window.setTimeout(() => setFlash(false), 600);
+    return () => window.clearTimeout(t);
+  }, [flow.branchNudge]);
+
   return (
     <div
       className={cn(
         "rounded-xl border p-3.5 transition-colors",
-        awaiting ? "border-accent/40 bg-accent/[0.03]" : "border-border",
+        awaiting ? "border-accent bg-accent/[0.05]" : "border-border",
+        awaiting && "animate-nudge-up",
+        flash && "animate-ring-flash",
       )}
     >
       <div className="mb-2.5 flex items-center justify-between pl-1.5">
-        <span className="eyebrow">Where do the two numbers land?</span>
+        <span className={cn("eyebrow", awaiting && "text-accent")}>
+          Where do the two numbers land?
+        </span>
         {awaiting && (
           <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-label text-accent">
             <span className="live-dot bg-accent" aria-hidden="true" />

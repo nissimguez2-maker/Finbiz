@@ -18,10 +18,13 @@ export function NotesDrawer({
   open,
   onClose,
   timer,
+  focusField,
 }: {
   open: boolean;
   onClose: () => void;
   timer: ReturnType<typeof useCallTimer>;
+  /** When opened via a "capture to Notes" affordance, the field to focus. */
+  focusField?: NoteKey | null;
 }) {
   const reduceMotion = useReducedMotion();
   const notes = useNotes();
@@ -49,10 +52,29 @@ export function NotesDrawer({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, close]);
 
-  // Move focus into the panel once it has animated in.
+  // Move focus into the panel once it has animated in. If we were opened from a
+  // "capture to Notes" affordance, land the cursor in that field (placed at the
+  // end of any existing text) instead of the close button.
   const onPanelEnter = useCallback(() => {
-    panelRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus();
-  }, []);
+    const panel = panelRef.current;
+    if (!panel) return;
+    if (focusField) {
+      const input = panel.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+        `[data-note-field="${focusField}"] input, [data-note-field="${focusField}"] textarea`,
+      );
+      if (input) {
+        input.focus();
+        const len = input.value.length;
+        try {
+          input.setSelectionRange(len, len);
+        } catch {
+          /* some input types don't support selection — focus is enough */
+        }
+        return;
+      }
+    }
+    panel.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+  }, [focusField]);
 
   return (
     <div className="no-print">
@@ -207,7 +229,7 @@ function NoteField({
   const fieldClass =
     "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/60 transition-colors hover:border-accent/30 focus-ring focus-visible:border-accent/40";
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-1.5" data-note-field={fieldKey}>
       <label
         htmlFor={id}
         className="block font-mono text-[10px] uppercase tracking-label text-muted-foreground"

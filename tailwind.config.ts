@@ -81,6 +81,19 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(28px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        // One-shot entrance for the awaiting-branch controls: a short, calm
+        // lift (no loop) so the rep registers a choice is owed.
+        "nudge-up": {
+          from: { opacity: "0", transform: "translateY(8px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        // One-shot accent ring that fades out — flashed when Space/→ is pressed
+        // with a lane still unpicked. Single iteration, no loop.
+        "ring-flash": {
+          "0%": { boxShadow: "0 0 0 0 rgba(0,82,255,0.0)" },
+          "30%": { boxShadow: "0 0 0 4px rgba(0,82,255,0.30)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(0,82,255,0.0)" },
+        },
         float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-10px)" },
@@ -111,6 +124,8 @@ const config: Config = {
       },
       animation: {
         "fade-in-up": "fade-in-up 0.7s cubic-bezier(0.16,1,0.3,1) both",
+        "nudge-up": "nudge-up 0.22s cubic-bezier(0.16,1,0.3,1) both",
+        "ring-flash": "ring-flash 0.6s ease-out 1",
         float: "float 5s ease-in-out infinite",
         "float-slow": "float 4s ease-in-out infinite",
         "float-slower": "float 7s ease-in-out infinite",

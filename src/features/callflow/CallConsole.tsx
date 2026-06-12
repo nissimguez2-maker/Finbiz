@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { NotesDrawer } from "@/features/notes/NotesDrawer";
 import { useCallTimer } from "@/features/notes/useCallTimer";
+import type { NoteKey } from "@/features/notes/useNotes";
 import { primaryProduct } from "./callScript";
 import { TopBar } from "./TopBar";
 import { StageStepper } from "./StageStepper";
@@ -27,7 +28,15 @@ export function CallConsole() {
   useKeyboardFlow(flow);
   const timer = useCallTimer();
   const [notesOpen, setNotesOpen] = useState(false);
+  // When the rep taps a "capture to Notes" affordance, Notes opens with this
+  // field focused (cleared back to null when opened the plain way).
+  const [notesFocus, setNotesFocus] = useState<NoteKey | null>(null);
   const [pitchProduct, setPitchProduct] = useState(() => primaryProduct()?.name ?? "");
+
+  const openNotes = useCallback((field: NoteKey | null = null) => {
+    setNotesFocus(field);
+    setNotesOpen(true);
+  }, []);
 
   return (
     <div className="flex h-[100dvh] flex-col overflow-hidden bg-background text-foreground">
@@ -38,9 +47,9 @@ export function CallConsole() {
         {/* LEFT — the script (talk track + objections) */}
         <section
           aria-label="Script"
-          className="flex min-w-0 flex-col px-5 py-5 sm:px-7 sm:py-6 lg:basis-[60%]"
+          className="flex min-h-0 min-w-0 flex-col px-5 py-5 sm:px-7 sm:py-6 lg:basis-[60%]"
         >
-          <StagePanel flow={flow} pitchProduct={pitchProduct} />
+          <StagePanel flow={flow} pitchProduct={pitchProduct} onCaptureNote={openNotes} />
         </section>
 
         {/* RIGHT — the product matrix (what I sell) */}
@@ -52,10 +61,15 @@ export function CallConsole() {
         </aside>
       </main>
 
-      <FooterStrip flow={flow} onOpenNotes={() => setNotesOpen(true)} />
+      <FooterStrip flow={flow} onOpenNotes={() => openNotes()} />
 
       <AfterCallPanel flow={flow} />
-      <NotesDrawer open={notesOpen} onClose={() => setNotesOpen(false)} timer={timer} />
+      <NotesDrawer
+        open={notesOpen}
+        onClose={() => setNotesOpen(false)}
+        timer={timer}
+        focusField={notesFocus}
+      />
     </div>
   );
 }
