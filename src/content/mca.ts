@@ -32,7 +32,7 @@ export const mca: McaContent = {
   whenNote: {
     tone: "accent",
     label: "When MCA's the call",
-    body: "Reach for it when he needs speed, has active deposits, and the bank box won't pass — but the daily pull has to fit. Stable cash flow and stronger credit → steer to a Term Loan or Line of Credit. Owns property and wants it fast → HELOC. (The live, fillable version of this math is the Approved Offer desk — used only after approval.)",
+    body: "Reach for it when he needs speed, has active deposits, and the bank box won't pass — but the daily pull has to fit. Stable cash flow and stronger credit → steer to a Term Loan or Line of Credit. Owns property and wants it fast → HELOC.",
   },
   loops: [
     { k: "Funding amount", v: "Exactly what lands in the account" },
@@ -40,5 +40,16 @@ export const mca: McaContent = {
     { k: "Payment frequency", v: "Daily/weekly draws shape day-to-day cash flow" },
     { k: "Cash-flow fit", v: "An approval still has to be survivable to be a good deal" },
     { k: "No obligation", v: "The merchant reviews the full offer before committing" },
+    { k: "Weekly vs daily", v: "Daily is the default; weekly is the upsell — but no weekly if he has an open daily MCA or FICO under 650" },
   ],
+  hardGates: [
+    { label: "Deposits", test: "Avg ≥ 3 deposits/mo across the last 3 months" },
+    { label: "Negative days", test: "≤ ~4–5 negative days/mo on average, last 3 months" },
+    { label: "Ending balance", test: "Positive ending balance in each of the last 3 months" },
+  ],
+  hardGatesNote: {
+    tone: "amber",
+    label: "Edge case",
+    body: "Two strong months plus one slightly negative is workable to pitch — but funders still often reject it. Don't promise on a thin third month.",
+  },
 };

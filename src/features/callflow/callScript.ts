@@ -10,6 +10,9 @@ import { triage } from "@/content/triage";
 import { products } from "@/content/products";
 import { minimumFile } from "@/content/minimumFile";
 import { objections } from "@/content/objections";
+import { mca } from "@/content/mca";
+import { routing } from "@/content/routing";
+import { compliance } from "@/content/compliance";
 import { ticker } from "@/content/meta";
 import type {
   CallBeat,
@@ -30,6 +33,7 @@ export type Step =
   | "story"
   | "gate"
   | "dig"
+  | "risk"
   | "pitch"
   | "close"
   | "light"
@@ -44,6 +48,7 @@ export const STEP_LABELS: Record<Step, string> = {
   story: "Story",
   gate: "Gate",
   dig: "Dig",
+  risk: "Risk",
   pitch: "Pitch",
   close: "Close",
   light: "Light",
@@ -60,7 +65,7 @@ export function pathFor(branch: BranchId): Step[] {
     case "qualifies":
     case null:
     default:
-      return ["open", "story", "gate", "dig", "pitch", "close"];
+      return ["open", "story", "gate", "dig", "risk", "pitch", "close"];
   }
 }
 
@@ -75,10 +80,12 @@ function beatForStep(step: Step): CallBeat | BranchCard {
       return callFlow.beats[2];
     case "dig":
       return callFlow.beats[3];
-    case "pitch":
+    case "risk":
       return callFlow.beats[4];
-    case "close":
+    case "pitch":
       return callFlow.beats[5];
+    case "close":
+      return callFlow.beats[6];
     case "light":
       return callFlow.branches[1]; // "↪ Light"
     case "funded":
@@ -200,11 +207,27 @@ export const dealKillers: DealKiller[] = objections.dealKillers;
 export const compliancePairs: CompliancePair[] = objections.compliance;
 
 /* ---- After-the-call tabs ----------------------------------------------- */
-export type AfterCallTab = "statements" | "qa" | "offer" | "pipeline" | "mca";
+export type AfterCallTab = "statements" | "qa" | "pipeline" | "mca";
 export const afterCallTabs: { id: AfterCallTab; label: string }[] = [
   { id: "statements", label: "Statement Read" },
   { id: "qa", label: "Final QA" },
-  { id: "offer", label: "Approved Offer" },
   { id: "pipeline", label: "Pipeline" },
   { id: "mca", label: "MCA Structure" },
 ];
+
+/* ---- Risk-check + Quick Lookup reference ------------------------------- */
+/** The three MCA hard gates (read live at the Gate / in Lookup). */
+export const mcaHardGates = mca.hardGates;
+export const mcaHardGatesNote = mca.hardGatesNote;
+/** The product routing decision tree + funder appetite + structuring plays. */
+export const routingRule = routing.rule;
+export const routingBranches = routing.branches;
+export const verticalAppetite = routing.appetite;
+export const structuringPlays = routing.plays;
+/** The bridge loan — offered when he insists on a slow product (SBA / term). */
+export function bridgeProduct(): Product | undefined {
+  return products.products.find((p) => /bridge/i.test(p.name));
+}
+/** Posture + written-comms rails for the Compliance card. */
+export const posture = compliance.posture;
+export const writtenRails = compliance.writtenRails;

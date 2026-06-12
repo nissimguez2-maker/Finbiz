@@ -108,12 +108,24 @@ export interface KeyValueRow {
   v: string;
 }
 
+/** One MCA "hard gate" — a pass/fail underwriting check read off the statements. */
+export interface HardGate {
+  /** Short name, e.g. "Deposits". */
+  label: string;
+  /** The pass test, e.g. "≥ 3 deposits/mo across the last 3 months". */
+  test: string;
+}
+
 export interface McaContent {
   meta: SectionMeta;
   example: StatCell[];
   factorNote: Callout;
   whenNote: Callout;
   loops: KeyValueRow[];
+  /** The three checks that actually decide an MCA (read live at the Gate / in Lookup). */
+  hardGates: HardGate[];
+  /** The edge-case caveat under the hard gates. */
+  hardGatesNote?: Callout;
 }
 
 /** ---- Triage / Lanes ----------------------------------------------------- */
@@ -155,6 +167,8 @@ export interface PipelineStep {
   n: string;
   title: string;
   desc: string;
+  /** What kills the deal at this stage, if anything. */
+  killer?: string;
 }
 
 export interface DiscoveryQ {
@@ -210,12 +224,44 @@ export interface FollowUpsContent {
   scenarios: FollowUpScenario[];
 }
 
-/** ---- Approved-Offer calculator (post-approval only) -------------------- */
-export interface OfferContent {
+/** ---- Routing (the "where does this file go" decision tree) ------------- */
+/** One branch of the routing decision tree: a condition → the product(s) it points to. */
+export interface RoutingBranch {
+  /** The condition, e.g. "Good cash flow". */
+  when: string;
+  /** Where it routes, e.g. "MCA · Line of Credit". */
+  then: string;
+  /** Optional caveat, e.g. "HELOC also needs real-estate equity". */
+  note?: string;
+}
+
+/** Funder appetite for a vertical or geography. */
+export interface AppetiteRow {
+  /** The vertical or region, e.g. "Trucking", "Texas". */
+  label: string;
+  /** The read, e.g. "Hard — usually only with an open position elsewhere". */
+  verdict: string;
+  tone?: Tone;
+}
+
+export interface RoutingContent {
   meta: SectionMeta;
-  /** Framing that this is used AFTER underwriting approves, never live. */
-  gate: Callout;
-  loops: KeyValueRow[];
+  /** The "read this first" routing rule. */
+  rule?: Callout;
+  branches: RoutingBranch[];
+  /** Vertical / geography funder appetite. */
+  appetite: AppetiteRow[];
+  /** Advanced structuring plays (e.g. multi-entity routing). */
+  plays: Callout[];
+}
+
+/** ---- Compliance & posture (written rails + how you carry the call) ----- */
+export interface ComplianceContent {
+  meta: SectionMeta;
+  /** How the rep carries the whole call (peer-but-expert). */
+  posture: Callout;
+  /** Rules for written follow-ups (SMS / email). */
+  writtenRails: string[];
 }
 
 /** ---- A registered, renderable section ---------------------------------- */

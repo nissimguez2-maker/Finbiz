@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { Statements } from "@/components/sections/Statements";
 import { FinalQa } from "@/components/sections/FinalQa";
-import { OfferDesk } from "@/components/sections/OfferDesk";
 import { Pipeline } from "@/components/sections/Pipeline";
 import { Mca } from "@/components/sections/Mca";
 import { afterCallTabs, type AfterCallTab } from "./callScript";
@@ -13,7 +12,6 @@ import type { UseCallFlow } from "./useCallFlow";
 const TAB_BODY: Record<AfterCallTab, React.ComponentType> = {
   statements: Statements,
   qa: FinalQa,
-  offer: OfferDesk,
   pipeline: Pipeline,
   mca: Mca,
 };

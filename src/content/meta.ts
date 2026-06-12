@@ -26,6 +26,7 @@ export const ticker: { k: string; v: string; sub?: string }[] = [
   { k: "Credit", v: "500+" },
   { k: "Green lane", v: "$20K · 12mo · 570" },
   { k: "To start a file", v: "3", sub: "mo stmts" },
+  { k: "Advertised", v: "$5K–$10M · ~1hr · same-day" },
 ];
 
 /** The always-on compliance rails (also rendered as a sticky strip). */
@@ -34,6 +35,8 @@ export const rails: string[] = [
   "No rate before the file",
   "Factor ≠ APR",
   "No invented urgency",
+  "FinBiz only — never name a parent company",
+  "In writing, never write “MCA” — say “funding”",
 ];
 
 /** Canonical nav order. Section ids must match registry + content metas. */
@@ -48,5 +51,4 @@ export const nav: NavItem[] = [
   { id: "objections", navNo: "08", navLabel: "Objections" },
   { id: "followups", navNo: "09", navLabel: "Follow-Ups" },
   { id: "qa", navNo: "10", navLabel: "Final QA" },
-  { id: "offer", navNo: "11", navLabel: "Approved Offer" },
 ];

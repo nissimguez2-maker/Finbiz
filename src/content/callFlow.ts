@@ -29,7 +29,10 @@ export const callFlow: CallFlowContent = {
         "I work with owners like you on growth capital — and I'm good at it.",
         "Give me five minutes. By the end, either I see a real way to put money to work in your business, or I don't — and I'll tell you flat. Fair?",
       ],
-      cues: ["Naming the “no” up front disarms him — reads as confidence, not a pitch."],
+      cues: [
+        "Naming the “no” up front disarms him — reads as confidence, not a pitch.",
+        "Posture: a peer who happens to be the expert — respect his time and judgment, but stay precise and in command of the numbers.",
+      ],
     },
     {
       label: "② Open the story",
@@ -58,6 +61,17 @@ export const callFlow: CallFlowContent = {
       cues: ["He just handed you the pain AND the payoff, in his words. Don't pitch yet — let it sit."],
     },
     {
+      label: "④.5 Risk check — defaults & modified positions",
+      says: [
+        "Real quick so I build this right — are you current on everything, or is anything behind, modified, or restructured?",
+        "And where's your credit sitting, ballpark?",
+      ],
+      cues: [
+        "A modified position reads almost as bad as a default to funders. Surface it now, not at submission.",
+        "Defaulting + 650+ credit + owns real estate? Pivot to HELOC — pay the default off so he never has to modify a position. That's the rescue.",
+      ],
+    },
+    {
       label: "⑤ Point it + paint it",
       says: [
         "Good. Here's what I'd put in front of you — a [term loan / line / advance].",
@@ -71,8 +85,9 @@ export const callFlow: CallFlowContent = {
       says: [
         "Here's what happens next: send me three months of bank statements today, I build your offer tonight, we talk tomorrow with real numbers.",
         "This your cell? Texting you right now so you've got me.",
+        "No obligation — you see the full payback and you decide. Let's just get the options on the table.",
       ],
-      cues: ["Daisy-chain — cell → text → email. Don't hang up until you've got the email."],
+      cues: ["Lock BOTH his cell and email before you hang up — the lead info can be wrong, and two channels means you can still reach him. Daisy-chain: cell → text → email."],
       texts: ["Hey, it's Ness — FinBiz.", "Shoot me your email."],
     },
   ],
