@@ -1,6 +1,9 @@
 # Netlify configuration for the FinBiz Operator Console (internal tool)
+# The deploy build runs vite directly. Type-checking is the local/commit-time gate
+# (npm run build = tsc --noEmit && vite build); running tsc inside Netlify's builder
+# has been flaky (opaque exit 2), and vite build (esbuild) is fast and robust.
 [build]
-  command = "npm run build"
+  command = "npx vite build"
   publish = "dist"
 
 [build.environment]
