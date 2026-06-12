@@ -117,6 +117,12 @@ export interface McaContent {
   example: StatCell[];
   factorNote: Callout;
   whenNote: Callout;
+  /** Daily-default / weekly-upsell rules and when weekly is unavailable. */
+  weeklyNote?: Callout;
+  /** The three MCA hard gates from BASE (deposits / negative days / ending balance). */
+  gatesNote?: Callout;
+  /** Modified-position risk education (modifying ≈ almost as bad as defaulting). */
+  riskNote?: Callout;
   loops: KeyValueRow[];
 }
 

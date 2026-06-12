@@ -5,7 +5,9 @@ import type { FollowUpsContent } from "@/types/content";
  * rep can fire after a call. Voice: Ness/Humanizer — these read like real human
  * texts (casual, short, contractions), never marketing spam. Compliance: no
  * offer/approval promised before a file exists, no "guaranteed/funded today",
- * no rate before statements, "no obligation" stays in.
+ * no rate before statements, "no obligation" stays in, and the written-channel
+ * rail is absolute — never the word "MCA" in writing, call it "funding".
+ * Source: master doc Scripts (Written follow-ups rail, Close choreography).
  */
 export const followUps: FollowUpsContent = {
   meta: {
@@ -15,19 +17,19 @@ export const followUps: FollowUpsContent = {
     eyebrow: "Chase",
     title: "{Follow-Ups}",
     lead:
-      "Get the three months in, or get a callback. Never promise an offer before you've seen a file.",
+      "Get the three months in, or get a callback. Never promise an offer before you've seen a file — and never write “MCA”; it's “funding” in writing.",
   },
   scenarios: [
     {
       scenario: "After a strong call",
       templates: [
         {
-          label: "Recap + ask · SMS",
-          text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 3 months of business bank statements and I'll come back with real numbers. No obligation either way.",
+          label: "Open the thread · SMS",
+          text: "Hey, it's Ness. Good talking just now — what's the best email for you?",
         },
         {
-          label: "Same-day nudge · SMS",
-          text: "[Name] — still got you on my list for today. Shoot those 3 months over whenever and I'll get into it tonight.",
+          label: "Recap + ask · SMS",
+          text: "[Name], send me 3 months of business bank statements and I'll come back with real numbers. No obligation either way.",
         },
       ],
     },
@@ -40,7 +42,7 @@ export const followUps: FollowUpsContent = {
         },
         {
           label: "Door-open · SMS",
-          text: "All good if the timing's off right now. Whenever you wanna look at capital I'm one text away. Cool if I check back end of week?",
+          text: "All good if the timing's off right now. Whenever you wanna look at funding I'm one text away. Cool if I check back end of week?",
         },
       ],
     },
@@ -66,7 +68,7 @@ export const followUps: FollowUpsContent = {
         },
         {
           label: "Circle-back · SMS",
-          text: "Circling back like I said I would. How's revenue looking lately? If it's firmed up, let's pull statements and get you funded.",
+          text: "Circling back like I said I would. How's revenue looking lately? If it's firmed up, send 3 months of statements and let's get you funded.",
         },
       ],
     },

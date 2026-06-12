@@ -4,7 +4,8 @@ import { products } from "@/content/products";
 
 /** 02 — Fit: the whole product menu, plus spoken-line pitch cards and the rails. */
 export function Products() {
-  const { meta, products: catalog, pitches, relationshipNote, rails } = products;
+  const { meta, products: catalog, pitches, routingNote, structuringNote, relationshipNote, rails } =
+    products;
 
   const rows: TableRow[] = catalog.map((p) => {
     const marker = p.primary
@@ -21,6 +22,9 @@ export function Products() {
   return (
     <Section meta={meta}>
       <div className="space-y-7">
+        {/* Routing first — point the file at the right product before the table. */}
+        {routingNote && <Callout {...routingNote} className="text-[15px]" />}
+
         <DataTable
           columns={["Product", "Best fit", "Terms", "Speed", "Say it / caveat"]}
           rows={rows}
@@ -42,6 +46,7 @@ export function Products() {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
+          {structuringNote && <Callout {...structuringNote} className="sm:col-span-2" />}
           <Callout {...relationshipNote} />
           <Callout {...rails} />
         </div>

@@ -1,9 +1,11 @@
 import type { TableSection } from "@/types/content";
 
 /**
- * Pre-submission checklist. A file is only clean when all four blocks check out.
+ * Pre-submission checklist. A file is only clean when every block checks out.
  * Voice: Ness — plainspoken. Compliance: internal enablement only; final
  * approvals depend on lender underwriting and a complete file review.
+ * Source: master doc BASE (pipeline: Contracts/Closing stips/Funding, minimum
+ * file, ZBL, contact rule).
  */
 export const finalQa: TableSection = {
   meta: {
@@ -13,7 +15,7 @@ export const finalQa: TableSection = {
     eyebrow: "Pre-flight",
     title: "Final {QA} Before Submission",
     lead:
-      "A file's only clean when all four blocks check out. If you can't explain it, don't send it.",
+      "A file's only clean when every block checks out. If you can't explain it, don't send it.",
   },
   columns: ["Block", "Every box checked"],
   rows: [
@@ -21,28 +23,28 @@ export const finalQa: TableSection = {
       emphasize: true,
       cells: [
         "**Merchant**",
-        "Decision-maker identified · ownership matches application · responsive · use of funds clear",
+        "Authorized signer identified · ownership matches application · cell + email both on file · use of funds clear",
       ],
     },
     {
       emphasize: true,
       cells: [
         "**Bank Statements**",
-        "Recent & complete · name matches · deposits, NSFs, negative days, ACH pulls reviewed",
+        "3 months, recent & complete · name matches · deposits, NSFs, negative days, ending balance reviewed vs. the hard gates",
       ],
     },
     {
       emphasize: true,
       cells: [
-        "**Existing Debt**",
-        "Balances disclosed · schedule known · payoff letters if refinancing · no hidden advances",
+        "**Existing Debt & Risk**",
+        "Balances disclosed · payment schedule known · payoff letters if refinancing · ZBL if past default · no hidden positions",
       ],
     },
     {
       emphasize: true,
       cells: [
-        "**Next Step**",
-        "Underwriting request clear · deadline documented · internal owner assigned · cadence set",
+        "**Contract & Funding**",
+        "Authorized signer signs · total payback reviewed · no obligation to accept · stips cleared · wire confirmed",
       ],
     },
   ],
@@ -53,5 +55,5 @@ export const finalQa: TableSection = {
       body: "Never submit a file you don't understand. If you can't explain it, it's not ready.",
     },
   ],
-  note: "Built from the FinBiz SDR Onboarding Manual & Call Script. Internal enablement only — final approvals depend on lender underwriting and complete file review. Confirm current advertised terms at finbizfunding.com before quoting live.",
+  note: "Internal enablement only — final approvals depend on lender underwriting and complete file review. No rate before the file; the statements set the rate.",
 };

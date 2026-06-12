@@ -3,7 +3,10 @@ import type { ObjectionsContent } from "@/types/content";
 /**
  * Objections, deal killers, and compliance. Acknowledge → clarify → reframe.
  * Voice: Ness — confident, plainspoken. Compliance rails are hard: no rate
- * before the file, factor rate is not APR, and none of the banned phrases.
+ * before the file, factor rate is not APR, no "guaranteed/approved", purchase of
+ * future receivables (never "interest"/"APR"/"bank loan" on MCA), never write
+ * "MCA" in SMS/email (say "funding"), credit repair never promises a score.
+ * Source: master doc Scripts (Objections) + BASE (Statement reds, Risk terms).
  */
 export const objections: ObjectionsContent = {
   meta: {
@@ -13,55 +16,50 @@ export const objections: ObjectionsContent = {
     eyebrow: "Defense",
     title: "Objections, Deal Killers & {Compliance}",
     lead:
-      "You don't beat resistance with pressure — you reframe toward what the file can do. Acknowledge → clarify → reframe, every time. Top rows are the ones you'll hear most.",
+      "You don't beat resistance with pressure — you reframe toward what the file can do. Acknowledge → clarify → reframe, every time. These are the five you'll hear most.",
   },
   objections: [
     {
       q: "What's your rate?",
       reframe:
-        "Smart question — and I won't make a number up to keep you on the phone. The statements set the rate. Send them and I'll quote you real, today.",
+        "Smart question — and I won't make up a number to keep you on the phone. The statements set the rate. Send them and I'll quote you real, today.",
     },
     {
       q: "Not interested.",
-      reframe: "Fair. Real quick — is it timing, or you just don't see the need right now?",
-      note: "then reframe whichever he says",
+      reframe: "Fair. Quick — is it timing, or you just don't see the need right now?",
+      note: "reframe whichever",
     },
     {
       q: "Too expensive.",
       reframe:
-        "Compared to what? If the money makes you more than it costs, the price answers itself. So what would you do with it if you had it?",
+        "Compared to what? If the money makes you more than it costs, the price answers itself.",
     },
     {
       q: "Bad credit.",
       reframe:
-        "That's fine, honestly. The revenue does the heavy lifting here, not the score. Let's pull the statements and see what's there.",
+        "That's fine, honestly. Revenue does the heavy lifting here, not the score. Let's pull the statements and see.",
     },
     {
-      q: "I already have funding.",
+      q: "I don't want to put my house/equity on the line. (HELOC)",
       reframe:
-        "Who's the funder, what's the balance, how are the payments structured? If the file supports it, we may free up your cash flow.",
-    },
-    {
-      q: "I don't need funding.",
-      reframe:
-        "Best time to look at options is before cash flow gets tight. If the numbers don't make sense, there's no obligation.",
+        "I hear you, and that's exactly why it's smart, not risky. This is the fastest money you can get — funded in about a day — and it's a line, not a lump you owe. You only draw what you need and you stay in control of it. It's there to solve the problem, not to be spent. Used right, it's the cheapest, fastest tool you've got.",
     },
   ],
   dealKillers: [
-    { issue: "Hidden balances", move: "Ask directly and document" },
-    { issue: "New funding mid-underwriting", move: "Warn the merchant early" },
-    { issue: "Negative balance at funding", move: "Monitor before close" },
-    { issue: "Sharp deposit drop", move: "Request MTD transactions" },
-    { issue: "Liens / judgments · prior default", move: "Disclose early" },
-    { issue: "Refuses bank verification", move: "Set the expectation up front" },
-    { issue: "Another broker submits · stops responding", move: "Move fast, set deadlines & cadence" },
+    { issue: "NSFs — repeated or recent", move: "Read 3 months; flag the pattern before you submit" },
+    { issue: "Stacking — multiple open positions", move: "Get funder, balance, payment schedule; document" },
+    { issue: "Negative days over the gate (~4–5/mo avg)", move: "Lane it out unless statements explain it" },
+    { issue: "Negative ending balance in a month", move: "Two strong + one slightly negative is a pitch, not a lock" },
+    { issue: "Prior default", move: "Require a ZBL (Zero Balance Letter) — proves it's closed out" },
+    { issue: "Modified position(s)", move: "To funders, almost as bad as default — disclose; HELOC can clear a current default" },
+    { issue: "Ownership mismatch", move: "Account/business name must match the file" },
+    { issue: "Manipulated statements", move: "Inconsistent format/sequence kills the file — walk" },
   ],
   compliance: [
-    { dont: "Guaranteed / definitely approved", say: "Approval depends on underwriting" },
-    { dont: "Cheap money", say: "Review the total payback & payment structure" },
-    { dont: "Basically a bank loan", say: "This is a different funding structure" },
-    { dont: "Factor rate is an interest rate", say: "Factor rate sets total payback; it's not APR" },
-    { dont: "No risk / won't affect cash flow", say: "Daily/weekly payments must fit cash flow" },
-    { dont: "Funded today", say: "Timing depends on underwriting & closing" },
+    { dont: "Interest / APR / bank loan (on MCA)", say: "Purchase of future receivables — factor rate + total payback" },
+    { dont: "Write “MCA” in an SMS or email", say: "Call it “funding” in writing — he can say MCA, you don't" },
+    { dont: "Guaranteed / approved", say: "Approval depends on underwriting" },
+    { dont: "Quote a rate before the file", say: "The statements set the rate — send them first" },
+    { dont: "Promise a credit score", say: "Credit repair takes 60–90 days; never promise a number" },
   ],
 };

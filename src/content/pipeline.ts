@@ -1,9 +1,10 @@
 import type { PipelineContent } from "@/types/content";
 
 /**
- * Pipeline & Discovery. The twelve stages every file walks, and the nine
- * questions that settle a call. Voice: Ness — plainspoken, no filler. Discovery
- * sets the rate by the statements, never the other way around.
+ * Pipeline & Discovery. The twelve stages every file rides, and the seven things
+ * discovery must surface before you advance. Voice: Ness — plainspoken, no filler.
+ * Discovery sets the rate by the statements, never the other way around.
+ * Source: master doc BASE (the pipeline) + Scripts ("Discovery must surface").
  */
 export const pipeline: PipelineContent = {
   meta: {
@@ -13,45 +14,39 @@ export const pipeline: PipelineContent = {
     eyebrow: "Flow",
     title: "Pipeline & {Discovery}",
     lead:
-      "Every file walks the same twelve stages. Never let one float — each active file has a next step, an owner, and a date.",
+      "Every file rides the same twelve stages — the spine of every call. Never let one float: each active file has a next step, an owner, and a date.",
   },
   steps: [
-    { n: "01", title: "Prospecting", desc: "Find the decision-maker" },
-    { n: "02", title: "Discovery", desc: "Understand the need" },
-    { n: "03", title: "Pre-Qualify", desc: "Check thresholds" },
-    { n: "04", title: "Collection", desc: "Build the file" },
-    { n: "05", title: "Stmt. Review", desc: "Spot the risks" },
-    { n: "06", title: "Submission", desc: "Send a clean file" },
-    { n: "07", title: "Approval", desc: "Understand terms" },
-    { n: "08", title: "Offer Pitch", desc: "Explain it clearly" },
-    { n: "09", title: "Contracts", desc: "Get signatures" },
-    { n: "10", title: "Closing Stips", desc: "Clear conditions" },
+    { n: "01", title: "Prospecting", desc: "Reach the owner / authorized signer" },
+    { n: "02", title: "Discovery", desc: "Need + urgency; open with the CTA" },
+    { n: "03", title: "Pre-qualify", desc: "Apply the floor" },
+    { n: "04", title: "Collection", desc: "Get the statements and/or needed docs" },
+    { n: "05", title: "Statement review", desc: "Read 3 months vs. the MCA hard gates; flag reds" },
+    { n: "06", title: "Submission", desc: "Package a clean file; confirm owner + deadline" },
+    { n: "07", title: "Approval", desc: "Confirm product, factor rate, term, payment" },
+    { n: "08", title: "Offer pitch & pivot", desc: "Present the fit; pivot; handle objections" },
+    { n: "09", title: "Contracts", desc: "Authorized signer; review total payback; no obligation" },
+    { n: "10", title: "Closing stips", desc: "Clear conditions" },
     { n: "11", title: "Funding", desc: "Confirm the wire" },
-    { n: "12", title: "Follow-Up", desc: "Build the renewal" },
+    { n: "12", title: "Follow-up", desc: "Renewal path, referrals, restructure" },
   ],
   questions: [
-    { n: "1", ask: "Monthly gross?", reveals: "Revenue capacity" },
-    { n: "2", ask: "Time in business?", reveals: "Eligibility & stability" },
-    { n: "3", ask: "Current business debt or advances?", reveals: "Existing obligations" },
-    { n: "4", ask: "Funder, balance, payment schedule?", reveals: "Cash-flow pressure" },
-    { n: "5", ask: "Use of funds?", reveals: "Business purpose" },
-    { n: "6", ask: "Amount needed?", reveals: "Funding target" },
-    { n: "7", ask: "How urgent?", reveals: "Timeline & seriousness" },
+    { n: "1", ask: "What's the business doing monthly recently?", reveals: "Monthly revenue" },
+    { n: "2", ask: "How long have you been open?", reveals: "Time in business" },
+    { n: "3", ask: "Any current business debt or funder balance?", reveals: "Current debt / funder balance" },
+    { n: "4", ask: "How are payments structured on existing advances?", reveals: "Payment schedule" },
+    { n: "5", ask: "What's the money for?", reveals: "Use of funds" },
+    { n: "6", ask: "How urgent is this?", reveals: "Urgency" },
     {
-      n: "8",
-      ask: "Recent NSFs, negatives, liens, judgments?",
-      reveals: "Risk profile",
-    },
-    {
-      n: "9",
-      ask: "Can you send 3 months of statements today?",
-      reveals: "Cooperation & momentum",
+      n: "7",
+      ask: "Any NSFs, liens, bankruptcies, defaults, or modified positions?",
+      reveals: "Risk history",
     },
   ],
   settles: {
     tone: "accent",
-    label: "Discovery settles five things",
+    label: "Then settle five things",
     body:
-      "Lane (G/Y/R) · doc speed · use of funds · whether debt is a problem · the defined next step.",
+      "Eligibility · document-speed expectation · funds purpose · debt risk · a defined next step.",
   },
 };

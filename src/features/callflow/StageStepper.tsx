@@ -3,8 +3,8 @@ import { cn } from "@/lib/cn";
 import { STEP_LABELS, type Step } from "./callScript";
 import type { UseCallFlow } from "./useCallFlow";
 
-/** The six canonical stages always shown on the stepper, in order. */
-const CANONICAL: Step[] = ["open", "story", "gate", "dig", "pitch", "close"];
+/** The canonical stages always shown on the stepper, in order. */
+const CANONICAL: Step[] = ["open", "story", "gate", "dig", "risk", "pitch", "close"];
 
 /** Branch id → the short label shown in the Branch slot once Gate is resolved. */
 const BRANCH_SLOT_LABEL: Record<Exclude<UseCallFlow["branch"], null>, string> = {
@@ -14,7 +14,7 @@ const BRANCH_SLOT_LABEL: Record<Exclude<UseCallFlow["branch"], null>, string> = 
 };
 
 /**
- * Horizontal, clickable stage stepper. Renders the six canonical stages with a
+ * Horizontal, clickable stage stepper. Renders the canonical stages with a
  * Branch slot after the Gate, highlights the active step with the signature
  * accent-gradient bar, disables post-gate steps until a branch is chosen, and
  * offers a "New call" reset plus compact hotkey hints. Chrome — not printed.
