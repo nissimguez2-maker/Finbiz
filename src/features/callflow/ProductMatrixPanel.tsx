@@ -89,7 +89,9 @@ export function ProductMatrixPanel({
             <b className="font-semibold tabular-nums text-foreground">{green}</b>
           </span>
         </div>
-        <p className="mt-2 text-[12px] leading-snug text-accent">{recLabel(branch)}</p>
+        {/* recLabel: 13px on accent-strong (7.07:1) clears AA for small text;
+            the 12px accent it replaced grazed the 4.5:1 line. */}
+        <p className="mt-2 text-[13px] font-medium leading-snug text-accent-strong">{recLabel(branch)}</p>
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto scroll-thin px-5 py-4">
@@ -172,12 +174,12 @@ function ProductRow({
           <div className="flex flex-wrap items-center gap-2">
             <Tag color={product.tag}>{product.name}</Tag>
             {recommended && (
-              <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
+              <span className="font-mono text-[9px] font-semibold uppercase tracking-label text-accent-strong">
                 ◆ Lead
               </span>
             )}
             {selected && (
-              <span className="ml-auto font-mono text-[9px] font-semibold uppercase tracking-label text-accent">
+              <span className="ml-auto font-mono text-[9px] font-semibold uppercase tracking-label text-accent-strong">
                 Selected
               </span>
             )}
@@ -218,7 +220,7 @@ function ProductRow({
             </div>
           ))}
           <div className="grid grid-cols-[5.25rem_1fr] gap-2 border-t border-border/50 pt-1.5">
-            <dt className="font-mono text-[9.5px] uppercase tracking-wider text-accent">Say it</dt>
+            <dt className="font-mono text-[9.5px] uppercase tracking-wider text-accent-strong">Say it</dt>
             <dd className="text-[12.5px] italic leading-snug text-muted-foreground">{product.sayIt}</dd>
           </div>
         </dl>

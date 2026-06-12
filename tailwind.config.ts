@@ -32,7 +32,11 @@ const config: Config = {
         card: "var(--card)",
         ring: "var(--ring)",
         // semantic lane / status tints (kept restrained, accent stays the hero)
-        go: "var(--go)",
+        go: {
+          DEFAULT: "var(--go)",
+          // darker green used ONLY as a fill behind white text (selected CTA)
+          strong: "var(--go-strong)",
+        },
         amber: "var(--amber)",
         clay: "var(--clay)",
         // surface-2 — warm-sand resting fill for pills/bubbles (non-white, non-blue)

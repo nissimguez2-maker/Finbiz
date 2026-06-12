@@ -73,7 +73,7 @@ function CloseReference() {
             type="button"
             onClick={() => setShowMore((s) => !s)}
             aria-expanded={showMore}
-            className="focus-ring inline-flex items-center gap-1.5 rounded-md font-mono text-[11px] font-semibold uppercase tracking-wider text-accent"
+            className="focus-ring inline-flex items-center gap-1.5 rounded-md font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-strong"
           >
             <span aria-hidden="true">{showMore ? "▾" : "▸"}</span>
             {showMore ? "Hide conditional" : `More — conditional (${conditional.length})`}

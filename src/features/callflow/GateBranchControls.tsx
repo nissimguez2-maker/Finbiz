@@ -27,7 +27,9 @@ const toneIdle: Record<BranchButton["tone"], string> = {
 };
 
 const toneSelected: Record<BranchButton["tone"], string> = {
-  go: "border-go bg-go text-white",
+  // go-strong (not go) so the white CTA label clears AA — white on go is only
+  // ~3.5:1; on go-strong it is 5.36:1. Label stays text-lg font-bold either way.
+  go: "border-go-strong bg-go-strong text-white",
   amber: "border-amber bg-amber text-white",
   accent: "border-accent bg-accent text-accent-foreground",
 };

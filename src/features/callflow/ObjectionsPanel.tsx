@@ -81,7 +81,7 @@ function ObjectionItem({
           open ? "border-accent bg-accent/[0.05]" : "border-surface-2-border hover:border-border hover:bg-muted/40",
         )}
       >
-        <span aria-hidden="true" className={cn("mt-[3px] font-mono text-[11px] text-accent", open && "rotate-90")}>
+        <span aria-hidden="true" className={cn("mt-[3px] font-mono text-[11px] text-accent-strong", open && "rotate-90")}>
           ▸
         </span>
         <span className="min-w-0 flex-1">
