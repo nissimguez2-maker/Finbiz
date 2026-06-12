@@ -75,44 +75,14 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(28px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-10px)" },
-        },
         "pulse-dot": {
           "0%, 100%": { transform: "scale(1)", opacity: "1" },
           "50%": { transform: "scale(1.3)", opacity: "0.7" },
         },
-        "spin-slow": {
-          from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(360deg)" },
-        },
-        // counter-rotation so an inner ring spins opposite the outer dashed ring
-        "spin-reverse": {
-          from: { transform: "rotate(360deg)" },
-          to: { transform: "rotate(0deg)" },
-        },
-        // gentle lateral+vertical drift for a secondary floating card
-        drift: {
-          "0%, 100%": { transform: "translate(0px, 0px)" },
-          "50%": { transform: "translate(6px, -8px)" },
-        },
-        // slow breathing opacity for radial accent glows
-        "glow-pulse": {
-          "0%, 100%": { opacity: "0.5" },
-          "50%": { opacity: "0.85" },
-        },
       },
       animation: {
         "fade-in-up": "fade-in-up 0.7s cubic-bezier(0.16,1,0.3,1) both",
-        float: "float 5s ease-in-out infinite",
-        "float-slow": "float 4s ease-in-out infinite",
-        "float-slower": "float 7s ease-in-out infinite",
-        drift: "drift 9s ease-in-out infinite",
         "pulse-dot": "pulse-dot 2s ease-in-out infinite",
-        "spin-slow": "spin-slow 60s linear infinite",
-        "spin-reverse": "spin-reverse 45s linear infinite",
-        "glow-pulse": "glow-pulse 6s ease-in-out infinite",
       },
     },
   },

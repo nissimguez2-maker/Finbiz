@@ -3,24 +3,17 @@ import { cn } from "@/lib/cn";
 interface CardProps {
   children: React.ReactNode;
   className?: string;
-  /** Adds a hover lift + gradient wash. */
+  /**
+   * Retained for API compatibility — no longer applies a hover lift/wash.
+   * The live console favors a calm, static surface over decorative motion.
+   */
   interactive?: boolean;
 }
 
 /** Standard elevated surface. */
-export function Card({ children, className, interactive }: CardProps) {
+export function Card({ children, className }: CardProps) {
   return (
-    <div
-      className={cn(
-        "relative rounded-2xl border border-border bg-card p-6 shadow-md",
-        interactive &&
-          "group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl",
-        className,
-      )}
-    >
-      {interactive && (
-        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/[0.03] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      )}
+    <div className={cn("relative rounded-2xl border border-border bg-card p-6 shadow-md", className)}>
       <div className="relative">{children}</div>
     </div>
   );
