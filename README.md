@@ -8,23 +8,29 @@ next line and she says it.
 It is a static single-page app (Vite + React + TypeScript + Tailwind) deployed to Netlify.
 **All script and product copy is data, not code** — it lives in typed modules under
 `src/content/*.ts`, so the wording can change every day without anyone touching layout or
-React. Those modules can be edited by hand or regenerated automatically from the two Google
-Docs the owner keeps as the source of truth.
+React. Those modules can be edited by hand or regenerated automatically from the single Google
+Doc — the **FinBiz Master Doc** — the owner keeps as the source of truth.
 
 > Internal tool. It ships with `X-Robots-Tag: noindex, nofollow` so search engines skip it.
 
 ---
 
-## The two source-of-truth Google Docs
+## The source-of-truth Google Doc
 
-The owner edits these every day. They are the canonical wording:
+Everything the app shows comes from **one** Google Doc, the **FinBiz Master Doc**. The owner
+edits it 3–4 times a week and it is the canonical wording — the repo only ever *points* to it:
 
-| Doc | What it feeds |
+**FinBiz Master Doc** — <https://docs.google.com/document/d/1D93j3Pjo6HPqdtb6IiAPvb5DIp_cuZl4bU-bsBawexg/edit>
+
+It has three parts, and each feeds different content files:
+
+| Part of the Master Doc | What it feeds |
 | --- | --- |
-| **Product matrix** — <https://docs.google.com/document/d/1Jor2uhFHAeMaO4Q9Be9KAHBDfSfoCf7kHgMZRkE0f2M/edit> | The product menu, pitches, MCA structure, the approved-offer math |
-| **Call sheet** — <https://docs.google.com/document/d/1TKD2yVT5v4uNtiAcejEacYQLEeHd4wAhDaTa3WM3TkE/edit> | The talk track, triage lanes, statement read, minimum file, pipeline, objections, follow-ups, final QA |
+| **Base** — company facts, the qualify floor, contact rule, the 12-stage pipeline, minimum file, MCA hard gates, risk terms | The masthead ticker & rails, triage, statement read, minimum file, pipeline |
+| **Part 1 — Product Matrix** — routing, MCA (primary), Bridge/Term/LOC/HELOC/Equipment, Asset-Based & Specialty, CCP, Credit Repair, structuring play, rails | The product menu, MCA structure, the approved-offer math |
+| **Part 2 — Scripts** — posture, written-follow-up wording rail, discovery list, beats ①–⑥ plus ④.5 Risk check, the All-set and Light branches, objections | The talk track, follow-up SMS, final QA, the triage LIGHT track |
 
-The exact "this doc section → this file" mapping is in **[docs/CONTENT-MAP.md](docs/CONTENT-MAP.md)**.
+The exact "this doc part → this file" mapping is in **[docs/CONTENT-MAP.md](docs/CONTENT-MAP.md)**.
 
 ---
 
@@ -58,7 +64,7 @@ clear TypeScript error **before** anything ships. That is the safety net — the
 The app is deliberately split so wording lives apart from layout.
 
 ```
-  Google Docs (source of truth)
+  FinBiz Master Doc (source of truth)
         │  (n8n sync — optional, see docs/N8N-SYNC.md)
         ▼
   src/content/*.ts        ← typed data: the words, numbers, SMS templates
@@ -164,10 +170,10 @@ it instantly. This is the fastest fix if a bad day's copy somehow lands — rest
 
 ## The daily-update flow (in one paragraph)
 
-The owner edits the Google Docs as usual. Then there are three ways to get those edits live,
+The owner edits the FinBiz Master Doc as usual. Then there are three ways to get those edits live,
 covered in full in **[docs/DAILY-UPDATES.md](docs/DAILY-UPDATES.md)**:
 
-- **(a) Docs → n8n sync → auto-deploy** — edit the Docs, run the sync; it regenerates the
+- **(a) Doc → n8n sync → auto-deploy** — edit the Doc, run the sync; it regenerates the
   `src/content/*.ts` files, commits them, and triggers a deploy. *(Recommended once set up.)*
 - **(b) Edit `src/content/*.ts` directly in GitHub's web editor** — for a one-word tweak;
   committing on the default branch auto-deploys via Netlify.
@@ -185,7 +191,7 @@ Finbiz/
 ├─ docs/
 │  ├─ CONTENT-MAP.md          ← "to change X, edit this file/field" cheat sheet
 │  ├─ DAILY-UPDATES.md        ← the three ways to push a change live
-│  └─ N8N-SYNC.md             ← buildable n8n workflow (Docs → Claude → GitHub → Netlify)
+│  └─ N8N-SYNC.md             ← buildable n8n workflow (Master Doc → Claude → GitHub → Netlify)
 ├─ .env.example               ← placeholder env vars for the sync/build (no real secrets)
 ├─ netlify.toml               ← Netlify build config (build cmd, publish dir, Node 22, redirects)
 ├─ index.html, vite.config.ts, tailwind.config.ts, tsconfig*.json

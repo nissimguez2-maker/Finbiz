@@ -1,23 +1,23 @@
-# n8n Sync — Google Docs → Claude → GitHub → Netlify
+# n8n Sync — Google Doc → Claude → GitHub → Netlify
 
-This is a concrete, buildable n8n workflow that keeps the two Google Docs as the source of truth
-and regenerates the typed `src/content/*.ts` modules whenever you ask it to. It reads both Docs,
-asks Claude to transform the prose into valid TypeScript that matches `src/types/content.ts`
-(preserving every number and enforcing the compliance rails), commits the regenerated files to
-GitHub, and triggers a Netlify rebuild.
+This is a concrete, buildable n8n workflow that keeps the single **FinBiz Master Doc** as the
+source of truth and regenerates the typed `src/content/*.ts` modules whenever you ask it to. It
+reads the Master Doc, asks Claude to transform the prose into valid TypeScript that matches
+`src/types/content.ts` (preserving every number and enforcing the compliance rails), commits the
+regenerated files to GitHub, and triggers a Netlify rebuild.
 
 ```
 ┌─────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│  Trigger    │──▶│ Read both    │──▶│ Anthropic    │──▶│ GitHub       │──▶│ Netlify      │
-│ (manual /   │   │ Google Docs  │   │ Claude       │   │ commit the   │   │ Build Hook   │
-│  webhook /  │   │ (2 nodes)    │   │ (transform   │   │ regenerated  │   │ (redeploy)   │
-│  schedule)  │   │              │   │  to TS)      │   │ content/*.ts │   │              │
+│  Trigger    │──▶│ Read the     │──▶│ Anthropic    │──▶│ GitHub       │──▶│ Netlify      │
+│ (manual /   │   │ FinBiz       │   │ Claude       │   │ commit the   │   │ Build Hook   │
+│  webhook /  │   │ Master Doc   │   │ (transform   │   │ regenerated  │   │ (redeploy)   │
+│  schedule)  │   │ (1 node)     │   │  to TS)      │   │ content/*.ts │   │              │
 └─────────────┘   └──────────────┘   └──────────────┘   └──────────────┘   └──────────────┘
 ```
 
-> Why Claude does the transform: the Docs are loose prose the owner edits freely; the content
+> Why Claude does the transform: the Doc is loose prose the owner edits freely; the content
 > files are strict, typed TypeScript. Claude bridges the two — turning "raise the qualify floor to
-> $18K" in a Doc into the exact `{ k: "Qualify floor", v: "$18K", sub: "/mo" }` edit in `meta.ts`,
+> $18K" in the Doc into the exact `{ k: "Qualify floor", v: "$18K", sub: "/mo" }` edit in `meta.ts`,
 > while keeping every other field byte-for-byte and applying the compliance rails.
 
 ---
@@ -32,7 +32,7 @@ and the whole job is "reproduce strict typed code without dropping a number or b
 | **Recommended** | `claude-opus-4-8` | $5 in / $25 out | The default. Most capable; best at producing exact, type-correct TS and respecting the rails. |
 | Cheaper option | `claude-sonnet-4-6` | $3 in / $15 out | Fine for routine wording-only refreshes; swap in to cut cost. |
 
-**Recommendation:** run on `claude-opus-4-8`. A sync processes roughly the size of the two Docs
+**Recommendation:** run on `claude-opus-4-8`. A sync processes roughly the size of the Master Doc
 plus the regenerated files — on the order of a few cents per run, so model price is not the
 deciding factor; correctness is. Drop to `claude-sonnet-4-6` only if you're doing many runs a day
 and the edits are small wording tweaks.
@@ -53,15 +53,14 @@ JSON or the repo. (`.env.example` in the repo lists the same names with comments
 
 | Secret / setting | Where it's used | How to get it |
 | --- | --- | --- |
-| **Google account (OAuth2)** with access to both Docs | the two Google Docs nodes | n8n → Credentials → *Google Docs OAuth2 API* (or a Google service account shared on both Docs). |
+| **Google account (OAuth2)** with access to the Master Doc | the Google Docs node | n8n → Credentials → *Google Docs OAuth2 API* (or a Google service account shared on the Master Doc). |
 | `ANTHROPIC_API_KEY` | the Claude node | <https://console.anthropic.com> → API keys. |
 | `GITHUB_TOKEN` (fine-grained PAT, **Contents: Read and write** on this repo) | the GitHub node | GitHub → Settings → Developer settings → Fine-grained tokens. |
 | `NETLIFY_BUILD_HOOK_URL` | the final HTTP node | Netlify → Site settings → Build & deploy → Build hooks → Add build hook. |
-| Doc IDs (Product matrix, Call sheet) | the Google Docs nodes | the long id in each Doc's URL (already in the README). |
+| Doc ID (FinBiz Master Doc) | the Google Docs node | the long id in the Doc's URL (already in the README). |
 
-Doc IDs for reference:
-- Product matrix: `1Jor2uhFHAeMaO4Q9Be9KAHBDfSfoCf7kHgMZRkE0f2M`
-- Call sheet: `1TKD2yVT5v4uNtiAcejEacYQLEeHd4wAhDaTa3WM3TkE`
+Doc ID for reference:
+- FinBiz Master Doc: `1D93j3Pjo6HPqdtb6IiAPvb5DIp_cuZl4bU-bsBawexg`
 
 ---
 
@@ -77,23 +76,22 @@ Use one (or both) of:
 - **Schedule Trigger** (optional) — e.g. once every morning, so the site self-refreshes from the
   Docs. You can wire all three into the same downstream chain.
 
-### Node 2 & 3 — Read the two Google Docs
+### Node 2 — Read the FinBiz Master Doc
 
-Two **Google Docs** nodes (Resource: *Document*, Operation: *Get*), one per Doc:
+One **Google Docs** node (Resource: *Document*, Operation: *Get*):
 
-- **Node 2 — "Read Product matrix":** Document ID = `1Jor2uhFHAeMaO4Q9Be9KAHBDfSfoCf7kHgMZRkE0f2M`.
-- **Node 3 — "Read Call sheet":** Document ID = `1TKD2yVT5v4uNtiAcejEacYQLEeHd4wAhDaTa3WM3TkE`.
+- **Node 2 — "Read Master Doc":** Document ID = `1D93j3Pjo6HPqdtb6IiAPvb5DIp_cuZl4bU-bsBawexg`.
 
-Each returns the Doc's content. Extract the plain text (the node returns the document structure;
-use the node's text output, or a small **Set**/**Code** node to flatten it to a single string per
-Doc). Carry both forward as, say, `productMatrixText` and `callSheetText`.
+It returns the Doc's content. Extract the plain text (the node returns the document structure;
+use the node's text output, or a small **Set**/**Code** node to flatten it to a single string).
+Carry it forward as, say, `masterDocText`.
 
-> If you prefer, replace these with **Google Drive → Download** as `text/plain` for each Doc — same
-> result, sometimes simpler text.
+> If you prefer, replace this with **Google Drive → Download** as `text/plain` — same result,
+> sometimes simpler text.
 
 ### Node 4 — Anthropic Claude (the transform)
 
-This is the heart of the sync. It receives both Docs plus the current type definitions and is
+This is the heart of the sync. It receives the Master Doc plus the current type definitions and is
 asked to output the full set of regenerated content modules as strict, valid TypeScript.
 
 **Option A — built-in Anthropic node** (easiest):
@@ -179,25 +177,34 @@ contract, preserves every number, and bakes in the compliance rails.
 You are a build step in a content pipeline for the "FinBiz Operator Console," an internal
 single-page app that an SDR named Ness reads during live business-funding sales calls. All of
 the on-screen copy lives as typed TypeScript data modules under src/content/. Your job is to
-regenerate those modules from two source-of-truth Google Docs, exactly matching the TypeScript
-type contract, so the result compiles and deploys unchanged.
+regenerate those modules from a single source-of-truth Google Doc — the FinBiz Master Doc —
+exactly matching the TypeScript type contract, so the result compiles and deploys unchanged.
+
+The Master Doc has three parts: a shared BASE (company facts, the single qualify floor, contact
+rule, the 12-stage pipeline, minimum file, MCA hard gates, risk terms), PART 1 — PRODUCT MATRIX
+(routing, MCA primary, Bridge/Term/LOC/HELOC/Equipment, Asset-Based & Specialty, CCP, Credit
+Repair, the structuring play, rails), and PART 2 — SCRIPTS (posture, the written-follow-up wording
+rail, the discovery list, beats ①–⑥ plus ④.5 Risk check, the All-set and Light branches,
+objections).
 
 INPUTS YOU WILL RECEIVE (in the user message):
-1. PRODUCT_MATRIX_DOC — plain text of the Product matrix Google Doc.
-2. CALL_SHEET_DOC — plain text of the Call sheet Google Doc.
-3. TYPES_TS — the full current source of src/types/content.ts (the type contract).
-4. CURRENT_FILES — the current source of each src/content/*.ts file you must regenerate, keyed
+1. MASTER_DOC — plain text of the FinBiz Master Doc.
+2. TYPES_TS — the full current source of src/types/content.ts (the type contract).
+3. CURRENT_FILES — the current source of each src/content/*.ts file you must regenerate, keyed
    by path. Use these as the structural template: keep their shape, field names, ordering, header
-   comments, and any field not driven by the Docs byte-for-byte unless a Doc clearly changes it.
+   comments, and any field not driven by the Doc byte-for-byte unless the Doc clearly changes it.
 
-WHICH DOC FEEDS WHICH FILE:
-- Product matrix doc → src/content/products.ts, src/content/mca.ts, src/content/offer.ts
-- Call sheet doc → src/content/callFlow.ts, src/content/triage.ts, src/content/statements.ts,
-  src/content/minimumFile.ts, src/content/pipeline.ts, src/content/objections.ts,
-  src/content/followUps.ts, src/content/finalQa.ts
-- Both / global → src/content/meta.ts (brand, the masthead `ticker` numbers, the `rails`,
-  and the `nav` order). Only change meta.ts fields a Doc clearly changes; never reorder `nav`
-  or change any `id`/`navNo` unless a Doc explicitly restructures the sections.
+WHICH PART OF THE MASTER DOC FEEDS WHICH FILE:
+- BASE → src/content/meta.ts (the masthead `ticker` numbers + the `rails`), src/content/triage.ts,
+  src/content/statements.ts (the MCA hard gates), src/content/minimumFile.ts,
+  src/content/pipeline.ts.
+- PART 1 — PRODUCT MATRIX → src/content/products.ts, src/content/mca.ts, src/content/offer.ts.
+- PART 2 — SCRIPTS → src/content/callFlow.ts (beats ①–⑥ + ④.5 Risk check + All-set/Light
+  branches), src/content/objections.ts, src/content/followUps.ts, src/content/finalQa.ts, and the
+  triage.ts LIGHT track.
+- Global (in meta.ts): only change brand, `ticker`, `rails`, or `nav` fields the Doc clearly
+  changes; never reorder `nav` or change any `id`/`navNo` unless the Doc explicitly restructures
+  the sections.
 
 HARD REQUIREMENTS — output must be valid TypeScript that satisfies TYPES_TS:
 - Each file must keep the SAME default/named export and import the SAME types as its CURRENT_FILES
@@ -214,9 +221,12 @@ HARD REQUIREMENTS — output must be valid TypeScript that satisfies TYPES_TS:
   them only if a Doc changes the underlying policy.
 
 PRESERVE EVERY NUMBER:
-- Reproduce all canonical figures exactly as the Docs state them: thresholds ($15K/mo, 6+ months,
-  500+ / 570+ credit, $20K green lane, 4 months of statements), dollar amounts and ranges, factor
-  rates, payback totals, term lengths, percentages, and timeframes (e.g. 60–90 days).
+- Reproduce all canonical figures exactly as the Doc states them: the single qualify floor
+  ($15K+/mo revenue · 6+ months in business · 500+ FICO · business bank account), 3 months of
+  bank statements, the MCA hard gates (3+ deposits/month, ≤4–5 negative days/month, positive
+  ending balance each of the last 3 months), dollar amounts and ranges, factor rates, payback
+  totals, term lengths, percentages, and timeframes (e.g. 60–90 days). The Doc now uses ONE
+  qualify floor — there is no tiered Green/Yellow/Red threshold; do not reintroduce one.
 - If a Doc changes a number that drives a worked example (e.g. the MCA example funded × factor =
   payback, ÷ term = per-payment), recompute ALL dependent numbers so the math is internally
   consistent (e.g. $20,000 × 1.40 = $28,000; ÷ 100 = $280/day). Never leave a stale dependent
@@ -271,11 +281,8 @@ be parseable by JSON.parse — escape newlines and quotes correctly inside the s
 Build the user message from the upstream nodes. A simple template:
 
 ```
-PRODUCT_MATRIX_DOC:
-{{ $node["Read Product matrix"].json.text }}
-
-CALL_SHEET_DOC:
-{{ $node["Read Call sheet"].json.text }}
+MASTER_DOC:
+{{ $node["Read Master Doc"].json.text }}
 
 TYPES_TS:
 {{ $node["Read types"].json.content }}
@@ -294,21 +301,20 @@ compiling on the first try.
 
 ## Node-by-node setup checklist
 
-1. [ ] **Credentials in n8n:** add Google Docs OAuth2 (with access to both Docs), `ANTHROPIC_API_KEY`,
+1. [ ] **Credentials in n8n:** add Google Docs OAuth2 (with access to the Master Doc), `ANTHROPIC_API_KEY`,
    `GITHUB_TOKEN` (Contents: read/write), and set `NETLIFY_BUILD_HOOK_URL` in n8n's environment.
 2. [ ] **Trigger node:** add a Manual Trigger (and optionally a Webhook and a daily Schedule).
-3. [ ] **Read Product matrix:** Google Docs → Get, Document ID `1Jor2uhFHAeMaO4Q9Be9KAHBDfSfoCf7kHgMZRkE0f2M`.
-4. [ ] **Read Call sheet:** Google Docs → Get, Document ID `1TKD2yVT5v4uNtiAcejEacYQLEeHd4wAhDaTa3WM3TkE`.
-5. [ ] **Read types + current files:** GitHub → Get `src/types/content.ts`, and fetch/bundle the
+3. [ ] **Read Master Doc:** Google Docs → Get, Document ID `1D93j3Pjo6HPqdtb6IiAPvb5DIp_cuZl4bU-bsBawexg`.
+4. [ ] **Read types + current files:** GitHub → Get `src/types/content.ts`, and fetch/bundle the
    current `src/content/*.ts` files (for Claude to use as a template).
-6. [ ] **Claude node:** model `claude-opus-4-8`, paste the system prompt, assemble the user message,
+5. [ ] **Claude node:** model `claude-opus-4-8`, paste the system prompt, assemble the user message,
    `max_tokens: 16000`, no temperature. (Or HTTP Request to `/v1/messages` with the headers above.)
-7. [ ] **Parse output:** Code node → `JSON.parse(text).files` → one item per `{ path, content }`.
-8. [ ] **GitHub commit:** GitHub → Create/Edit File, run once per item, path/content from the item,
+6. [ ] **Parse output:** Code node → `JSON.parse(text).files` → one item per `{ path, content }`.
+7. [ ] **GitHub commit:** GitHub → Create/Edit File, run once per item, path/content from the item,
    commit to the default branch.
-9. [ ] **Netlify redeploy:** HTTP Request → POST `NETLIFY_BUILD_HOOK_URL`, body `{}`.
-10. [ ] **(Optional) Notify:** Slack/Email on success and on failure.
-11. [ ] **Test:** make a tiny, obvious edit in one Doc (e.g. bump a ticker number), run the workflow,
+8. [ ] **Netlify redeploy:** HTTP Request → POST `NETLIFY_BUILD_HOOK_URL`, body `{}`.
+9. [ ] **(Optional) Notify:** Slack/Email on success and on failure.
+10. [ ] **Test:** make a tiny, obvious edit in the Doc (e.g. bump a ticker number), run the workflow,
     confirm the GitHub diff is exactly that change, and watch Netlify deploy.
 
 ---
@@ -318,17 +324,17 @@ compiling on the first try.
 Instead of committing straight to the default branch, have the GitHub node commit to a
 `sync/<date>` branch and **open a Pull Request**. Netlify builds a deploy preview for the PR, so
 you can eyeball the rendered change before it's live. Merge to publish. This adds a human review
-gate for free while keeping the Docs as the source of truth. For day-to-day, committing to the
-default branch (the design above) is fine — the type-checked build is already a strong gate.
+gate for free while keeping the Master Doc as the source of truth. For day-to-day, committing to
+the default branch (the design above) is fine — the type-checked build is already a strong gate.
 
 ## Cost and guardrails
 
-- Each run sends the two Docs + the type file + the current content files, and gets back the
+- Each run sends the Master Doc + the type file + the current content files, and gets back the
   regenerated files — on the order of a few cents on `claude-opus-4-8`. Negligible for a daily sync.
 - The `max_tokens: 16000` cap bounds output. Keep `effort` at `low`/`medium` for this
   reproduce-the-code task.
 - If you schedule the sync, give it a sane cadence (e.g. once a day) rather than every few minutes —
-  there's no value in re-running when the Docs haven't changed.
+  there's no value in re-running when the Master Doc hasn't changed.
 - The real safety net is downstream: the Netlify build type-checks every regenerated file against
   `src/types/content.ts`. If Claude ever produced malformed TS, the build fails, the previous good
   version stays live, and you get an email — nothing broken reaches Ness on a call.

@@ -13,6 +13,11 @@
   --accent: #0052ff;
   --accent-secondary: #4d7cff;
   --accent-foreground: #ffffff;
+  /* accent-strong — a darker accent reserved for SMALL text (<18px) where the
+     hero accent (#0052ff, ~5.5:1 on the page) sits close to the AA line. At
+     7.07:1 on --background and 7.38:1 on --card it clears AA for body-size
+     accent labels (matrix recLabel, "◆ Lead", "Selected"). */
+  --accent-strong: #0046d6;
   --border: #e2e8f0;
   --card: #ffffff;
   --ring: #0052ff;
@@ -21,6 +26,10 @@
   --go: #0f9d6b;
   --amber: #b45309;
   --clay: #dc2626;
+  /* go-strong — a darker green used ONLY as a fill behind white text (the
+     selected "Qualifies" CTA). On --go itself white is ~3.5:1 (fails AA for the
+     bold-but-not-large button label); on --go-strong it is 5.36:1 → passes. */
+  --go-strong: #0a7a52;
 
   /* surface-2 — a soft warm sand for resting pill/bubble fills.
      The one neutral-but-not-gray fill that gives chips and SMS bubbles a

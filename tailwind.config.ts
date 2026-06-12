@@ -25,6 +25,8 @@ const config: Config = {
           DEFAULT: "var(--accent)",
           secondary: "var(--accent-secondary)",
           foreground: "var(--accent-foreground)",
+          // darker accent for small (<18px) text where the hero accent grazes AA
+          strong: "var(--accent-strong)",
         },
         border: "var(--border)",
         card: "var(--card)",

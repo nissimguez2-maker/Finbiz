@@ -17,13 +17,17 @@ Two ways to make a change (both end up live — see [DAILY-UPDATES.md](DAILY-UPD
 
 ---
 
-## At a glance: which Google Doc feeds which file
+## At a glance: which part of the Master Doc feeds which file
 
-| Google Doc | Feeds these `src/content/` files |
+There is now **one** source doc — the **FinBiz Master Doc**
+(<https://docs.google.com/document/d/1D93j3Pjo6HPqdtb6IiAPvb5DIp_cuZl4bU-bsBawexg/edit>) — split
+into three parts. Here's which part feeds which file:
+
+| Part of the Master Doc | Feeds these `src/content/` files |
 | --- | --- |
-| **Product matrix** | `products.ts`, `mca.ts`, `offer.ts` |
-| **Call sheet** | `callFlow.ts`, `triage.ts`, `statements.ts`, `minimumFile.ts`, `pipeline.ts`, `objections.ts`, `followUps.ts`, `finalQa.ts` |
-| **Both / global** | `meta.ts` (brand name, the top ticker numbers, the compliance rails, section order) |
+| **Base** (company facts, qualify floor, contact rule, the 12-stage pipeline, minimum file, MCA hard gates, risk terms) | `meta.ts` (ticker + rails), `triage.ts`, `statements.ts` (the hard gates), `minimumFile.ts`, `pipeline.ts` |
+| **Part 1 — Product Matrix** (routing, MCA, Bridge/Term/LOC/HELOC/Equipment, Asset-Based & Specialty, CCP, Credit Repair, structuring play) | `products.ts`, `mca.ts`, `offer.ts` |
+| **Part 2 — Scripts** (posture, follow-up wording rail, discovery list, beats ①–⑥ + ④.5 Risk check, All-set/Light branches, objections) | `callFlow.ts`, `objections.ts`, `followUps.ts`, `finalQa.ts` (+ the triage **LIGHT** track) |
 
 ---
 
@@ -60,7 +64,8 @@ to touch either.
 
 ## 01 — Call Flow (the live talk track)
 
-**Google Doc:** Call sheet → the call script. **File:** `src/content/callFlow.ts`.
+**Master Doc:** Part 2 — Scripts → beats ①–⑥ (+ ④.5 Risk check, All-set/Light branches).
+**File:** `src/content/callFlow.ts`.
 
 - The numbered beats Ness reads top-to-bottom live in the `beats` array. Each beat has:
   - `label` — the beat name, e.g. `"① Open — own it"`.
@@ -90,7 +95,7 @@ To **add a line**, add another quoted string to the list (comma after the previo
 
 ## 02 — Product Matrix
 
-**Google Doc:** Product matrix. **File:** `src/content/products.ts`.
+**Master Doc:** Part 1 — Product Matrix (the product menu + routing). **File:** `src/content/products.ts`.
 
 - The big table is the `products` array. Each product has `name`, `bestFit`, `terms`, `speed`,
   and `sayIt` (how to say it / the main caveat).
@@ -114,7 +119,7 @@ terms: "Factor rate + total payback (e.g. **$20K × 1.35 = $27K**) · daily/week
 
 ## 03 — MCA Structure (rep education, not a live quote)
 
-**Google Doc:** Product matrix → the MCA mechanics. **File:** `src/content/mca.ts`.
+**Master Doc:** Part 1 — Product Matrix → the MCA (PRIMARY) mechanics. **File:** `src/content/mca.ts`.
 
 - The worked-example stat grid is the `example` array (`k` label, `v` value, `hot: true` to
   highlight the key figures — Factor and Total payback).
@@ -147,25 +152,31 @@ example: [
 
 ## 04 — Triage & Lanes
 
-**Google Doc:** Call sheet → eligibility lanes. **File:** `src/content/triage.ts`.
+**Master Doc:** Base → the single qualify floor (+ the Scripts LIGHT track for misses).
+**File:** `src/content/triage.ts`.
 
-Three lanes in the `lanes` array — Green/Yellow/Red. Each has `name`, `verdict`, and an `items`
-list of bullet criteria. `rule` is the callout at the bottom.
+The lanes live in the `lanes` array. Each has `name`, `verdict`, and an `items` list of bullet
+criteria. `rule` is the callout at the bottom. The Master Doc now uses **one qualify floor**, not
+the old tiered Green/Yellow/Red thresholds — miss any one bullet and the merchant works the LIGHT
+track (credit repair / CCP / call back with stronger months).
 
 ```ts
-// before — Green lane bullets
-items: ["$20K+ deposits/mo", "12+ months", "570+ credit", ...]
-// after — raised Green deposit threshold
-items: ["$25K+ deposits/mo", "12+ months", "570+ credit", ...]
+// before — a lane's bullets
+items: ["$15K+/mo revenue", "6+ months in business", ...]
+// after — reworded the revenue bullet
+items: ["$15K+/mo deposits", "6+ months in business", ...]
 ```
 
-`tone` (`go`/`amber`/`clay`) is the lane color — leave it.
+The single floor is **$15K+/mo revenue · 6+ months in business · 500+ FICO · business bank
+account** — keep all four wherever the floor is stated. `tone` (`go`/`amber`/`clay`) is the lane
+color — leave it.
 
 ---
 
 ## 05 — Statement Read
 
-**Google Doc:** Call sheet → how to read bank statements. **File:** `src/content/statements.ts`.
+**Master Doc:** Base → the MCA hard gates (deposits, negative days, ending balance) read across
+the 3 months. **File:** `src/content/statements.ts`.
 
 A table. `columns` are the headers; `rows` are the lines. Each row's `cells` array fills the
 columns left to right. The numbered priority rows have a `no` ("1"–"4") and `emphasize: true`.
@@ -183,7 +194,7 @@ columns left to right. The numbered priority rows have a `no` ("1"–"4") and `e
 
 ## 06 — Minimum File
 
-**Google Doc:** Call sheet → minimum package to move a file. **File:** `src/content/minimumFile.ts`.
+**Master Doc:** Base → minimum file (collection). **File:** `src/content/minimumFile.ts`.
 
 Same table shape as Statement Read. Rows with a `subhead` are section dividers ("Core —
 non-negotiable", "Conditional — only when it applies") and have empty `cells: []`.
@@ -191,16 +202,17 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ```ts
 // before — a core row
-{ cells: ["**3–4 months bank statements**", "Revenue & cash-flow review"] },
-// after — asked for 4–6 months
-{ cells: ["**4–6 months bank statements**", "Revenue & cash-flow review"] },
+{ cells: ["**3 months bank statements**", "Revenue & cash-flow review"] },
+// after — reworded the description
+{ cells: ["**3 months bank statements**", "Revenue volume & cash-flow review"] },
 ```
 
 ---
 
 ## 07 — Pipeline & Discovery
 
-**Google Doc:** Call sheet → pipeline stages + discovery questions. **File:** `src/content/pipeline.ts`.
+**Master Doc:** Base → the 12-stage pipeline; the discovery questions come from Part 2 — Scripts
+→ "Discovery must surface". **File:** `src/content/pipeline.ts`.
 
 - The 12 stages are the `steps` array (`n` number, `title`, `desc`).
 - The discovery questions are the `questions` array (`n`, `ask`, `reveals`).
@@ -217,7 +229,7 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ## 08 — Objections, Deal Killers & Compliance
 
-**Google Doc:** Call sheet → objections. **File:** `src/content/objections.ts`.
+**Master Doc:** Part 2 — Scripts → ⚡ Objections. **File:** `src/content/objections.ts`.
 
 - `objections` — each is a question `q` Ness hears and her `reframe` (optional short `note`).
 - `dealKillers` — `issue` + the `move` to make.
@@ -237,26 +249,27 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ## 09 — Follow-Ups (SMS templates)
 
-**Google Doc:** Call sheet → follow-up texts. **File:** `src/content/followUps.ts`.
+**Master Doc:** Part 2 — Scripts → the written-follow-up wording rail. **File:** `src/content/followUps.ts`.
 
 The `scenarios` array. Each scenario has a `scenario` name and two `templates`, each with a
 `label` and the actual `text` of the SMS.
 
 ```ts
 // before
-{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 4 months of business bank statements and I'll come back with real numbers. No obligation either way." },
+{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — good talking just now. Send me 3 months of business bank statements and I'll come back with real numbers. No obligation either way." },
 // after — shorter
-{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — great talking. Send 4 months of bank statements and I'll come back with real numbers. No obligation." },
+{ label: "Recap + ask · SMS", text: "Hey [Name], Ness from FinBiz — great talking. Send 3 months of bank statements and I'll come back with real numbers. No obligation." },
 ```
 
 > Keep "No obligation" in, and never promise an offer or approval before a file exists.
-> `[Name]` is a merge placeholder Ness fills in — leave it as literal text.
+> In writing, never use the word "MCA" — call it "funding." `[Name]` is a merge
+> placeholder Ness fills in — leave it as literal text.
 
 ---
 
 ## 10 — Final QA
 
-**Google Doc:** Call sheet → pre-submission checklist. **File:** `src/content/finalQa.ts`.
+**Master Doc:** Part 2 — Scripts → ⑥ Close + Base → minimum file (the pre-submission checklist). **File:** `src/content/finalQa.ts`.
 
 Same table shape as the other tables. Four emphasized rows (Merchant / Bank Statements /
 Existing Debt / Next Step), each a `cells` pair. `callouts` is the rule band; `note` is the
@@ -273,7 +286,7 @@ cells: ["**Bank Statements**", "Recent, complete, no gaps · name matches · dep
 
 ## 11 — Approved Offer Desk (post-approval only)
 
-**Google Doc:** Product matrix → the approved-offer walkthrough. **File:** `src/content/offer.ts`.
+**Master Doc:** Part 1 — Product Matrix → MCA (PRIMARY) terms + the structuring play (the approved-offer walkthrough). **File:** `src/content/offer.ts`.
 
 - `gate` is the red "after approval only" warning band — keep its meaning intact.
 - `loops` is the list of things to walk the merchant through (`k` label, `v` description).
