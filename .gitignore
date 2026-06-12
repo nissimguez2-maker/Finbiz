@@ -1,0 +1,16 @@
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.*
+!.env.example
+.DS_Store
+.netlify
+*.log
+.vite
+
+# TS incremental build info — never commit
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
