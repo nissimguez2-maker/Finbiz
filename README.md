@@ -1,15 +1,15 @@
 # FinBiz Operator Console
 
 An internal, single-screen cockpit an SDR ("Ness") keeps open during live funding calls.
-Everything she reads — talk track, product matrix, triage lanes, objection reframes,
-follow-up SMS, the pre-submission QA — is on one page, organized so her eye lands on the
-next line and she says it.
+Everything she reads — the full call script, the product matrix, objection reframes, the
+pre-submission QA — is on one page, organized so her eye lands on the next line and she says it.
 
 It is a static single-page app (Vite + React + TypeScript + Tailwind) deployed to Netlify.
 **All script and product copy is data, not code** — it lives in typed modules under
 `src/content/*.ts`, so the wording can change every day without anyone touching layout or
-React. Those modules can be edited by hand or regenerated automatically from the single Google
-Doc — the **FinBiz Master Doc** — the owner keeps as the source of truth.
+React. Those modules are regenerated from the single Google Doc — the **FinBiz Master Doc** —
+the owner keeps as the source of truth: every few days the owner opens a Claude Code session and
+asks it to sync the site to the doc.
 
 > Internal tool. It ships with `X-Robots-Tag: noindex, nofollow` so search engines skip it.
 
@@ -65,18 +65,15 @@ The app is deliberately split so wording lives apart from layout.
 
 ```
   FinBiz Master Doc (source of truth)
-        │  (n8n sync — optional, see docs/N8N-SYNC.md)
+        │  (a Claude session syncs the site to the doc — see docs/CONTENT-SYNC.md)
         ▼
-  src/content/*.ts        ← typed data: the words, numbers, SMS templates
-        │  referenced by (never copied)
-        ▼
-  src/features/callflow/callScript.ts   ← the one bridge from content to the console
+  src/content/*.ts        ← typed data: the words and numbers
         │  read by
         ▼
-  src/features/callflow/CallConsole.tsx ← the live guided console (App.tsx renders this)
-        │  (post-call tabs mount src/components/sections/*.tsx, same data)
+  src/ (the reading-console layout)   ← renders the content; never holds script copy
+        │
         ▼
-  npm run build → dist/   ← static site Netlify serves
+  npm run build → dist/   ← static site, deployed to Netlify from the sync session
 ```
 
 Three layers, each with one job:
@@ -95,18 +92,19 @@ Three layers, each with one job:
    `callFlow` · `products` · `mca` · `triage` · `statements` · `minimumFile` ·
    `pipeline` · `objections` · `finalQa` · `offer` — plus `meta`.
 
-3. **The layout — `src/features/callflow/*` and `src/components/sections/*.tsx`.** The live
-   view is the guided **CallConsole** (stage stepper, hero line, objections pane, product
-   matrix — see [docs/GUIDED-FLOW.md](docs/GUIDED-FLOW.md)). It reaches into the content
-   through exactly one bridge module, `src/features/callflow/callScript.ts`, which references
-   fields — it never copies text. The post-call reference tabs (Statements, Final QA, Approved
-   Offer, Pipeline, MCA) mount the per-section components in `src/components/sections/*`, which
-   render their data objects with shared UI pieces (`Section`, `Beat`, `Say`, `Cue`, `Callout`,
-   `Card`, `TextBubble`, …). None of these files contain script copy — only structure.
+3. **The layout — the reading console under `src/`.** The live view is a single
+   **scrolling script column** down the center: the full call script top to bottom, with the
+   branches shown inline right after the Gate. A **left panel — "What you sell"** collapses
+   open to the product matrix, the MCA structure, and the Approved Offer desk. A **right panel
+   — "Run the call"** collapses open to the objections, deal killers, the don't-say / say-instead
+   pairs, the statement read, the minimum file, the final QA, and the pipeline. A slim top bar
+   holds the two panel toggles. Keyboard: **`[`** toggles the left panel, **`]`** toggles the
+   right panel, **`Esc`** closes whichever is open. The palette is a near-monochrome light theme
+   with a single blue accent. (No notes, no timer, no search, no stepper, no after-call overlay —
+   those were removed.) None of these layout files contain script copy — only structure.
 
-   Example: `callFlow.ts` holds the beats; the console walks them stage by stage and renders
-   each spoken line as the hero. Change a line in `callFlow.ts` and the rendered output
-   changes; the components never move.
+   Example: `callFlow.ts` holds the beats; the center column renders each spoken line in order.
+   Change a line in `callFlow.ts` and the rendered output changes; the layout never moves.
 
 **Why this matters for a non-technical owner:** to change what Ness says, you edit one
 `src/content/*.ts` field. You never read or touch a `.tsx` file. See
@@ -134,33 +132,24 @@ The repo is wired for Netlify already (`netlify.toml`):
 | Node version | `22` (set via `NODE_VERSION` in `netlify.toml`) |
 | SPA redirect | every route → `/index.html` (status 200) so deep links work |
 
-### First-time setup
+The live site is **`finbiz-operator-console.netlify.app`** (site ID
+`14bd8a31-376a-4941-a3f4-06e8c89015db`). Full details in **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**.
 
-1. In Netlify, **Add new site → Import an existing project** and connect this GitHub repo.
-2. Netlify reads `netlify.toml`, so the build command and publish dir are filled in automatically.
-   Just confirm and deploy.
-3. After the first deploy you get a live URL (e.g. `your-site.netlify.app`).
+### How deploys actually happen
 
-### Day-to-day deploys (automatic)
+The Netlify site is **not linked to the GitHub repo.** Pushing or merging the default branch does
+**not** deploy anything on its own. The site is published by **upload from the sync session** — at
+the end of a "sync the site to the doc" session, the session builds `dist/` and deploys it directly
+to Netlify (via the Netlify CLI or MCP), then verifies the live bundle. See
+**[docs/CONTENT-SYNC.md](docs/CONTENT-SYNC.md)**.
 
-Once connected, **every push to the default branch triggers a Netlify build and deploy** — no
-manual step. If the build fails (e.g. a bad content edit), Netlify keeps the previous good
-version live and emails the failure. Nothing broken reaches Ness mid-call.
+### Optional improvement: link the repo
 
-### The "Sync now / Redeploy" button (Build Hook)
-
-A **Build Hook** is a secret URL; an HTTP `POST` to it kicks off a fresh build and deploy with
-no code change. The owner can bookmark it, put it behind a button, or have the n8n sync call it.
-
-Create one in Netlify: **Site settings → Build & deploy → Build hooks → Add build hook**.
-Name it (e.g. `sync-redeploy`), pick the branch, and copy the URL. Store it as
-`NETLIFY_BUILD_HOOK_URL` (see `.env.example`) — treat it like a password.
-
-Trigger it:
-
-```bash
-curl -X POST -d '{}' "$NETLIFY_BUILD_HOOK_URL"
-```
+If you'd rather have pushes deploy themselves, an account admin can link the repo in the Netlify UI
+once (**Site configuration → Build & deploy → Continuous deployment → Link repository**). Netlify
+reads `netlify.toml`, so the build command and publish dir fill in automatically. After that, every
+push to the production branch would build and publish on its own — and the manual upload step in
+the sync session becomes unnecessary. Until someone does this, deploying stays a manual step.
 
 ### Rolling back
 
@@ -171,16 +160,17 @@ it instantly. This is the fastest fix if a bad day's copy somehow lands — rest
 
 ## The daily-update flow (in one paragraph)
 
-The owner edits the FinBiz Master Doc as usual. Then there are three ways to get those edits live,
+The owner edits the FinBiz Master Doc as usual. Then there are two ways to get those edits live,
 covered in full in **[docs/DAILY-UPDATES.md](docs/DAILY-UPDATES.md)**:
 
-- **(a) Doc → n8n sync → auto-deploy** — edit the Doc, run the sync; it regenerates the
-  `src/content/*.ts` files, commits them, and triggers a deploy. *(Recommended once set up.)*
-- **(b) Edit `src/content/*.ts` directly in GitHub's web editor** — for a one-word tweak;
-  committing on the default branch auto-deploys via Netlify.
-- **(c) "Sync now / Redeploy" button** — a bookmarked Netlify Build Hook to force a rebuild.
-
-The n8n workflow that powers option (a) is designed in **[docs/N8N-SYNC.md](docs/N8N-SYNC.md)**.
+- **(a) The recommended path — sync via Claude.** Edit the Master Doc, then every few days open a
+  Claude Code session and ask it to **sync the site to the doc.** It regenerates the
+  `src/content/*.ts` files from the doc, builds, merges, and deploys to Netlify. The full contract
+  the session follows is **[docs/CONTENT-SYNC.md](docs/CONTENT-SYNC.md)**.
+- **(b) An emergency one-word tweak** — edit a `src/content/*.ts` file directly in GitHub's web
+  editor. Note it **won't deploy by itself** (the site isn't linked to the repo), and the next doc
+  sync **overwrites** anything you didn't also put in the doc — the doc is the whitelist. Put the
+  change in the doc too.
 
 ---
 

@@ -3,42 +3,20 @@
 @tailwind utilities;
 
 /* ============================================================
-   Minimalist Modern — design tokens (CSS custom properties)
+   Reading console — design tokens
+   Near-monochrome light. One background, one text colour, one
+   muted gray, one hairline border, ONE accent (a calm deep blue)
+   used only for beat labels, hover/focus, and focus rings.
    ============================================================ */
 :root {
-  --background: #fafafa;
-  --foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #0052ff;
-  --accent-secondary: #4d7cff;
+  --background: #fbfbfa; /* plain near-white */
+  --foreground: #1a1a1a; /* near-black reading colour */
+  --muted: #f4f4f3; /* the one quiet fill (text-message blocks) */
+  --muted-foreground: #6b6b6b; /* secondary text */
+  --border: #e6e6e3; /* hairline */
+  --accent: #1d4ed8; /* the single calm deep blue */
   --accent-foreground: #ffffff;
-  /* accent-strong — a darker accent reserved for SMALL text (<18px) where the
-     hero accent (#0052ff, ~5.5:1 on the page) sits close to the AA line. At
-     7.07:1 on --background and 7.38:1 on --card it clears AA for body-size
-     accent labels (matrix recLabel, "◆ Lead", "Selected"). */
-  --accent-strong: #0046d6;
-  --border: #e2e8f0;
-  --card: #ffffff;
-  --ring: #0052ff;
-
-  /* restrained lane / status tints — accent stays the hero */
-  --go: #0f9d6b;
-  --amber: #b45309;
-  --clay: #dc2626;
-  /* go-strong — a darker green used ONLY as a fill behind white text (the
-     selected "Qualifies" CTA). On --go itself white is ~3.5:1 (fails AA for the
-     bold-but-not-large button label); on --go-strong it is 5.36:1 → passes. */
-  --go-strong: #0a7a52;
-
-  /* surface-2 — a soft warm sand for resting pill/bubble fills.
-     The one neutral-but-not-gray fill that gives chips and SMS bubbles a
-     calm, clearly-non-white contrast on the near-white page. Accent blue
-     stays reserved for active/selected/recommended; sand is the resting fill.
-     Contrast on #F4EFE6: slate fg 15.6:1, warm-taupe fg 5.7:1, accent 5.0:1. */
-  --surface-2: #f4efe6;
-  --surface-2-foreground: #6b5b47;
-  --surface-2-border: #e7decd;
+  --ring: #1d4ed8;
 }
 
 @layer base {
@@ -62,120 +40,28 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-size: 15px;
-    line-height: 1.65;
-    letter-spacing: 0.005em;
-    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
   }
   ::selection {
-    background: rgba(0, 82, 255, 0.16);
-  }
-  /* number columns / metrics */
-  .tnum {
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
   }
 }
 
 @layer components {
-  /* The signature gradient text treatment for key headline words */
-  .gradient-text {
-    background: linear-gradient(to right, var(--accent), var(--accent-secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* Dot-grid texture overlay for inverted (dark) sections */
-  .dot-texture {
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.9) 1px, transparent 1px);
-    background-size: 32px 32px;
-    opacity: 0.03;
-  }
-
-  /* Brighter dot-grid for the inverted "floor" band — reads as deliberate texture */
-  .dot-texture-bold {
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.9) 1px, transparent 1px);
-    background-size: 26px 26px;
-    opacity: 0.06;
-  }
-
-  /* Signature radial accent glow — a soft Electric-Blue bloom for hero/inverted */
-  .radial-glow {
-    background: radial-gradient(
-      circle at center,
-      rgba(0, 82, 255, 0.22) 0%,
-      rgba(77, 124, 255, 0.1) 40%,
-      transparent 70%
-    );
-  }
-
-  /* Focus ring helper matching the accent aesthetic */
-  .focus-ring {
-    @apply outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring;
-  }
-
-  /* ---- Live-call console primitives -------------------------------------
-     Shared so the three panels read as one surface: consistent eyebrow,
-     card chrome, and a single padded scroll region per pane. */
-
-  /* Mono eyebrow label used across every panel heading (Objections, refs…).
-     One typographic idiom for every section label in the console so the three
-     panels read as a single surface. */
+  /* Tiny mono eyebrow — the only mono in reading flow (beat numbers/labels). */
   .eyebrow {
-    @apply font-mono text-[10px] font-semibold uppercase tracking-label text-muted-foreground;
+    @apply font-mono text-[11px] font-semibold uppercase tracking-[0.14em];
   }
 
-  /* The cohesive reference/objection card — one radius, one border, one fill,
-     one quiet lift. Every reference block, lane card, product row and objection
-     row inherits this so radii/borders/shadows never drift between panels. */
-  .console-card {
-    @apply rounded-xl border border-border bg-card;
-  }
-
-  /* A primary/active surface: the accent-tinted variant of console-card, used
-     for the primary product, the active objection, and awaiting states. */
-  .console-card-accent {
-    @apply rounded-xl border;
-    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
-    background-color: color-mix(in srgb, var(--accent) 4%, transparent);
-  }
-
-  /* A thin section divider that collapses cleanly when its block is empty. */
-  .console-rule {
-    @apply border-t;
-    border-top-color: color-mix(in srgb, var(--border) 60%, transparent);
-  }
-
-  /* The pane scroll region: the only place the live view ever scrolls. */
-  .pane-scroll {
-    @apply min-h-0 flex-1 overflow-y-auto scroll-thin;
-  }
-
-  /* One hotkey-chip idiom across the whole console (stepper hints, objections
-     `o`, footer). Small, mono, quiet — a consistent keyboard vocabulary. */
+  /* One keyboard-hint idiom: small, mono, quiet. */
   .kbd-hint {
-    @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-surface-2-border bg-surface-2 px-1 font-mono text-[10px] font-semibold leading-none text-surface-2-foreground;
-  }
-
-  /* A static "live" dot next to the running timer. No looping motion — the
-     console stays calm so nothing competes with the line you're reading. */
-  .live-dot {
-    @apply h-2 w-2 rounded-full bg-go;
-  }
-
-  /* Spoken-line marker. A stable, documented hook on every line the rep reads
-     aloud (the `Say` primitive + the console hero line), so spoken copy can be
-     targeted as a unit — print styling, search emphasis, future typographic
-     tuning — without leaning on utility-class ordering. Visuals stay on the
-     utilities; this class only guarantees the longhand below always wins over
-     them and gives spoken lines one stable, balanced wrap. */
-  .say-line {
-    text-wrap: balance;
+    @apply inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-border px-1 font-mono text-[10px] font-semibold leading-none text-muted-foreground;
   }
 }
 
-/* Thin, unobtrusive scrollbars inside scroll regions */
+/* Thin, unobtrusive scrollbars inside scroll regions. */
 .scroll-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
@@ -187,14 +73,4 @@
 .scroll-thin::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 999px;
-}
-
-/* Print: hide interactive chrome, keep content legible */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-  body {
-    background: #fff;
-  }
 }
