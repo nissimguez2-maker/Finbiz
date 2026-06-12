@@ -181,8 +181,9 @@ Finbiz/
 ├─ README.md                 ← you are here
 ├─ docs/
 │  ├─ CONTENT-MAP.md          ← "to change X, edit this file/field" cheat sheet
-│  ├─ DAILY-UPDATES.md        ← the three ways to push a change live
-│  └─ N8N-SYNC.md             ← buildable n8n workflow (Master Doc → Claude → GitHub → Netlify)
+│  ├─ CONTENT-SYNC.md         ← the contract a Claude session follows to sync the site to the doc
+│  ├─ DAILY-UPDATES.md        ← the two ways to push a change live
+│  └─ DEPLOYMENT.md           ← Netlify site details, manual deploy, and rollback
 ├─ .env.example               ← placeholder env vars for the sync/build (no real secrets)
 ├─ netlify.toml               ← Netlify build config (build cmd, publish dir, Node 22, redirects)
 ├─ index.html, vite.config.ts, tailwind.config.ts, tsconfig*.json
@@ -193,9 +194,9 @@ Finbiz/
    │   ├─ meta.ts             ← brand, ticker, compliance rails, nav order
    │   ├─ callFlow.ts  products.ts  mca.ts  triage.ts  statements.ts
    │   └─ minimumFile.ts  pipeline.ts  objections.ts  finalQa.ts  offer.ts
-   ├─ features/callflow/      ← THE LIVE VIEW: the guided console (callScript.ts is the
-   │                            only file that reaches into content/ — see GUIDED-FLOW.md)
-   └─ components/sections/    ← post-call reference tabs (don't edit for copy)
+   └─ (layout)                ← THE LIVE VIEW: the reading console — a center script
+                                column with a left "What you sell" panel and a right
+                                "Run the call" panel. Renders content/; holds no script copy.
 ```
 
 ## Compliance rails (baked into the content)
@@ -209,5 +210,5 @@ These are non-negotiable and must survive any edit or regeneration. They are sta
 - No invented urgency.
 - Credit repair never promises a specific score (CROA); it takes 60–90 days.
 
-If you change copy by hand or via the sync, keep these intact. The n8n sync's Claude prompt
-(see `docs/N8N-SYNC.md`) enforces them automatically.
+If you change copy by hand or via the sync, keep these intact. The sync session follows
+**[docs/CONTENT-SYNC.md](docs/CONTENT-SYNC.md)**, which enforces these rails on every regenerated line.

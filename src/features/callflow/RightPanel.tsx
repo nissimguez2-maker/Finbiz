@@ -1,0 +1,184 @@
+import { useMemo, useState } from "react";
+import type { TableSection } from "@/types/content";
+import { inlineMarkup } from "@/lib/inlineBold";
+import { NeutralCallout } from "./LeftPanel";
+import {
+  objectionList,
+  dealKillers,
+  compliancePairs,
+  statementRead,
+  minimumFileRead,
+  finalQaRead,
+  pipelineRead,
+} from "./content";
+
+/**
+ * Right panel — "Run the call". Objections first (with the small filter input),
+ * then Deal killers, the don't-say / say compliance pairs, Statement read,
+ * Minimum file, Final QA, and the Pipeline. Plain rows separated by whitespace
+ * and hairlines; one neutral callout style; no colour, tags, or boxes.
+ */
+export function RightPanel() {
+  const [filter, setFilter] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = filter.trim().toLowerCase();
+    if (!q) return objectionList;
+    return objectionList.filter(
+      (o) => o.q.toLowerCase().includes(q) || o.reframe.toLowerCase().includes(q),
+    );
+  }, [filter]);
+
+  return (
+    <div className="space-y-10">
+      <section>
+        <h3 className="eyebrow mb-3 text-accent">Objections</h3>
+        <input
+          type="text"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          placeholder="Filter objections…"
+          aria-label="Filter objections"
+          className="mb-4 h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <div className="space-y-5">
+          {filtered.map((o) => (
+            <div key={o.q}>
+              <p
+                className="font-medium leading-snug text-foreground"
+                dangerouslySetInnerHTML={inlineMarkup(o.q)}
+              />
+              <p
+                className="mt-1 text-sm leading-relaxed text-muted-foreground"
+                dangerouslySetInnerHTML={inlineMarkup(o.reframe)}
+              />
+              {o.note && <p className="mt-1 text-xs italic text-muted-foreground">{o.note}</p>}
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <p className="text-sm text-muted-foreground">No objections match “{filter}”.</p>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <h3 className="eyebrow mb-3 text-accent">Deal killers</h3>
+        <dl className="space-y-3">
+          {dealKillers.map((d) => (
+            <div key={d.issue}>
+              <dt
+                className="text-sm font-medium text-foreground"
+                dangerouslySetInnerHTML={inlineMarkup(d.issue)}
+              />
+              <dd
+                className="mt-0.5 text-sm leading-relaxed text-muted-foreground"
+                dangerouslySetInnerHTML={inlineMarkup(d.move)}
+              />
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section>
+        <h3 className="eyebrow mb-3 text-accent">Compliance — don't say / say</h3>
+        <dl className="space-y-3">
+          {compliancePairs.map((c) => (
+            <div key={c.dont}>
+              <dt className="text-sm leading-snug text-muted-foreground">
+                <span className="mr-1.5 font-medium uppercase tracking-wide">Don't</span>
+                <span dangerouslySetInnerHTML={inlineMarkup(c.dont)} />
+              </dt>
+              <dd className="mt-0.5 text-sm leading-snug text-foreground">
+                <span className="mr-1.5 font-medium uppercase tracking-wide text-accent">Say</span>
+                <span dangerouslySetInnerHTML={inlineMarkup(c.say)} />
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <TableBlock title="Statement read" section={statementRead} />
+      <TableBlock title="Minimum file" section={minimumFileRead} />
+      <TableBlock title="Final QA" section={finalQaRead} />
+
+      <section>
+        <h3 className="eyebrow mb-3 text-accent">Pipeline</h3>
+        <ol className="space-y-2.5">
+          {pipelineRead.steps.map((s) => (
+            <li key={s.n} className="flex gap-3">
+              <span className="eyebrow shrink-0 pt-0.5 text-muted-foreground">{s.n}</span>
+              <span>
+                <span className="text-sm font-medium text-foreground">{s.title}</span>
+                <span className="ml-1.5 text-sm text-muted-foreground">{s.desc}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
+
+        <h4 className="eyebrow mb-3 mt-6 text-muted-foreground">Discovery must surface</h4>
+        <dl className="space-y-2.5">
+          {pipelineRead.questions.map((q) => (
+            <div key={q.n}>
+              <dt className="text-sm font-medium text-foreground">{q.ask}</dt>
+              <dd className="mt-0.5 text-sm text-muted-foreground">{q.reveals}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="mt-4">
+          <NeutralCallout callout={pipelineRead.settles} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/** A TableSection (Statements / Minimum file / Final QA) rendered as plain rows. */
+function TableBlock({ title, section }: { title: string; section: TableSection }) {
+  return (
+    <section>
+      <h3 className="eyebrow mb-3 text-accent">{title}</h3>
+
+      <div className="space-y-2.5">
+        {section.rows.map((row, i) =>
+          row.subhead ? (
+            <p key={i} className="eyebrow pt-2 text-muted-foreground">
+              {row.subhead}
+            </p>
+          ) : (
+            <div key={i} className="border-t border-border pt-2.5 first:border-t-0">
+              {row.cells.map((cell, c) => (
+                <p
+                  key={c}
+                  className={
+                    c === 0
+                      ? "text-sm font-medium text-foreground"
+                      : "mt-0.5 text-sm leading-relaxed text-muted-foreground"
+                  }
+                  dangerouslySetInnerHTML={inlineMarkup(
+                    section.columns.length > 1 && c > 0 ? `${section.columns[c]}: ${cell}` : cell,
+                  )}
+                />
+              ))}
+            </div>
+          ),
+        )}
+      </div>
+
+      {section.note && (
+        <p
+          className="mt-4 text-sm leading-relaxed text-muted-foreground"
+          dangerouslySetInnerHTML={inlineMarkup(section.note)}
+        />
+      )}
+
+      {section.callouts && section.callouts.length > 0 && (
+        <div className="mt-4 space-y-3">
+          {section.callouts.map((co) => (
+            <NeutralCallout key={co.label} callout={co} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

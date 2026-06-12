@@ -3,12 +3,15 @@
 A plain-English cheat sheet. Find the thing you want to change on the left, edit the file and
 field on the right. **You only ever touch files in `src/content/`.** You never open a `.tsx` file.
 
-Two ways to make a change (both end up live — see [DAILY-UPDATES.md](DAILY-UPDATES.md)):
+Two ways to make a change (see [DAILY-UPDATES.md](DAILY-UPDATES.md) for the full picture):
 
-- **By hand:** open the `src/content/*.ts` file in GitHub's web editor, change the words inside
-  the quotes, commit. Netlify rebuilds and deploys automatically.
-- **Via the sync:** edit the Google Doc instead, then run the n8n sync, which rewrites these
-  same files for you. See [N8N-SYNC.md](N8N-SYNC.md).
+- **The recommended path — via the doc:** edit the **FinBiz Master Doc**, then open a Claude
+  session and ask it to **sync the site to the doc.** The session rewrites these same files for
+  you, builds, and deploys. See [CONTENT-SYNC.md](CONTENT-SYNC.md).
+- **By hand (emergencies only):** open the `src/content/*.ts` file in GitHub's web editor, change
+  the words inside the quotes, commit. Note this **does not deploy on its own** — the site isn't
+  linked to the repo — and the next doc sync **overwrites** anything you didn't also put in the
+  Master Doc. So put the change in the doc too.
 
 > **Golden rule:** change the words *between the quote marks*. Leave the punctuation around
 > them — the commas, braces `{ }`, brackets `[ ]`, and the field names (`says:`, `terms:`) —
@@ -145,8 +148,8 @@ example: [
 ```
 
 > If you change one number in the example, **change all the dependent ones** so the math holds
-> ($20,000 × 1.35 = $27,000; ÷ 100 = $270/day). The sync's Claude prompt does this automatically;
-> by hand, do the arithmetic.
+> ($20,000 × 1.35 = $27,000; ÷ 100 = $270/day). A doc sync does this arithmetic for you
+> (see [CONTENT-SYNC.md](CONTENT-SYNC.md)); by hand, do it yourself.
 
 ---
 
@@ -314,8 +317,9 @@ changing them can break how sections are referenced.
 ## If something breaks
 
 - The site is built before it ships. A bad edit (missing quote/comma, renamed field) makes
-  `npm run build` fail, **Netlify keeps the last good version live**, and you get an email.
-- Fastest fix: in Netlify, **Deploys → pick the last good deploy → Publish deploy** to roll back,
-  then fix the typo (usually a missing `"` or `,`) and commit again.
-- When in doubt, edit the Google Doc and let the sync regenerate the file — it always produces
-  valid, type-correct output.
+  `npm run build` fail during a sync, so it never gets deployed — **the last good version stays
+  live** until a clean build is uploaded.
+- Fastest fix: in Netlify, **Deploys → pick the last good deploy → Publish deploy** to roll back
+  instantly, then fix the typo (usually a missing `"` or `,`).
+- When in doubt, edit the Master Doc and ask a Claude session to sync — it always produces
+  valid, type-correct output. See [CONTENT-SYNC.md](CONTENT-SYNC.md).
