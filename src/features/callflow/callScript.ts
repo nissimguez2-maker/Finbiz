@@ -24,12 +24,13 @@ import type {
   CompliancePair,
 } from "@/types/content";
 
-/** A step in the call: the 6 canonical stages plus the two branch screens. */
+/** A step in the call: the 7 canonical stages plus the two branch screens. */
 export type Step =
   | "open"
   | "story"
   | "gate"
   | "dig"
+  | "risk"
   | "pitch"
   | "close"
   | "light"
@@ -44,6 +45,7 @@ export const STEP_LABELS: Record<Step, string> = {
   story: "Story",
   gate: "Gate",
   dig: "Dig",
+  risk: "Risk",
   pitch: "Pitch",
   close: "Close",
   light: "Light",
@@ -60,7 +62,8 @@ export function pathFor(branch: BranchId): Step[] {
     case "qualifies":
     case null:
     default:
-      return ["open", "story", "gate", "dig", "pitch", "close"];
+      // ④.5 Risk check sits between Dig and Pitch on the qualifying path.
+      return ["open", "story", "gate", "dig", "risk", "pitch", "close"];
   }
 }
 
@@ -75,10 +78,12 @@ function beatForStep(step: Step): CallBeat | BranchCard {
       return callFlow.beats[2];
     case "dig":
       return callFlow.beats[3];
+    case "risk":
+      return callFlow.beats[4]; // "④.5 Risk check"
     case "pitch":
-      return callFlow.beats[4];
-    case "close":
       return callFlow.beats[5];
+    case "close":
+      return callFlow.beats[6];
     case "light":
       return callFlow.branches[1]; // "↪ Light"
     case "funded":

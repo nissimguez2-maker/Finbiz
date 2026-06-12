@@ -1,9 +1,12 @@
 import type { TriageContent } from "@/types/content";
 
 /**
- * Eligibility lanes for live triage. The rep is deciding whether the file is
- * worth pursuing — NOT underwriting it. Voice: Ness — plainspoken, no hype.
- * Compliance: triage only; no "approved/guaranteed", no rate before the file.
+ * Eligibility for live triage. There are no Green/Yellow/Red lanes — there's one
+ * qualify floor (all four conditions or you work the LIGHT track) and three MCA
+ * hard gates that actually decide the file. The rep is triaging, NOT underwriting.
+ * Voice: Ness — plainspoken, no hype. Compliance: triage only; no
+ * "approved/guaranteed", no rate before the file. Source: master doc BASE
+ * (qualify floor, MCA hard gates) + Scripts (LIGHT track).
  */
 export const triage: TriageContent = {
   meta: {
@@ -11,45 +14,43 @@ export const triage: TriageContent = {
     navNo: "04",
     navLabel: "Triage & Lanes",
     eyebrow: "Triage",
-    title: "Eligibility & {Lanes}",
+    title: "Floor & {Hard Gates}",
     lead:
-      "You're not underwriting — you're triaging. The only question right now: is this file worth pursuing, and what risk has to be on the table before it ships? Floor to even start: $15K+/mo deposits, 6+ months, 500+ credit. Below that, needing money isn't the same as being fundable.",
+      "You're not underwriting — you're triaging. First the floor: all four or it's the LIGHT track. Then the three small checks that actually decide an MCA. Below the floor, needing money isn't the same as being fundable.",
   },
   lanes: [
     {
       tone: "go",
-      name: "Green",
-      verdict: "PUSH",
+      name: "Floor — all four or LIGHT",
+      verdict: "QUALIFY",
       items: [
-        "$20K+ deposits/mo",
-        "12+ months",
-        "570+ credit",
-        "Consistent pattern, low NSFs",
-        "Manageable debt, fast cooperation",
+        "$15K+/mo revenue",
+        "6+ months in business",
+        "500+ FICO",
+        "Revenue into a business bank account",
+        "Miss any one → not yet eligible · work the LIGHT track",
       ],
     },
     {
       tone: "amber",
-      name: "Yellow",
-      verdict: "REVIEW",
+      name: "MCA hard gates",
+      verdict: "DECIDES IT",
       items: [
-        "$10–20K deposits/mo",
-        "3–12 months",
-        "500–570 credit",
-        "Some explainable NSFs",
-        "One advance, low avg balance",
+        "Deposits: avg ≥ 3 deposits/mo across the last 3 months",
+        "Negative days: no more than ~4–5/mo on average across the last 3 months",
+        "Ending balance: positive in each of the last 3 months",
+        "Edge case: two amazing months + one slightly negative is workable to pitch — funders still often reject it",
       ],
     },
     {
       tone: "clay",
-      name: "Red",
-      verdict: "WEAK",
+      name: "LIGHT track",
+      verdict: "NOT YET",
       items: [
-        "Under $10K/mo · neg. now",
-        "Under 3 months",
-        "Frequent NSFs",
-        "Stacked advances, defaults",
-        "Liens/judgments · refuses docs",
+        "Credit repair to get eligible (60–90 days; never promise a score)",
+        "CCP to hold the line — never an opener",
+        "“Give me two stronger months and a callback.”",
+        "Don't write him off — convert him into a future deal",
       ],
     },
   ],

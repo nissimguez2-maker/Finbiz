@@ -19,12 +19,19 @@ export const brand = {
     "One screen, every move — who you are on the phone, what we sell, and the last check before you submit. Lead with conviction; let the file win the argument.",
 };
 
-/** Masthead ticker — the numbers a rep should never have to look up. */
+/**
+ * Masthead ticker — the numbers a rep should never have to look up.
+ * NOTE: the first three entries are the qualify-floor chips (revenue / time in
+ * business / credit) — callScript.ts reads `ticker.slice(0, 3)` as the floor.
+ * Numbers come straight from the master doc's single qualify floor.
+ */
 export const ticker: { k: string; v: string; sub?: string }[] = [
-  { k: "Qualify floor", v: "$15K", sub: "/mo" },
+  { k: "Qualify floor", v: "$15K+", sub: "/mo" },
   { k: "Time in biz", v: "6+", sub: "mo" },
-  { k: "Credit", v: "500+" },
-  { k: "Green lane", v: "$20K · 12mo · 570" },
+  { k: "Credit", v: "500+", sub: "FICO" },
+  { k: "Business bank acct", v: "Required" },
+  { k: "Funding range", v: "$5K–$10M" },
+  { k: "Approvals", v: "~1 hr" },
   { k: "To start a file", v: "3", sub: "mo stmts" },
 ];
 
@@ -34,6 +41,7 @@ export const rails: string[] = [
   "No rate before the file",
   "Factor ≠ APR",
   "No invented urgency",
+  "In SMS/email, never write “MCA” — say “funding”",
 ];
 
 /** Canonical nav order. Section ids must match registry + content metas. */

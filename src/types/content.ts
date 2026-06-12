@@ -92,6 +92,10 @@ export interface ProductsContent {
   meta: SectionMeta;
   products: Product[];
   pitches: ProductPitch[];
+  /** Routing logic — which profile gets pointed at which product. */
+  routingNote?: Callout;
+  /** Multi-entity structuring play and its guardrails. */
+  structuringNote?: Callout;
   relationshipNote: Callout;
   rails: Callout;
 }
