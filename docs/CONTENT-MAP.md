@@ -3,12 +3,13 @@
 A plain-English cheat sheet. Find the thing you want to change on the left, edit the file and
 field on the right. **You only ever touch files in `src/content/`.** You never open a `.tsx` file.
 
-Two ways to make a change (both end up live — see [DAILY-UPDATES.md](DAILY-UPDATES.md)):
+How a change reaches the screen (see [DAILY-UPDATES.md](DAILY-UPDATES.md)):
 
-- **By hand:** open the `src/content/*.ts` file in GitHub's web editor, change the words inside
-  the quotes, commit. Netlify rebuilds and deploys automatically.
-- **Via the sync:** edit the Google Doc instead, then run the n8n sync, which rewrites these
-  same files for you. See [N8N-SYNC.md](N8N-SYNC.md).
+- **The owner updates the FinBiz Master Doc**, then hands it to **Claude Code**, which edits
+  the matching `src/content/*.ts` field(s) and commits. Netlify rebuilds and deploys automatically.
+- **By hand (small tweak):** open the `src/content/*.ts` file in GitHub's web editor, change the
+  words inside the quotes, commit. Same auto-deploy. (Still update the Master Doc so it stays the
+  source of truth.)
 
 > **Golden rule:** change the words *between the quote marks*. Leave the punctuation around
 > them — the commas, braces `{ }`, brackets `[ ]`, and the field names (`says:`, `terms:`) —
@@ -17,13 +18,16 @@ Two ways to make a change (both end up live — see [DAILY-UPDATES.md](DAILY-UPD
 
 ---
 
-## At a glance: which Google Doc feeds which file
+## At a glance: which Master Doc part feeds which file
 
-| Google Doc | Feeds these `src/content/` files |
+The single **FinBiz Master Doc** has three parts. Each maps to a set of `src/content/` files:
+
+| Master Doc part | Feeds these `src/content/` files |
 | --- | --- |
-| **Product matrix** | `products.ts`, `mca.ts`, `offer.ts` |
-| **Call sheet** | `callFlow.ts`, `triage.ts`, `statements.ts`, `minimumFile.ts`, `pipeline.ts`, `objections.ts`, `followUps.ts`, `finalQa.ts` |
-| **Both / global** | `meta.ts` (brand name, the top ticker numbers, the compliance rails, section order) |
+| **BASE** — qualify floor, pipeline, minimum file, statement review, MCA hard gates, risk signals | `meta.ts`, `pipeline.ts` (incl. each stage's `killer`), `minimumFile.ts`, `statements.ts`, `triage.ts`, `mca.ts` (the `hardGates`) |
+| **PART 1 — Product Matrix** — products & terms, the routing tree, funder appetite, the multi-entity structuring play, rails | `products.ts`, `mca.ts`, `routing.ts`, `compliance.ts` |
+| **PART 2 — Scripts** — the live talk track, Light/Funded branches, the mid-call risk check, posture, written-comms rails | `callFlow.ts`, `objections.ts`, `followUps.ts`, `finalQa.ts`, `compliance.ts` |
+| **Global** | `meta.ts` (brand name, the top ticker numbers, the compliance rails, section order) |
 
 ---
 
@@ -60,7 +64,7 @@ to touch either.
 
 ## 01 — Call Flow (the live talk track)
 
-**Google Doc:** Call sheet → the call script. **File:** `src/content/callFlow.ts`.
+**Master Doc:** PART 2 — Scripts → the live call script. **File:** `src/content/callFlow.ts`.
 
 - The numbered beats Ness reads top-to-bottom live in the `beats` array. Each beat has:
   - `label` — the beat name, e.g. `"① Open — own it"`.
@@ -90,7 +94,7 @@ To **add a line**, add another quoted string to the list (comma after the previo
 
 ## 02 — Product Matrix
 
-**Google Doc:** Product matrix. **File:** `src/content/products.ts`.
+**Master Doc:** PART 1 — Product Matrix. **File:** `src/content/products.ts`.
 
 - The big table is the `products` array. Each product has `name`, `bestFit`, `terms`, `speed`,
   and `sayIt` (how to say it / the main caveat).
@@ -114,11 +118,16 @@ terms: "Factor rate + total payback (e.g. **$20K × 1.35 = $27K**) · daily/week
 
 ## 03 — MCA Structure (rep education, not a live quote)
 
-**Google Doc:** Product matrix → the MCA mechanics. **File:** `src/content/mca.ts`.
+**Master Doc:** PART 1 → the MCA mechanics + BASE → MCA hard gates. **File:** `src/content/mca.ts`.
 
 - The worked-example stat grid is the `example` array (`k` label, `v` value, `hot: true` to
   highlight the key figures — Factor and Total payback).
 - `factorNote` and `whenNote` are the two callouts. `loops` is the "what to keep straight" list.
+- **`hardGates`** — the three small checks that actually decide an MCA. Each entry is a `label`
+  + `test` (e.g. `{ label: "Deposits", test: "Avg ≥ 3 deposits/mo across the last 3 months" }`).
+  `hardGatesNote` is the "two strong months + one thin one" edge-case callout. These mirror the
+  Master Doc's BASE → "MCA hard gates" — keep the thresholds (3 deposits, ~4–5 negative days,
+  positive ending balance) exact.
 
 ```ts
 // before
@@ -147,7 +156,7 @@ example: [
 
 ## 04 — Triage & Lanes
 
-**Google Doc:** Call sheet → eligibility lanes. **File:** `src/content/triage.ts`.
+**Master Doc:** BASE → the qualify floor (and the green-lane numbers). **File:** `src/content/triage.ts`.
 
 Three lanes in the `lanes` array — Green/Yellow/Red. Each has `name`, `verdict`, and an `items`
 list of bullet criteria. `rule` is the callout at the bottom.
@@ -165,7 +174,7 @@ items: ["$25K+ deposits/mo", "12+ months", "570+ credit", ...]
 
 ## 05 — Statement Read
 
-**Google Doc:** Call sheet → how to read bank statements. **File:** `src/content/statements.ts`.
+**Master Doc:** BASE → the 10-point statement review. **File:** `src/content/statements.ts`.
 
 A table. `columns` are the headers; `rows` are the lines. Each row's `cells` array fills the
 columns left to right. The numbered priority rows have a `no` ("1"–"4") and `emphasize: true`.
@@ -183,7 +192,7 @@ columns left to right. The numbered priority rows have a `no` ("1"–"4") and `e
 
 ## 06 — Minimum File
 
-**Google Doc:** Call sheet → minimum package to move a file. **File:** `src/content/minimumFile.ts`.
+**Master Doc:** BASE → the minimum file (collection). **File:** `src/content/minimumFile.ts`.
 
 Same table shape as Statement Read. Rows with a `subhead` are section dividers ("Core —
 non-negotiable", "Conditional — only when it applies") and have empty `cells: []`.
@@ -200,9 +209,9 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ## 07 — Pipeline & Discovery
 
-**Google Doc:** Call sheet → pipeline stages + discovery questions. **File:** `src/content/pipeline.ts`.
+**Master Doc:** BASE → the pipeline (the spine) + Scripts → discovery. **File:** `src/content/pipeline.ts`.
 
-- The 12 stages are the `steps` array (`n` number, `title`, `desc`).
+- The 12 stages are the `steps` array (`n` number, `title`, `desc`, and an optional **`killer`**).
 - The discovery questions are the `questions` array (`n`, `ask`, `reveals`).
 - `settles` is the callout summarizing what discovery settles.
 
@@ -213,11 +222,16 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 { n: "1", ask: "Average monthly gross deposits?", reveals: "Revenue capacity" },
 ```
 
+- **`killer`** (optional, per stage) is the thing that ends the deal at that stage — e.g.
+  Prospecting's `"Inactive Secretary of State · wrong EIN/SSN · another broker submits first"`.
+  Not every stage has one. These come from the Master Doc's per-stage "Killers"; keep them
+  verbatim where the doc states them.
+
 ---
 
 ## 08 — Objections, Deal Killers & Compliance
 
-**Google Doc:** Call sheet → objections. **File:** `src/content/objections.ts`.
+**Master Doc:** PART 2 — Scripts → Objections (plus BASE → risk signals for the deal-killers). **File:** `src/content/objections.ts`.
 
 - `objections` — each is a question `q` Ness hears and her `reframe` (optional short `note`).
 - `dealKillers` — `issue` + the `move` to make.
@@ -237,7 +251,7 @@ The `[[double brackets]]` mark a condition inside a cell (e.g. `[[if refinancing
 
 ## 09 — Follow-Ups (SMS templates)
 
-**Google Doc:** Call sheet → follow-up texts. **File:** `src/content/followUps.ts`.
+**Master Doc:** PART 2 — Scripts → the written follow-ups (SMS / email). **File:** `src/content/followUps.ts`.
 
 The `scenarios` array. Each scenario has a `scenario` name and two `templates`, each with a
 `label` and the actual `text` of the SMS.
@@ -256,7 +270,7 @@ The `scenarios` array. Each scenario has a `scenario` name and two `templates`, 
 
 ## 10 — Final QA
 
-**Google Doc:** Call sheet → pre-submission checklist. **File:** `src/content/finalQa.ts`.
+**Master Doc:** BASE → submission (clean, accurate file) + risk signals. **File:** `src/content/finalQa.ts`.
 
 Same table shape as the other tables. Four emphasized rows (Merchant / Bank Statements /
 Existing Debt / Next Step), each a `cells` pair. `callouts` is the rule band; `note` is the
@@ -271,22 +285,48 @@ cells: ["**Bank Statements**", "Recent, complete, no gaps · name matches · dep
 
 ---
 
-## 11 — Approved Offer Desk (post-approval only)
+## 12 — Routing (the "where does this file go" decision tree)
 
-**Google Doc:** Product matrix → the approved-offer walkthrough. **File:** `src/content/offer.ts`.
+**Master Doc:** PART 1 → Routing (read this first) + MCA funder appetite + the structuring play.
+**File:** `src/content/routing.ts`. *(Reference / Quick Lookup — never quoted verbatim live.)*
 
-- `gate` is the red "after approval only" warning band — keep its meaning intact.
-- `loops` is the list of things to walk the merchant through (`k` label, `v` description).
+- `rule` is the "read first" band (good cash flow → MCA/LOC; good credit 650+ → HELOC/long-term/SBA).
+- `branches` — the decision tree. Each entry is `when` (the merchant's situation) → `then` (what to
+  lead with), plus a short `note`.
+- `appetite` — funder-appetite calls (steady vs. seasonal, Trucking, Texas). Each has a `label`,
+  a `verdict`, and a `tone` color.
+- `plays` — the multi-entity **structuring** callout. Keep the guardrails intact: name the true
+  borrowing entity, accurate ownership, real revenue; never inflate deposits via inter-company
+  transfers, never misstate ownership.
 
 ```ts
-// before
-{ k: "Total payback", v: "The real obligation — funded × factor, not the funded figure" },
-// after
-{ k: "Total payback", v: "The real obligation — funded amount times the factor, not the funded figure" },
+// before — a routing branch
+{ when: "Good cash flow", then: "MCA · Line of Credit", note: "Active deposits, credit-flexible, needs speed." },
+// after — same shape, reworded note
+{ when: "Good cash flow", then: "MCA · Line of Credit", note: "Active deposits, flexible credit, wants speed." },
 ```
 
-> This desk is used only *after* underwriting approves, with real numbers. Don't turn it into
-> something that quotes live on a cold call — that's the whole point of the `gate` band.
+---
+
+## 13 — Compliance (posture + written-comms rails)
+
+**Master Doc:** Scripts → Posture + the written follow-up wording rail; BASE → company facts.
+**File:** `src/content/compliance.ts`. *(The always-on framing in Quick Lookup. The verbal
+"say instead" pairs and deal-killers live in `objections.ts`, not here.)*
+
+- `posture` is the "how you carry it" band (a peer who happens to be the expert).
+- `writtenRails` is the list of hard rails for SMS/email and how you talk about the company.
+
+```ts
+// before — a written rail
+"No “guaranteed” or “approved” — approval depends on underwriting.",
+// after — same rail, tightened
+"No “guaranteed/approved” — approval is underwriting's call.",
+```
+
+> Two rails are newer and easy to miss — **keep both**: never name a parent/holding entity
+> (it's FinBiz / FinBiz Funding only), and **in writing never write the word "MCA" — say
+> "funding."** The merchant can call it an MCA; you don't, in text or email.
 
 ---
 
@@ -324,5 +364,5 @@ registry, and changing them can break the page order.
   `npm run build` fail, **Netlify keeps the last good version live**, and you get an email.
 - Fastest fix: in Netlify, **Deploys → pick the last good deploy → Publish deploy** to roll back,
   then fix the typo (usually a missing `"` or `,`) and commit again.
-- When in doubt, edit the Google Doc and let the sync regenerate the file — it always produces
-  valid, type-correct output.
+- When in doubt, hand the Master Doc to Claude Code and let it re-edit the file — it preserves
+  the data shapes and the compliance rails, and the build still type-checks the result before it ships.

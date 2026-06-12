@@ -25,9 +25,10 @@ admin can click — it can't be done via API):
 
 ## Editing content
 All script/product copy is typed data under `src/content/*.ts` (see
-`docs/CONTENT-MAP.md`). Edit a value → commit/push → auto-deploys. The two Google
-Docs remain the source of truth; `docs/N8N-SYNC.md` describes the optional
-Docs → repo → deploy sync.
+`docs/CONTENT-MAP.md`). Edit a value → commit/push → auto-deploys. The source of
+truth is the single **FinBiz Master Doc**: the owner updates it, then hands it to
+Claude Code, which edits the `src/content/*.ts` files and commits. See
+`docs/DAILY-UPDATES.md` for the routine (no n8n sync — that's retired).
 
 ## Manual deploy (fallback, no git connection)
 If you ever need to publish without the git connection, build locally and deploy

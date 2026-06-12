@@ -1,5 +1,7 @@
 # GUIDED-FLOW — FinBiz Operator Console rebuild spec
 
+> **Superseded by the 2.0 mode shell** (lean "Live Call" + "Quick Lookup" modes with a mid-call "Risk check" stage). Kept for historical context; the stage model below still informs the Live Call flow.
+
 > **Status:** design spec, no code written yet. **Owner:** UX Architect (AgentsNess).
 > **Goal:** replace the 11-section scrolling reference with a **guided live-call flow** — compact, stage-by-stage, two-pane desktop, "show only what's relevant now," with the line-to-say always large+bold and objections always one reach away.
 >
