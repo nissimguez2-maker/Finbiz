@@ -61,7 +61,7 @@ export function CallConsole() {
         <div
           className={cn(
             "z-20 w-full max-w-[400px] shrink-0 overflow-hidden",
-            "fixed inset-y-0 left-0 top-12 lg:static lg:top-0",
+            "fixed bottom-0 left-0 top-12 lg:static",
             leftOpen ? "block animate-slide-in-left" : "hidden",
           )}
         >
@@ -86,7 +86,7 @@ export function CallConsole() {
         <div
           className={cn(
             "z-20 w-full max-w-[400px] shrink-0 overflow-hidden",
-            "fixed inset-y-0 right-0 top-12 lg:static lg:top-0",
+            "fixed bottom-0 right-0 top-12 lg:static",
             rightOpen ? "block animate-slide-in-right" : "hidden",
           )}
         >

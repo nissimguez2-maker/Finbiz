@@ -1,9 +1,8 @@
 /**
  * Global console metadata: brand, the masthead ticker, and the canonical nav
- * order. The guided console (src/features/callflow/) reads brand, ticker and
- * rails directly; the nav list records the canonical section order for the
- * section components in src/components/sections/* (the post-call ones are
- * mounted by AfterCallPanel).
+ * order. The reading console (src/features/callflow/) renders brand in the top
+ * bar; ticker, rails and nav are kept as canonical master-doc data even where
+ * the current UI doesn't show them as chrome.
  */
 
 export interface NavItem {
@@ -22,10 +21,9 @@ export const brand = {
 };
 
 /**
- * Masthead ticker — the numbers a rep should never have to look up.
- * NOTE: the first three entries are the qualify-floor chips (revenue / time in
- * business / credit) — callScript.ts reads `ticker.slice(0, 3)` as the floor.
- * Numbers come straight from the master doc's single qualify floor.
+ * The numbers a rep should never have to look up. The first three entries are
+ * the qualify floor (revenue / time in business / credit). Numbers come
+ * straight from the master doc's single qualify floor.
  */
 export const ticker: { k: string; v: string; sub?: string }[] = [
   { k: "Qualify floor", v: "$15K+", sub: "/mo" },
@@ -37,7 +35,7 @@ export const ticker: { k: string; v: string; sub?: string }[] = [
   { k: "To start a file", v: "3", sub: "mo stmts" },
 ];
 
-/** The always-on compliance rails (also rendered as a sticky strip). */
+/** The always-on compliance rails (policy data; not rendered as chrome). */
 export const rails: string[] = [
   "No “guaranteed / approved”",
   "No rate before the file",
