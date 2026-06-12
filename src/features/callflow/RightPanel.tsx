@@ -146,25 +146,12 @@ function TableBlock({ title, section }: { title: string; section: TableSection }
               {row.subhead}
             </p>
           ) : (
-            <div key={i} className="border-t border-border pt-2.5 first:border-t-0">
-              {row.cells.map((cell, c) => (
-                <p
-                  key={c}
-                  className={
-                    c === 0
-                      ? "text-sm font-medium text-foreground"
-                      : "mt-0.5 text-sm leading-relaxed text-muted-foreground"
-                  }
-                  dangerouslySetInnerHTML={inlineMarkup(
-                    section.columns.length > 1 && c > 0 ? `${section.columns[c]}: ${cell}` : cell,
-                  )}
-                />
-              ))}
-            </div>
+            <RowBlock key={i} cells={row.cells} columns={section.columns} />
           ),
         )}
       </div>
 
+      {/* note + callouts below */}
       {section.note && (
         <p
           className="mt-4 text-sm leading-relaxed text-muted-foreground"
@@ -180,5 +167,34 @@ function TableBlock({ title, section }: { title: string; section: TableSection }
         </div>
       )}
     </section>
+  );
+}
+
+/**
+ * One data row: first cell is the bold lead; the rest carry their column label
+ * inline. Tables with a leading "#" column (Statements) have one more column
+ * than cells, so we align labels by the trailing offset, never index 0..n.
+ */
+function RowBlock({ cells, columns }: { cells: string[]; columns: string[] }) {
+  // e.g. Statements: 4 columns, 3 cells → offset 1, so cell c uses columns[c+1].
+  const offset = Math.max(0, columns.length - cells.length);
+  return (
+    <div className="border-t border-border pt-2.5 first:border-t-0">
+      {cells.map((cell, c) => {
+        const label = columns[c + offset];
+        const showLabel = c > 0 && columns.length > 1 && label;
+        return (
+          <p
+            key={c}
+            className={
+              c === 0
+                ? "text-sm font-medium text-foreground"
+                : "mt-0.5 text-sm leading-relaxed text-muted-foreground"
+            }
+            dangerouslySetInnerHTML={inlineMarkup(showLabel ? `${label}: ${cell}` : cell)}
+          />
+        );
+      })}
+    </div>
   );
 }
