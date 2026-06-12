@@ -2,12 +2,16 @@ import { useEffect } from "react";
 import { isTypingTarget } from "@/features/search/useSearch";
 import type { UseCallFlow } from "./useCallFlow";
 
+// Re-exported here so the live-call keyboard layer is the single import surface
+// for "are we typing?" guards (ConsoleShell's mode-toggle reuses it too).
+export { isTypingTarget };
+
 /**
  * Binds the live-call keyboard map to a useCallFlow instance.
  *
  *   → / Space  next()        ← back()
  *   1 qualifies  2 light  3 funded   (only meaningful at the Gate)
- *   o toggle objections      a toggle After-the-call
+ *   r jump to Risk-check     o toggle objections      a toggle After-the-call
  *
  * Guarded by isTypingTarget so typing in Notes/search never jumps the stage.
  * "/" (search focus) and Esc are handled by the existing CommandBar/overlays.
@@ -45,6 +49,13 @@ export function useKeyboardFlow(flow: UseCallFlow): void {
             e.preventDefault();
             flow.setBranch("funded");
           }
+          break;
+        case "r":
+        case "R":
+          // Jump straight to the ④.5 Risk-check. goTo no-ops unless "risk" is in
+          // the active path (the qualifies path), so 1/2/3 stay free for lanes.
+          e.preventDefault();
+          flow.goTo("risk");
           break;
         case "o":
         case "O":

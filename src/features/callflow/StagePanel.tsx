@@ -3,6 +3,7 @@ import { cn } from "@/lib/cn";
 import { Cue, TextBubble } from "@/components/ui/Beat";
 import { StageReference } from "./StageReference";
 import { GateBranchControls } from "./GateBranchControls";
+import { RiskCheckPanel } from "./RiskCheckPanel";
 import { ObjectionsPanel } from "./ObjectionsPanel";
 import { stepLines, stepCues, stepTexts, branchTitle, pitchFramePhrase } from "./callScript";
 import type { UseCallFlow } from "./useCallFlow";
@@ -115,6 +116,7 @@ export function StagePanel({ flow, pitchProduct }: { flow: UseCallFlow; pitchPro
 
           {stage === "close" && <CloseTexts texts={stepTexts("close")} />}
           {stage === "gate" && <GateBranchControls flow={flow} />}
+          {stage === "risk" && <RiskCheckPanel />}
         </div>
       )}
 

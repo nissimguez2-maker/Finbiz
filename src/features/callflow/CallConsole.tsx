@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { NotesDrawer } from "@/features/notes/NotesDrawer";
-import { useCallTimer } from "@/features/notes/useCallTimer";
+import type { useCallTimer } from "@/features/notes/useCallTimer";
 import { primaryProduct } from "./callScript";
-import { TopBar } from "./TopBar";
 import { StageStepper } from "./StageStepper";
 import { FooterStrip } from "./FooterStrip";
 import { StagePanel } from "./StagePanel";
@@ -11,27 +9,36 @@ import { AfterCallPanel } from "./AfterCallPanel";
 import { useCallFlow } from "./useCallFlow";
 import { useKeyboardFlow } from "./useKeyboardFlow";
 
+/** Props handed down from ConsoleShell, which owns the shared shell state. */
+export interface CallConsoleProps {
+  /** The single shared call timer (owned + rendered by the shell's TopBar). */
+  timer: ReturnType<typeof useCallTimer>;
+  /** Whether the shared Notes drawer is open (owned by the shell). */
+  notesOpen: boolean;
+  /** Opens the shared Notes drawer (wired to the FooterStrip "Notes" button). */
+  onOpenNotes: () => void;
+}
+
 /**
- * The guided live-call console.
+ * The LIVE-CALL body (no longer the root — ConsoleShell owns the TopBar, the
+ * shared timer, and the Notes drawer). It still drives the guided flow:
  *
  *  LEFT  — "what I say": the script (current line + stage context), with the
- *          objection comebacks folded in (toggled by `o` / the header button).
+ *          objection comebacks folded in (toggled by `o` / the header button)
+ *          and the ④.5 Risk-check prompt on the risk stage.
  *  RIGHT — "what I sell": the persistent product matrix (thresholds +
  *          branch-driven recommendation); tapping a product sets the pitch line.
  *
  * Stripped to the essentials — no decorative motion, gradients, or glow. The
  * current line and the matrix are the only things meant to pull the eye.
  */
-export function CallConsole() {
+export function CallConsole({ onOpenNotes }: CallConsoleProps) {
   const flow = useCallFlow();
   useKeyboardFlow(flow);
-  const timer = useCallTimer();
-  const [notesOpen, setNotesOpen] = useState(false);
   const [pitchProduct, setPitchProduct] = useState(() => primaryProduct()?.name ?? "");
 
   return (
-    <div className="flex h-[100dvh] flex-col overflow-hidden bg-background text-foreground">
-      <TopBar timer={timer} />
+    <>
       <StageStepper flow={flow} />
 
       <main className="flex min-h-0 flex-1 flex-col lg:flex-row">
@@ -52,10 +59,9 @@ export function CallConsole() {
         </aside>
       </main>
 
-      <FooterStrip flow={flow} onOpenNotes={() => setNotesOpen(true)} />
+      <FooterStrip flow={flow} onOpenNotes={onOpenNotes} />
 
       <AfterCallPanel flow={flow} />
-      <NotesDrawer open={notesOpen} onClose={() => setNotesOpen(false)} timer={timer} />
-    </div>
+    </>
   );
 }

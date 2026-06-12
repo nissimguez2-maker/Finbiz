@@ -6,23 +6,33 @@ import { cn } from "@/lib/cn";
 import { brand } from "@/content/meta";
 
 /**
- * Sticky top bar (h-14): compact FinBiz brand mark, the existing CommandBar
- * (find-on-page / "what do I say"), and the console's single live call-timer
- * readout + controls (the same timer the Notes drawer shows). Chrome — never
- * printed.
+ * Persistent top region of the 2.0 shell (h-14): a trimmed FinBiz wordmark, the
+ * two-mode switch (passed in as a slot from ConsoleShell), the existing
+ * CommandBar (find-on-page / "what do I say"), and the console's single live
+ * call-timer readout + controls (the same timer the Notes drawer shows). The
+ * timer and CommandBar persist across both modes. Chrome — never printed.
  */
-export function TopBar({ timer }: { timer: ReturnType<typeof useCallTimer> }) {
+export function TopBar({
+  timer,
+  modeBar,
+}: {
+  timer: ReturnType<typeof useCallTimer>;
+  /** The ModeBar element, owned by ConsoleShell (which holds mode state). */
+  modeBar?: React.ReactNode;
+}) {
   return (
     <header className="no-print sticky top-0 z-40 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur sm:px-6">
-      {/* Brand mark — collapsed from the masthead per spec §7. */}
-      <a
-        href="#"
+      {/* Trimmed wordmark — a small non-link mark now that the shell owns nav. */}
+      <span
         aria-label={`${brand.name}${brand.mark} — operator console`}
-        className="focus-ring flex shrink-0 items-baseline gap-px rounded-md font-display text-lg leading-none"
+        className="flex shrink-0 items-baseline gap-px font-display text-lg leading-none"
       >
         {brand.name}
         <span className="text-accent">{brand.mark}</span>
-      </a>
+      </span>
+
+      {/* Mode switch — the spine of the shell, between the brand and search. */}
+      {modeBar}
 
       {/* The existing CommandBar is itself a sticky h-14 bar; here we mount only
           its search field by neutralising those wrapper styles via a flex slot.

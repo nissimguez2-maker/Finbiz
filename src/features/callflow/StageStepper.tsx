@@ -3,8 +3,13 @@ import { cn } from "@/lib/cn";
 import { STEP_LABELS, type Step } from "./callScript";
 import type { UseCallFlow } from "./useCallFlow";
 
-/** The six canonical stages always shown on the stepper, in order. */
-const CANONICAL: Step[] = ["open", "story", "gate", "dig", "pitch", "close"];
+/**
+ * The canonical stages always shown on the stepper, in order. Risk (④.5) sits
+ * between Dig and Pitch on the qualifies path; like the other post-gate steps it
+ * shows here but only navigates when it's in the active path (goTo no-ops on the
+ * light/funded branches, which don't include it).
+ */
+const CANONICAL: Step[] = ["open", "story", "gate", "dig", "risk", "pitch", "close"];
 
 /** Branch id → the short label shown in the Branch slot once Gate is resolved. */
 const BRANCH_SLOT_LABEL: Record<Exclude<UseCallFlow["branch"], null>, string> = {
@@ -172,6 +177,7 @@ function Hints() {
     >
       <Hint k="←/→" v="step" />
       <Hint k="1·2·3" v="lane" />
+      <Hint k="r" v="risk" />
       <Hint k="o" v="obj" />
       <Hint k="a" v="after" />
     </div>

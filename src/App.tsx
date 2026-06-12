@@ -1,5 +1,5 @@
-import { CallConsole } from "@/features/callflow/CallConsole";
+import { ConsoleShell } from "@/features/callflow/ConsoleShell";
 
 export default function App() {
-  return <CallConsole />;
+  return <ConsoleShell />;
 }
