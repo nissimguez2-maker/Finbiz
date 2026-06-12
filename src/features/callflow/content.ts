@@ -24,6 +24,9 @@ export const scriptBranches = callFlow.branches;
 
 /* ---- Left panel: what you sell ----------------------------------------- */
 export const sellProducts = products.products;
+export const productRouting = products.routingNote;
+export const productStructuring = products.structuringNote;
+export const productRelationship = products.relationshipNote;
 export const mcaStructure = mca;
 export const offerDesk = offer;
 

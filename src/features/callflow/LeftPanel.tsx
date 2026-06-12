@@ -1,7 +1,14 @@
 import type { Callout, Product } from "@/types/content";
 import { inlineMarkup } from "@/lib/inlineBold";
 import { Disclosure } from "@/components/Disclosure";
-import { sellProducts, mcaStructure, offerDesk } from "./content";
+import {
+  sellProducts,
+  productRouting,
+  productStructuring,
+  productRelationship,
+  mcaStructure,
+  offerDesk,
+} from "./content";
 
 /**
  * Left panel — "What you sell". Three plain stacked sections behind disclosure
@@ -18,6 +25,11 @@ export function LeftPanel() {
           {sellProducts.map((p) => (
             <ProductRow key={p.name} product={p} />
           ))}
+        </div>
+        <div className="mt-5 space-y-3">
+          {productRouting && <NeutralCallout callout={productRouting} />}
+          {productStructuring && <NeutralCallout callout={productStructuring} />}
+          <NeutralCallout callout={productRelationship} />
         </div>
       </Group>
 

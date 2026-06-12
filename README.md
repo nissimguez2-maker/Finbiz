@@ -112,12 +112,12 @@ Three layers, each with one job:
 
 ### A few formatting conventions in the content files
 
-- **`{curly braces}` in a title** mark the word that gets the gradient highlight, e.g.
-  `title: "Call {Flow}"` highlights "Flow".
 - **`**double asterisks**`** make text bold inside a cell or terms string (e.g. a canonical number).
-- **`[[double brackets]]`** mark a conditional/annotation in a table cell (e.g. `[[if refinancing]]`).
-- **`tone`** values (`accent`, `go`, `amber`, `clay`) pick the color band of a callout — they are
-  styling labels, not content. Leave them as-is unless you intend a color change.
+- **`[[double brackets]]`** mark a quiet parenthetical/annotation (rendered muted, e.g. `[[if refinancing]]`).
+- **`{curly braces}` in a `title`** and the **`tone`** values (`accent`, `go`, `amber`, `clay`) are
+  canonical master-doc metadata the reading console does **not** currently render — titles aren't
+  shown and every callout uses one neutral style. Leave them as-is; they stay in the data so the
+  content remains a faithful, regenerable copy of the master doc.
 
 ---
 

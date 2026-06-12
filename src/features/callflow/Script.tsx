@@ -70,7 +70,7 @@ function Beat({ beat }: { beat: CallBeat }) {
           {beat.texts.map((text, i) => (
             <div
               key={i}
-              className="flex items-center gap-2 rounded-md border border-border bg-muted/60 py-1.5 pl-4 pr-1"
+              className="flex items-center gap-2 rounded-md border border-border bg-muted/50 py-1.5 pl-4 pr-1"
             >
               <span className="flex-1 text-base text-foreground">{text}</span>
               <CopyButton text={text} label={`Copy text: ${text}`} />
