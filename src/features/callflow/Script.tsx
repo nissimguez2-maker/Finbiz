@@ -170,25 +170,31 @@ function Line({
         active ? "border-accent" : "border-transparent hover:border-border",
       )}
     >
-      {/* Left marker: filled accent when active, quiet outline dot otherwise. */}
+      {/* Left marker: filled accent when active, quiet outline dot otherwise.
+          The marker sits on the first text line; its top offset is `em` so it
+          tracks each row's own font-size (the active row is larger), keeping the
+          dot aligned to the cap height of line one even when the text wraps. */}
       <span
         aria-hidden
         className={cn(
-          "mt-[0.55em] h-2 w-2 shrink-0 rounded-full transition-colors duration-150 motion-reduce:transition-none",
+          "mt-[0.62em] h-2 w-2 shrink-0 rounded-full transition-colors duration-150 motion-reduce:transition-none",
           active
-            ? "bg-accent"
-            : "border border-muted-foreground/50 bg-transparent group-hover:border-accent",
+            ? "bg-accent text-2xl sm:text-[1.7rem]"
+            : cn(
+                "border border-muted-foreground/50 bg-transparent group-hover:border-accent",
+                subordinate ? "text-base" : "text-lg",
+              ),
         )}
       />
 
       <span
         dangerouslySetInnerHTML={inlineMarkup(line)}
         className={cn(
-          "leading-relaxed transition-[font-size,color] duration-150 motion-reduce:transition-none",
+          "leading-relaxed transition-colors duration-150 motion-reduce:transition-none",
           active
             ? "text-2xl font-semibold text-foreground sm:text-[1.7rem]"
             : cn(
-                "font-normal text-foreground/60",
+                "font-normal text-foreground/70",
                 subordinate ? "text-base" : "text-lg",
               ),
         )}
