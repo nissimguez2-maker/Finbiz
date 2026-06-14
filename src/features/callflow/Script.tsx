@@ -1,14 +1,13 @@
 import type { BranchCard, CallBeat } from "@/types/content";
 import { inlineMarkup } from "@/lib/inlineBold";
 import { CopyButton } from "@/components/CopyButton";
-import { scriptBeats, scriptBranches, scriptRule } from "./content";
+import { scriptBeats, scriptBranches } from "./content";
 
 /**
  * The center reading column — the whole call script, top to bottom, in one calm
- * measure (~68ch). The `says` lines are the dominant readable text; `cues` are
- * clearly subordinate; the Close `texts` are quiet bordered blocks with a copy
- * affordance. The two Gate branches render inline as subordinate "↪ if…" blocks
- * right after the Gate beat. No stepper, no progress, no sticky chrome.
+ * measure (~68ch). ONLY the lines she says out loud (plus the Close `texts`).
+ * No posture intro, no coaching cues — just the script. The two Gate branches
+ * render inline as subordinate "↪ if…" blocks right after the Gate beat.
  */
 export function Script() {
   // Branch cards slot in after the Gate beat (index 2), before Dig (index 3).
@@ -16,13 +15,6 @@ export function Script() {
 
   return (
     <article className="mx-auto w-full max-w-reading px-6 py-12 sm:py-16">
-      {scriptRule && (
-        <p className="mb-12 text-sm leading-relaxed text-muted-foreground">
-          <span className="eyebrow mr-2 text-accent">{scriptRule.label}</span>
-          {scriptRule.body}
-        </p>
-      )}
-
       <div className="space-y-14">
         {scriptBeats.map((beat, i) => (
           <div key={beat.label} className="contents">
@@ -36,7 +28,7 @@ export function Script() {
   );
 }
 
-/** One beat: quiet label heading, dominant says lines, subordinate cues + texts. */
+/** One beat: quiet label heading, then the spoken lines, then any Close texts. */
 function Beat({ beat }: { beat: CallBeat }) {
   return (
     <section aria-label={beat.label}>
@@ -51,18 +43,6 @@ function Beat({ beat }: { beat: CallBeat }) {
           />
         ))}
       </div>
-
-      {beat.cues && beat.cues.length > 0 && (
-        <div className="mt-5 space-y-2">
-          {beat.cues.map((cue, i) => (
-            <p
-              key={i}
-              className="text-sm leading-relaxed text-muted-foreground"
-              dangerouslySetInnerHTML={inlineMarkup(cue)}
-            />
-          ))}
-        </div>
-      )}
 
       {beat.texts && beat.texts.length > 0 && (
         <div className="mt-6 space-y-2">
@@ -97,18 +77,6 @@ function Branch({ branch }: { branch: BranchCard }) {
           />
         ))}
       </div>
-
-      {branch.cues && branch.cues.length > 0 && (
-        <div className="mt-4 space-y-2">
-          {branch.cues.map((cue, i) => (
-            <p
-              key={i}
-              className="text-sm leading-relaxed text-muted-foreground"
-              dangerouslySetInnerHTML={inlineMarkup(cue)}
-            />
-          ))}
-        </div>
-      )}
     </section>
   );
 }

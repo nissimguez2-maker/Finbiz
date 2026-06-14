@@ -19,7 +19,7 @@ import {
  */
 export function LeftPanel() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <Group title="Product matrix">
         <div>
           {sellProducts.map((p) => (
@@ -65,40 +65,38 @@ export function LeftPanel() {
   );
 }
 
-/** A top-level panel section: quiet heading + content separated by whitespace. */
+/** A top-level panel section: loud accent heading + content. */
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h3 className="eyebrow mb-3 text-accent">{title}</h3>
+      <h3 className="section-head">{title}</h3>
       {children}
     </section>
   );
 }
 
-/** One product as a disclosure: name + bestFit one-liner, expands to detail. */
+/** One product as a disclosure: name + bestFit one-liner, expands to essentials. */
 function ProductRow({ product }: { product: Product }) {
   return (
     <Disclosure
       summary={product.name}
       hint={<span dangerouslySetInnerHTML={inlineMarkup(product.bestFit)} />}
     >
-      <dl className="space-y-2.5">
+      <dl className="space-y-3">
         <Field label="Terms" value={product.terms} />
-        <Field label="Speed" value={product.speed} />
         <Field label="Say it" value={product.sayIt} />
-        {product.details?.map((d) => <Field key={d.label} label={d.label} value={d.value} />)}
       </dl>
     </Disclosure>
   );
 }
 
-/** A labelled detail line. */
+/** A labelled detail line: small near-black label over near-black value. */
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</dt>
+      <dt className="eyebrow text-muted-foreground">{label}</dt>
       <dd
-        className="mt-0.5 text-sm leading-relaxed text-foreground"
+        className="mt-1 text-[15px] leading-relaxed text-foreground"
         dangerouslySetInnerHTML={inlineMarkup(value)}
       />
     </div>
@@ -108,12 +106,12 @@ function Field({ label, value }: { label: string; value: string }) {
 /** Key/value loop rows (MCA mechanics / Offer desk steps). */
 function KeyValueList({ rows }: { rows: { k: string; v: string }[] }) {
   return (
-    <dl className="space-y-2.5 border-t border-border pt-4">
+    <dl className="space-y-3 border-t border-border pt-4">
       {rows.map((row) => (
         <div key={row.k}>
-          <dt className="text-sm font-medium text-foreground">{row.k}</dt>
+          <dt className="item-head">{row.k}</dt>
           <dd
-            className="mt-0.5 text-sm leading-relaxed text-muted-foreground"
+            className="mt-0.5 text-[15px] leading-relaxed text-foreground"
             dangerouslySetInnerHTML={inlineMarkup(row.v)}
           />
         </div>
@@ -128,7 +126,7 @@ export function NeutralCallout({ callout }: { callout: Callout }) {
     <div className="border-l-2 border-border bg-muted/50 py-2.5 pl-4 pr-3">
       <p className="eyebrow mb-1 text-muted-foreground">{callout.label}</p>
       <p
-        className="text-sm leading-relaxed text-foreground"
+        className="text-[15px] leading-relaxed text-foreground"
         dangerouslySetInnerHTML={inlineMarkup(callout.body)}
       />
     </div>

@@ -42,7 +42,7 @@ export function Disclosure({ summary, hint, children, defaultOpen = false }: Dis
           )}
         />
         <span className="min-w-0 flex-1">
-          <span className="block font-medium leading-snug text-foreground group-hover:text-accent">
+          <span className="block text-[15px] font-semibold leading-snug text-foreground group-hover:text-accent">
             {summary}
           </span>
           {hint != null && (

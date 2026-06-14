@@ -17,8 +17,7 @@ import { finalQa } from "@/content/finalQa";
 import { pipeline } from "@/content/pipeline";
 import { brand } from "@/content/meta";
 
-/* ---- Center: the call script ------------------------------------------- */
-export const scriptRule = callFlow.rule;
+/* ---- Center: the call script (spoken lines only) ----------------------- */
 export const scriptBeats = callFlow.beats;
 export const scriptBranches = callFlow.branches;
 

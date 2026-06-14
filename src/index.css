@@ -12,7 +12,7 @@
   --background: #fbfbfa; /* plain near-white */
   --foreground: #1a1a1a; /* near-black reading colour */
   --muted: #f4f4f3; /* the one quiet fill (text-message blocks) */
-  --muted-foreground: #6b6b6b; /* secondary text */
+  --muted-foreground: #555555; /* secondary text — labels, notes, numbers */
   --border: #e6e6e3; /* hairline */
   --accent: #1d4ed8; /* the single calm deep blue */
   --accent-foreground: #ffffff;
@@ -50,9 +50,21 @@
 }
 
 @layer components {
-  /* Tiny mono eyebrow — the only mono in reading flow (beat numbers/labels). */
+  /* Tiny mono eyebrow — small structural labels (field labels, table subheads). */
   .eyebrow {
     @apply font-mono text-[11px] font-semibold uppercase tracking-[0.14em];
+  }
+
+  /* The loud section header at the top of each panel group — the only place the
+     accent appears in the panels, sized + weighted to clearly outrank the body. */
+  .section-head {
+    @apply mb-4 border-b border-border pb-2 font-sans text-[13px] font-bold uppercase tracking-[0.1em] text-accent;
+  }
+
+  /* Item header: an objection, a product name, a row lead, a step title.
+     Near-black, semibold, a touch larger than body — the second tier. */
+  .item-head {
+    @apply text-[15px] font-semibold leading-snug text-foreground;
   }
 
   /* One keyboard-hint idiom: small, mono, quiet. */
