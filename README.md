@@ -2,7 +2,8 @@
 
 An internal, single-screen cockpit an SDR ("Ness") keeps open during live funding calls.
 Everything she reads — the full call script, the product matrix, objection reframes, the
-pre-submission QA — is on one page, organized so her eye lands on the next line and she says it.
+pre-submission QA — is on one page. The script reads like a teleprompter: she walks the active
+line down it with the arrow keys, and the line she's on is the one in bold.
 
 It is a static single-page app (Vite + React + TypeScript + Tailwind) deployed to Netlify.
 **All script and product copy is data, not code** — it lives in typed modules under
@@ -86,25 +87,33 @@ Three layers, each with one job:
 2. **The data — `src/content/*.ts`.** One file per section, each exporting a typed object
    (e.g. `callFlow.ts` exports `callFlow: CallFlowContent`). **This is where the words live.**
    Every file carries a header comment describing its voice and compliance rails. There are
-   eleven content sections plus `meta.ts` (brand, masthead ticker, the always-on compliance
+   ten content sections plus `meta.ts` (brand, masthead ticker, the always-on compliance
    rails, and the canonical nav order):
 
    `callFlow` · `products` · `mca` · `triage` · `statements` · `minimumFile` ·
    `pipeline` · `objections` · `finalQa` · `offer` — plus `meta`.
 
 3. **The layout — the reading console under `src/`.** The live view is a single
-   **scrolling script column** down the center: the full call script top to bottom, with the
-   branches shown inline right after the Gate. A **left panel — "What you sell"** collapses
-   open to the product matrix, the MCA structure, and the Approved Offer desk. A **right panel
-   — "Run the call"** collapses open to the objections, deal killers, the don't-say / say-instead
-   pairs, the statement read, the minimum file, the final QA, and the pipeline. A slim top bar
-   holds the two panel toggles. Keyboard: **`[`** toggles the left panel, **`]`** toggles the
-   right panel, **`Esc`** closes whichever is open. The palette is a near-monochrome light theme
-   with a single blue accent. (No notes, no timer, no search, no stepper, no after-call overlay —
-   those were removed.) None of these layout files contain script copy — only structure.
+   **scrolling script column** down the center showing **only the lines Ness says out loud** —
+   no posture, no coaching cues, no copy-paste blocks. It reads like a teleprompter: every line
+   is a bulleted row, and **one line is the active line** — bold and enlarged, with an accent
+   marker. She moves it with the keyboard (**`↓`/`→`/`Space`** → next line, **`↑`/`←`/`Shift`+`Space`**
+   → previous), or clicks any line to jump; the active line auto-scrolls to center. The two **Gate
+   branches** ("All set", "Light") render inline right after the Gate and are clickable, but the
+   arrow flow walks the beats only and skips them. A **left panel — "What you sell"** collapses
+   open to the product matrix (each product expands to its essentials — best-fit, terms,
+   how-to-say-it), the MCA structure, and the Approved Offer desk. A **right panel — "Run the
+   call"** collapses open to the objections (with a filter), deal killers, the don't-say /
+   say-instead pairs, the statement read, the minimum file, the final QA, and the pipeline. A slim
+   top bar holds the two panel toggles. Keyboard: **`[`** toggles the left panel, **`]`** toggles
+   the right, **`Esc`** closes whichever is open, and the **arrow keys** drive the script line. The
+   palette is a near-monochrome light theme with a single blue accent. (No notes, no timer, no
+   search, no stepper, no after-call overlay — those were removed.) None of these layout files
+   contain script copy — only structure.
 
-   Example: `callFlow.ts` holds the beats; the center column renders each spoken line in order.
-   Change a line in `callFlow.ts` and the rendered output changes; the layout never moves.
+   Example: `callFlow.ts` holds the beats; the center column renders each spoken line in order and
+   the arrow keys walk the active line through them. Change a line in `callFlow.ts` and the
+   rendered output changes; the layout never moves.
 
 **Why this matters for a non-technical owner:** to change what Ness says, you edit one
 `src/content/*.ts` field. You never read or touch a `.tsx` file. See
