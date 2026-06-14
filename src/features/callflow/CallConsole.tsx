@@ -78,7 +78,10 @@ export function CallConsole() {
         </div>
 
         {/* Center script — always the focal column. */}
-        <main className="scroll-thin min-w-0 flex-1 overflow-y-auto">
+        <main
+          aria-label="Call script — arrow keys move the current line"
+          className="scroll-thin min-w-0 flex-1 overflow-y-auto"
+        >
           <Script />
         </main>
 

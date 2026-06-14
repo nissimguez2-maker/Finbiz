@@ -12,8 +12,12 @@ import { useCallback, useEffect, useState } from "react";
  */
 export type DrawerSide = "left" | "right" | null;
 
-/** True when the event target is a text input / editable element. */
-function isTypingTarget(el: EventTarget | null): boolean {
+/**
+ * True when the event target is a text input / editable element. Exported so the
+ * script cursor (useScriptCursor) reuses the SAME guard — arrows/space typed in
+ * the objection filter must never move the reading cursor.
+ */
+export function isTypingTarget(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false;
   const tag = el.tagName;
   return (
